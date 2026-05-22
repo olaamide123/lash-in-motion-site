@@ -10,6 +10,7 @@ export default defineConfig({
   title: "Lash In Motion Studio",
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || "1cee5byk",
   dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || "production",
+  basePath: "/studio",
   plugins: [
     structureTool({ structure: studioStructure }),
     visionTool()
