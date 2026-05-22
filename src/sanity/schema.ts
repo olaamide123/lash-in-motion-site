@@ -2,6 +2,30 @@ import { defineArrayMember, defineField, defineType } from "sanity";
 
 import { embedUrlValidation, mediaPathValidation } from "./validation";
 
+const colorStyleOptions = [
+  { title: "Default", value: "default" },
+  { title: "Muted", value: "muted" },
+  { title: "Red", value: "red" },
+  { title: "Blue", value: "blue" },
+  { title: "Yellow", value: "yellow" },
+  { title: "Black", value: "black" },
+  { title: "White", value: "white" }
+];
+
+function colorStyleField(name: string, title: string, description?: string) {
+  return defineField({
+    name,
+    title,
+    type: "string",
+    initialValue: "default",
+    description,
+    options: {
+      list: colorStyleOptions,
+      layout: "dropdown"
+    }
+  });
+}
+
 const portableTextBlock = defineArrayMember({
   type: "block",
   marks: {
@@ -269,7 +293,8 @@ const whatMovesItem = defineType({
   fields: [
     defineField({ name: "label", title: "Label", type: "string" }),
     defineField({ name: "title", title: "Title", type: "string", validation: (rule) => rule.required() }),
-    defineField({ name: "body", title: "Body", type: "text", rows: 4 })
+    defineField({ name: "body", title: "Body", type: "text", rows: 4 }),
+    colorStyleField("accentColor", "Accent color", "Controls the track marker color using the approved brand palette.")
   ],
   preview: {
     select: {
@@ -432,6 +457,11 @@ const siteSettings = defineType({
       type: "imageAssetValue",
       group: "brand"
     }),
+    colorStyleField(
+      "defaultAccentColor",
+      "Default accent color",
+      "Optional shared color for small global markers like the header CTA dot."
+    ),
     defineField({
       name: "mainNavigation",
       title: "Main navigation",
@@ -510,6 +540,7 @@ const homepage = defineType({
     defineField({ name: "heroLabel", title: "Hero label", type: "string" }),
     defineField({ name: "heroHeadline", title: "Hero headline", type: "text", rows: 2 }),
     defineField({ name: "heroAccentWord", title: "Hero accent word", type: "string" }),
+    colorStyleField("heroAccentColor", "Hero accent text color"),
     defineField({ name: "heroBody", title: "Hero body", type: "text", rows: 4 }),
     defineField({
       name: "heroMetaLine",
@@ -521,15 +552,18 @@ const homepage = defineType({
     defineField({ name: "mainReel", title: "Main reel", type: "videoAssetValue" }),
     defineField({ name: "mainReelButtonText", title: "Main reel button text", type: "string" }),
     defineField({ name: "selectedWorkLabel", title: "Selected work label", type: "string" }),
+    colorStyleField("selectedWorkEyebrowColor", "Selected work eyebrow color"),
     defineField({ name: "selectedWorkTitle", title: "Selected work title", type: "string" }),
     defineField({ name: "selectedWorkSubtitle", title: "Selected work subtitle", type: "string" }),
     defineField({ name: "selectedWorkIntro", title: "Selected work intro", type: "text", rows: 4 }),
     defineField({ name: "caseStudiesSectionKicker", title: "Case studies kicker", type: "string" }),
     defineField({ name: "caseStudiesSectionEyebrow", title: "Case studies eyebrow", type: "string" }),
+    colorStyleField("caseStudiesSectionAccentColor", "Case studies section accent color"),
     defineField({ name: "caseStudiesSectionTitle", title: "Case studies section title", type: "string" }),
     defineField({ name: "caseStudiesSectionIntro", title: "Case studies section intro", type: "text", rows: 3 }),
     defineField({ name: "motionSectionKicker", title: "Motion section kicker", type: "string" }),
     defineField({ name: "motionSectionEyebrow", title: "Motion section eyebrow", type: "string" }),
+    colorStyleField("motionSectionAccentColor", "Motion section accent color"),
     defineField({ name: "motionSectionTitle", title: "Motion section title", type: "string" }),
     defineField({ name: "motionSectionIntro", title: "Motion section intro", type: "text", rows: 3 }),
     defineField({
@@ -555,8 +589,10 @@ const homepage = defineType({
       of: [portableTextBlock]
     }),
     defineField({ name: "whatMovesLabel", title: "What Moves Here label", type: "string" }),
+    colorStyleField("whyThisExistsAccentColor", "Why This Exists accent color"),
     defineField({ name: "whatMovesTitle", title: "What Moves Here title", type: "string" }),
     defineField({ name: "whatMovesIntro", title: "What Moves Here intro", type: "text", rows: 3 }),
+    colorStyleField("whatMovesAccentColor", "What Moves Here accent color"),
     defineField({
       name: "whatMovesItems",
       title: "What Moves Here items",
@@ -565,7 +601,8 @@ const homepage = defineType({
     }),
     defineField({ name: "finalCTATitle", title: "Final CTA title", type: "string" }),
     defineField({ name: "finalCTABody", title: "Final CTA body", type: "text", rows: 3 }),
-    defineField({ name: "finalCTAButtonText", title: "Final CTA button text", type: "string" })
+    defineField({ name: "finalCTAButtonText", title: "Final CTA button text", type: "string" }),
+    colorStyleField("finalCTAAccentColor", "Final CTA accent color")
   ]
 });
 
@@ -575,10 +612,13 @@ const workPage = defineType({
   type: "document",
   fields: [
     defineField({ name: "pageLabel", title: "Page label", type: "string" }),
+    colorStyleField("pageAccentColor", "Page label accent color"),
     defineField({ name: "pageTitle", title: "Page title", type: "string" }),
     defineField({ name: "introCopy", title: "Intro copy", type: "text", rows: 4 }),
+    colorStyleField("caseStudiesSectionAccentColor", "Case studies section accent color"),
     defineField({ name: "caseStudiesSectionTitle", title: "Case studies section title", type: "string" }),
     defineField({ name: "caseStudiesSectionSubtitle", title: "Case studies section subtitle", type: "text", rows: 3 }),
+    colorStyleField("motionSectionAccentColor", "Motion section accent color"),
     defineField({ name: "motionSectionTitle", title: "Motion section title", type: "string" }),
     defineField({ name: "motionSectionSubtitle", title: "Motion section subtitle", type: "text", rows: 3 }),
     defineField({
@@ -713,14 +753,17 @@ const contextPage = defineType({
   type: "document",
   fields: [
     defineField({ name: "pageLabel", title: "Page label", type: "string" }),
+    colorStyleField("pageAccentColor", "Page label accent color"),
     defineField({ name: "pageTitle", title: "Page title", type: "string" }),
     defineField({ name: "portraitImage", title: "Portrait image", type: "imageAssetValue" }),
     defineField({ name: "portraitName", title: "Portrait name", type: "string" }),
     defineField({ name: "portraitLocation", title: "Portrait location", type: "string" }),
     defineField({ name: "portraitRole", title: "Portrait role", type: "string" }),
     defineField({ name: "personHeading", title: "Person heading", type: "string" }),
+    colorStyleField("personAccentColor", "The Person Behind It accent color"),
     defineField({ name: "personBody", title: "Person body", type: "array", of: [portableTextBlock] }),
     defineField({ name: "whyHeading", title: "Why heading", type: "string" }),
+    colorStyleField("whyAccentColor", "Why This Exists accent color"),
     defineField({ name: "whyBody", title: "Why body", type: "array", of: [portableTextBlock] }),
     defineField({
       name: "whyRows",
@@ -737,12 +780,14 @@ const makeSomethingPage = defineType({
   type: "document",
   fields: [
     defineField({ name: "pageLabel", title: "Page label", type: "string" }),
+    colorStyleField("pageAccentColor", "Page label accent color"),
     defineField({ name: "pageTitle", title: "Page title", type: "string" }),
     defineField({ name: "introCopy", title: "Intro copy", type: "text", rows: 3 }),
     defineField({ name: "contactEmail", title: "Contact email", type: "string" }),
     defineField({ name: "emailHelperText", title: "Email helper text", type: "string" }),
     defineField({ name: "formIntro", title: "Form intro", type: "text", rows: 4 }),
     defineField({ name: "inquiryLabel", title: "Inquiry label", type: "string" }),
+    colorStyleField("contactAccentColor", "Form and contact accent color"),
     defineField({ name: "inquiryTitle", title: "Inquiry title", type: "string" }),
     defineField({ name: "bestForBody", title: "Best for copy", type: "array", of: [portableTextBlock] }),
     defineField({ name: "contactBody", title: "Contact helper copy", type: "array", of: [portableTextBlock] }),

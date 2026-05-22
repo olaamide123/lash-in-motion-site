@@ -1,7 +1,15 @@
 import { CtaControl } from "@/components/CtaControl";
 import { SiteFrame } from "@/components/SiteFrame";
 import { VideoFigure } from "@/components/VideoFigure";
-import { homeCaseClass, homeMotionClass, renderFinalCtaTitle, splitPageTitleLines } from "@/lib/cms-helpers";
+import {
+  getMarkerColorClass,
+  getTextColorClass,
+  homeCaseClass,
+  homeMotionClass,
+  joinClasses,
+  renderFinalCtaTitle,
+  splitPageTitleLines
+} from "@/lib/cms-helpers";
 import { resolveMotionVideo } from "@/lib/media";
 import { getHomepage } from "@/lib/sanity/fetch";
 
@@ -14,8 +22,6 @@ export default async function HomePage() {
   const finalTitle = renderFinalCtaTitle(homepage.finalCTATitle || "Have something worth moving?");
   const heroMeta = homepage.heroMetaLine || "Chicago — Motion + Editorial — Reel 2026";
   const [whatMovesLead, whatMovesAccent] = splitPageTitleLines(homepage.whatMovesTitle || "What Moves Here.");
-  const moveTrackColors = ["red", "blue", "yellow"] as const;
-
   return (
     <SiteFrame currentPath="/">
       <main id="top">
@@ -41,7 +47,11 @@ export default async function HomePage() {
                       {index === lines.length - 1 ? (
                         <>
                           {" "}
-                          <span className="ed-italic red">{homepage.heroAccentWord}</span>
+                          <span
+                            className={joinClasses("ed-italic", getTextColorClass(homepage.heroAccentColor))}
+                          >
+                            {homepage.heroAccentWord}
+                          </span>
                         </>
                       ) : (
                         <br />
@@ -79,10 +89,14 @@ export default async function HomePage() {
             <div className="section-head">
               <div>
                 <div className="section-eyebrow">
-                  <span className="red-square"></span>
-                  <span className="mono">{homepage.selectedWorkLabel}</span>
+                  <span className={joinClasses("red-square", getMarkerColorClass(homepage.selectedWorkEyebrowColor))}></span>
+                  <span className={joinClasses("mono", getTextColorClass(homepage.selectedWorkEyebrowColor))}>
+                    {homepage.selectedWorkLabel}
+                  </span>
                 </div>
-                <h2 className="section-title">{homepage.selectedWorkTitle}</h2>
+                <h2 className={joinClasses("section-title", getTextColorClass(homepage.selectedWorkEyebrowColor))}>
+                  {homepage.selectedWorkTitle}
+                </h2>
                 {homepage.selectedWorkSubtitle ? (
                   <p className="section-subtitle">{homepage.selectedWorkSubtitle}</p>
                 ) : null}
@@ -111,12 +125,16 @@ export default async function HomePage() {
             <div className="work-section" data-section="studies">
               <div className="work-section-head">
                 <div className="section-stack">
-                  <div className="section-kicker">{homepage.caseStudiesSectionKicker || "The Full Story."}</div>
-                  <div className="work-section-eyebrow">
-                    <span className="red-square"></span>
-                    <span className="mono">{homepage.caseStudiesSectionEyebrow || "Case Studies"}</span>
+                  <div className={joinClasses("section-kicker", getTextColorClass(homepage.caseStudiesSectionAccentColor))}>
+                    {homepage.caseStudiesSectionKicker || "The Full Story."}
                   </div>
-                  <h3 className="work-section-title">
+                  <div className="work-section-eyebrow">
+                    <span className={joinClasses("red-square", getMarkerColorClass(homepage.caseStudiesSectionAccentColor))}></span>
+                    <span className={joinClasses("mono", getTextColorClass(homepage.caseStudiesSectionAccentColor))}>
+                      {homepage.caseStudiesSectionEyebrow || "Case Studies"}
+                    </span>
+                  </div>
+                  <h3 className={joinClasses("work-section-title", getTextColorClass(homepage.caseStudiesSectionAccentColor))}>
                     {homepage.caseStudiesSectionTitle || "Projects That Made the Cut."}
                   </h3>
                 </div>
@@ -181,16 +199,20 @@ export default async function HomePage() {
             <div className="work-section" data-section="motion">
               <div className="work-section-head">
                 <div className="section-stack">
-                  <div className="section-kicker">{homepage.motionSectionKicker || "Shorter Work."}</div>
+                  <div className={joinClasses("section-kicker", getTextColorClass(homepage.motionSectionAccentColor))}>
+                    {homepage.motionSectionKicker || "Shorter Work."}
+                  </div>
                   <div className="work-section-eyebrow">
                     <span className="brand-swatches sm" aria-hidden="true">
                       <i className="r"></i>
                       <i className="b"></i>
                       <i className="y"></i>
                     </span>
-                    <span className="mono">{homepage.motionSectionEyebrow || "Standalone Pieces"}</span>
+                    <span className={joinClasses("mono", getTextColorClass(homepage.motionSectionAccentColor))}>
+                      {homepage.motionSectionEyebrow || "Standalone Pieces"}
+                    </span>
                   </div>
-                  <h3 className="work-section-title">
+                  <h3 className={joinClasses("work-section-title", getTextColorClass(homepage.motionSectionAccentColor))}>
                     {homepage.motionSectionTitle || "Motion, spots, and standalone pieces."}
                   </h3>
                 </div>
@@ -240,8 +262,10 @@ export default async function HomePage() {
           <span className="why-mark" aria-hidden="true"></span>
           <div className="container">
             <div className="section-eyebrow">
-              <span className="red-square"></span>
-              <span className="mono">{homepage.whyThisExistsLabel}</span>
+              <span className={joinClasses("red-square", getMarkerColorClass(homepage.whyThisExistsAccentColor))}></span>
+              <span className={joinClasses("mono", getTextColorClass(homepage.whyThisExistsAccentColor))}>
+                {homepage.whyThisExistsLabel}
+              </span>
             </div>
             <div className="why-grid">
               <div className="why-body">
@@ -261,15 +285,17 @@ export default async function HomePage() {
             <div className="section-head">
               <div>
                 <div className="section-eyebrow">
-                  <span className="red-square"></span>
-                  <span className="mono">{homepage.whatMovesLabel}</span>
+                  <span className={joinClasses("red-square", getMarkerColorClass(homepage.whatMovesAccentColor))}></span>
+                  <span className={joinClasses("mono", getTextColorClass(homepage.whatMovesAccentColor))}>
+                    {homepage.whatMovesLabel}
+                  </span>
                 </div>
                 <h2 className="section-title">
                   {whatMovesLead}
                   {whatMovesAccent ? (
                     <>
                       {" "}
-                      <span className="red">{whatMovesAccent}</span>
+                      <span className={getTextColorClass(homepage.whatMovesAccentColor)}>{whatMovesAccent}</span>
                     </>
                   ) : null}
                 </h2>
@@ -285,7 +311,11 @@ export default async function HomePage() {
               </span>
 
               {whatMovesItems.map((item, index) => (
-                <div className="moves-track" data-color={moveTrackColors[index % moveTrackColors.length]} key={`${item.title}-${index}`}>
+                <div
+                  className="moves-track"
+                  data-color={item.accentColor === "default" ? undefined : item.accentColor}
+                  key={`${item.title}-${index}`}
+                >
                   <span className="moves-track-marker" aria-hidden="true"></span>
                   <div className="moves-track-num">{item.label || `Track ${String(index + 1).padStart(2, "0")}`}</div>
                   <h3 className="moves-name">{item.title}</h3>
@@ -309,7 +339,11 @@ export default async function HomePage() {
                   ) : (
                     <>
                       {finalTitle.lead}
-                      <span className="italic ed-italic">{finalTitle.accent}</span>
+                      <span
+                        className={joinClasses("italic ed-italic", getTextColorClass(homepage.finalCTAAccentColor))}
+                      >
+                        {finalTitle.accent}
+                      </span>
                     </>
                   )}
                 </h2>
@@ -318,7 +352,8 @@ export default async function HomePage() {
                 <p className="body">{homepage.finalCTABody}</p>
                 <div className="contact-cta-row">
                   <button type="button" className="btn-ghost js-open-reel">
-                    <span className="red-square"></span> {homepage.finalCTAButtonText || homepage.mainReelButtonText}
+                    <span className={joinClasses("red-square", getMarkerColorClass(homepage.finalCTAAccentColor))}></span>{" "}
+                    {homepage.finalCTAButtonText || homepage.mainReelButtonText}
                   </button>
                 </div>
               </div>

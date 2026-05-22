@@ -1,6 +1,6 @@
 import { SiteFrame } from "@/components/SiteFrame";
 import { VideoFigure } from "@/components/VideoFigure";
-import { splitPageTitleLines } from "@/lib/cms-helpers";
+import { getMarkerColorClass, getTextColorClass, joinClasses, splitPageTitleLines } from "@/lib/cms-helpers";
 import { resolveMotionVideo } from "@/lib/media";
 import { getWorkPage } from "@/lib/sanity/fetch";
 import type { MotionPiece } from "@/lib/types";
@@ -31,10 +31,12 @@ export default async function WorkPage() {
             <div className="page-hero-inner">
               <div>
                 <div className="page-kicker">
-                  <span className="red-square"></span>
-                  <span className="mono">{workPage.pageLabel}</span>
+                  <span className={joinClasses("red-square", getMarkerColorClass(workPage.pageAccentColor))}></span>
+                  <span className={joinClasses("mono", getTextColorClass(workPage.pageAccentColor))}>
+                    {workPage.pageLabel}
+                  </span>
                 </div>
-                <h1 className="page-title">
+                <h1 className={joinClasses("page-title", getTextColorClass(workPage.pageAccentColor))}>
                   <span className="page-title-line">{titleLineOne}</span>
                   {titleLineTwo ? <span className="page-title-line">{titleLineTwo}</span> : null}
                 </h1>
@@ -72,12 +74,18 @@ export default async function WorkPage() {
             <div className="work-section" data-section="studies">
               <div className="section-head">
                 <div className="section-stack">
-                  <div className="section-kicker">The Full Story.</div>
-                  <div className="section-eyebrow">
-                    <span className="red-square"></span>
-                    <span className="mono">Case Studies</span>
+                  <div className={joinClasses("section-kicker", getTextColorClass(workPage.caseStudiesSectionAccentColor))}>
+                    The Full Story.
                   </div>
-                  <h2 className="section-title">{workPage.caseStudiesSectionTitle}</h2>
+                  <div className="section-eyebrow">
+                    <span className={joinClasses("red-square", getMarkerColorClass(workPage.caseStudiesSectionAccentColor))}></span>
+                    <span className={joinClasses("mono", getTextColorClass(workPage.caseStudiesSectionAccentColor))}>
+                      Case Studies
+                    </span>
+                  </div>
+                  <h2 className={joinClasses("section-title", getTextColorClass(workPage.caseStudiesSectionAccentColor))}>
+                    {workPage.caseStudiesSectionTitle}
+                  </h2>
                 </div>
                 <p className="section-intro">{workPage.caseStudiesSectionSubtitle}</p>
               </div>
@@ -119,16 +127,22 @@ export default async function WorkPage() {
             <div className="work-section" data-section="motion">
               <div className="section-head">
                 <div className="section-stack">
-                  <div className="section-kicker">Shorter Work.</div>
+                  <div className={joinClasses("section-kicker", getTextColorClass(workPage.motionSectionAccentColor))}>
+                    Shorter Work.
+                  </div>
                   <div className="section-eyebrow">
                     <span className="brand-swatches sm" aria-hidden="true">
                       <i className="r"></i>
                       <i className="b"></i>
                       <i className="y"></i>
                     </span>
-                    <span className="mono">Standalone Pieces</span>
+                    <span className={joinClasses("mono", getTextColorClass(workPage.motionSectionAccentColor))}>
+                      Standalone Pieces
+                    </span>
                   </div>
-                  <h2 className="section-title">{workPage.motionSectionTitle}</h2>
+                  <h2 className={joinClasses("section-title", getTextColorClass(workPage.motionSectionAccentColor))}>
+                    {workPage.motionSectionTitle}
+                  </h2>
                 </div>
                 <p className="section-intro">{workPage.motionSectionSubtitle}</p>
               </div>

@@ -1,4 +1,5 @@
 import { CtaControl } from "@/components/CtaControl";
+import { getMarkerColorClass, joinClasses } from "@/lib/cms-helpers";
 import { resolveImageSrc } from "@/lib/media";
 import type { SiteSettings } from "@/lib/types";
 
@@ -54,11 +55,11 @@ export function Header({ settings, currentPath }: HeaderProps) {
         </nav>
         <div className="nav-right">
           <span className="palette" aria-hidden="true">
-            <i className="a"></i>
+            <i className={joinClasses("a", getMarkerColorClass(settings.defaultAccentColor))}></i>
             <i className="b"></i>
             <i className="c"></i>
           </span>
-          <CtaControl cta={settings.primaryCTA} className="nav-cta" />
+          <CtaControl cta={settings.primaryCTA} className={joinClasses("nav-cta", getMarkerColorClass(settings.defaultAccentColor))} />
         </div>
       </div>
     </header>

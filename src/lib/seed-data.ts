@@ -54,6 +54,7 @@ export function pt(paragraphs: string[]): RichTextBlock[] {
 export const siteSettings: SiteSettings = {
   siteTitle: "Lash In Motion",
   logoText: "Lash in Motion",
+  defaultAccentColor: "red",
   roundLogo: {
     src: "/assets/images/lim-round-mark.png",
     alt: "Lash in Motion round mark"
@@ -94,17 +95,20 @@ export const whatMovesItems: WhatMovesItem[] = [
   withKey("what-moves", "motion-design", {
     title: "Motion Design",
     label: "Track 01",
-    body: "Animation, typography, compositing, explainers, and visual systems designed to communicate clearly and move with purpose."
+    body: "Animation, typography, compositing, explainers, and visual systems designed to communicate clearly and move with purpose.",
+    accentColor: "red"
   }),
   withKey("what-moves", "editing-and-storytelling", {
     title: "Editing & Storytelling",
     label: "Track 02",
-    body: "Projects shaped through pacing, structure, sound, and editorial decisions that help ideas land the way they are meant to."
+    body: "Projects shaped through pacing, structure, sound, and editorial decisions that help ideas land the way they are meant to.",
+    accentColor: "blue"
   }),
   withKey("what-moves", "campaign-and-advocacy", {
     title: "Campaign & Advocacy",
     label: "Track 03",
-    body: "Political, nonprofit, and purpose-driven work built to connect with people, simplify complexity, and create momentum."
+    body: "Political, nonprofit, and purpose-driven work built to connect with people, simplify complexity, and create momentum.",
+    accentColor: "yellow"
   })
 ];
 
@@ -112,6 +116,7 @@ export const homepage: HomepageSeed = {
   heroLabel: "Reel 2026",
   heroHeadline: "Motion that knows\nwhat to",
   heroAccentWord: "leave out.",
+  heroAccentColor: "red",
   heroBody: "Motion design, editing, and storytelling built with clarity, rhythm, and enough restraint to know when less is doing more.",
   heroMetaLine: "Chicago — Motion + Editorial — Reel 2026",
   heroPrimaryCTA: {
@@ -127,21 +132,25 @@ export const homepage: HomepageSeed = {
   },
   mainReelButtonText: "See It.",
   selectedWorkLabel: "Selected Work",
+  selectedWorkEyebrowColor: "default",
   selectedWorkTitle: "Selected Work.",
   selectedWorkSubtitle: "Selected Work.",
   selectedWorkIntro: "A selection of motion, editing, and visual storytelling projects shaped through research, rhythm, and a healthy amount of problem solving. Case studies first. Shorter pieces below.",
   caseStudiesSectionKicker: "The Full Story.",
   caseStudiesSectionEyebrow: "Case Studies",
+  caseStudiesSectionAccentColor: "default",
   caseStudiesSectionTitle: "Projects That Made the Cut.",
   caseStudiesSectionIntro: "Some projects benefit from a little more context.",
   motionSectionKicker: "Shorter Work.",
   motionSectionEyebrow: "Standalone Pieces",
+  motionSectionAccentColor: "default",
   motionSectionTitle: "Motion, spots, and standalone pieces.",
   motionSectionIntro:
     "Shorter work that still carries the same attention to pace, clarity, and editorial shape.",
   selectedCaseStudies: ["move", "carrum-health-patient-guide"],
   selectedMotionPieces: ["adge-ai", "caymall", "hcg-smores", "dirt-road"],
   whyThisExistsLabel: "Why This Exists.",
+  whyThisExistsAccentColor: "default",
   whyThisExistsTitle: "Why This Exists.",
   whyThisExistsBody: pt([
     "No one is ever going to care more about a project than the people behind it. If the energy is not there, it shows. Creative work has a way of showing exactly where people stopped paying attention.",
@@ -149,20 +158,25 @@ export const homepage: HomepageSeed = {
     "The goal is never just to make something polished. Plenty of polished things still miss the point. The goal is to make something thoughtful, clear, and worth paying attention to."
   ]),
   whatMovesLabel: "Three Tracks",
+  whatMovesAccentColor: "red",
   whatMovesTitle: "What Moves Here.",
   whatMovesIntro: "Projects can begin in any of them and usually end somewhere between all three.",
   whatMovesItems,
   finalCTATitle: "Have something worth moving?",
   finalCTABody: "For campaign films, motion, editorial work, and projects where getting it right actually matters.",
-  finalCTAButtonText: "See It."
+  finalCTAButtonText: "See It.",
+  finalCTAAccentColor: "default"
 };
 
 export const workPage: WorkPageSeed = {
   pageLabel: "Work",
+  pageAccentColor: "default",
   pageTitle: "Selected Work.",
   introCopy: "A selection of motion, editing, and visual storytelling projects shaped through research, rhythm, and a healthy amount of problem solving. Case studies first. Shorter pieces below.",
+  caseStudiesSectionAccentColor: "default",
   caseStudiesSectionTitle: "Projects That Made the Cut.",
   caseStudiesSectionSubtitle: "Some projects benefit from a little more context.",
+  motionSectionAccentColor: "default",
   motionSectionTitle: "Motion, spots, and standalone pieces.",
   motionSectionSubtitle: "Shorter work that still carries the same attention to pace, clarity, and editorial shape.",
   featuredCaseStudies: ["move", "carrum-health-patient-guide", "volley"],
@@ -721,6 +735,7 @@ export const motionPieces: MotionPiece[] = [
 
 export const contextPage: ContextPage = {
   pageLabel: "Context",
+  pageAccentColor: "default",
   pageTitle: "The Person Behind It",
   portraitImage: {
     src: "/assets/images/Greg_Green.jpeg",
@@ -730,6 +745,7 @@ export const contextPage: ContextPage = {
   portraitLocation: "Chicago",
   portraitRole: "Motion + Editorial",
   personHeading: "The Person Behind It",
+  personAccentColor: "default",
   personBody: pt([
     "More than a decade in motion design has meant working across a wide range of creative challenges, industries, timelines, and expectations. Some carefully planned. Some held together by deadlines and determination.",
     "Projects have ranged from political campaigns and advocacy efforts to restaurant advertising, educational content, explainers, presentations, promos, and commercial work with very little time and very high expectations. Some projects need energy and momentum. Others need restraint, clarity, or the discipline to simplify something complicated without making it feel simplistic. And then there are some that simply need to be forgotten.",
@@ -737,6 +753,7 @@ export const contextPage: ContextPage = {
     "The strongest work tends to come from projects where people are genuinely invested in the outcome. Creative work benefits from clear communication, honest feedback, and people who care enough to push for better instead of simply checking the box. Not every project calls for that level of involvement. The ones that do are usually the interesting ones."
   ]),
   whyHeading: "Why This Exists.",
+  whyAccentColor: "default",
   whyBody: pt([
     "No one is ever going to care more about a project than the people behind it. If the energy is not there, it shows. Creative work has a way of showing exactly where people stopped paying attention.",
     "The best results tend to happen when ideas are met with curiosity, enthusiasm, and a willingness to stay engaged in the process. Projects are developed from concept through final delivery with a hands-on approach that keeps momentum intact from beginning to end. Sometimes that means solving problems before they become problems. Sometimes it means figuring things out in real time.",
@@ -768,6 +785,7 @@ export const contextPage: ContextPage = {
 
 export const makeSomethingPage: MakeSomethingPage = {
   pageLabel: "Make Something.",
+  pageAccentColor: "default",
   pageTitle: "Have something worth moving?",
   introCopy: "For campaign films, brand motion, editorial pieces, and projects that need clarity from concept to final delivery.",
   contactEmail: "create@lashinmotion.com",
@@ -795,6 +813,7 @@ export const makeSomethingPage: MakeSomethingPage = {
     "Flexible"
   ],
   inquiryLabel: "Inquiry",
+  contactAccentColor: "blue",
   inquiryTitle: "Tell me what needs to move.",
   bestForBody: pt([
     "Campaign films, motion systems, launch pieces, explainers, and editorial projects that need more than surface polish."

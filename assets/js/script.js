@@ -80,6 +80,11 @@
       function setClick(label) { if (clickEl) clickEl.textContent = label; }
       function markPlaying(isPlaying) { frame.classList.toggle('is-playing', !!isPlaying); }
       function clearLoading() { frame.classList.remove('is-loading'); }
+      function syncDuration() {
+        if (timeEl && isFinite(video.duration) && video.duration > 0) {
+          timeEl.textContent = '00:00 / ' + fmt(video.duration);
+        }
+      }
       function setMutedState(isMuted) {
         video.muted = isMuted;
         video.defaultMuted = isMuted;
@@ -87,9 +92,13 @@
         else video.removeAttribute('muted');
       }
 
+      video.addEventListener('loadedmetadata', function () {
+        clearLoading();
+        syncDuration();
+      });
       video.addEventListener('loadeddata', function () {
         clearLoading();
-        if (timeEl) timeEl.textContent = '00:00 / ' + fmt(video.duration);
+        syncDuration();
       });
       video.addEventListener('canplay', clearLoading);
       video.addEventListener('error', function () { frame.classList.add('is-loading'); });
@@ -108,6 +117,11 @@
       setMutedState(true);
       setHint('Hover to preview');
       setClick('Click for sound');
+
+      if (video.readyState >= 1) {
+        clearLoading();
+        syncDuration();
+      }
 
       var wantsPlaying = false;
       function startHoverPlay() {

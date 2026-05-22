@@ -73,7 +73,19 @@
 
     .mono { font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink); }
     .mono-soft { font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-mute); }
+    .text-muted { color: var(--ink-mute); }
+    .text-red { color: var(--red); }
+    .text-blue { color: var(--blue); }
+    .text-yellow { color: var(--yellow); }
+    .text-black { color: var(--ink); }
+    .text-white { color: #fff; }
     .red-square { display: inline-block; width: 7px; height: 7px; background: var(--red); vertical-align: 1px; margin-right: 8px; }
+    .marker-muted { background: var(--ink-mute) !important; }
+    .marker-red { background: var(--red) !important; }
+    .marker-blue { background: var(--blue) !important; }
+    .marker-yellow { background: var(--yellow) !important; }
+    .marker-black { background: var(--ink) !important; }
+    .marker-white { background: #fff !important; }
     .sq-blue { display: inline-block; width: 6px; height: 6px; background: var(--blue); }
     .sq-yellow { display: inline-block; width: 6px; height: 6px; background: var(--yellow); }
     .sq-red { display: inline-block; width: 6px; height: 6px; background: var(--red); }
@@ -130,6 +142,11 @@
     .nav-cta { display: inline-flex; align-items: center; gap: 10px; padding: 11px 16px; background: var(--ink); color: var(--bg); font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.2em; text-transform: uppercase; transition: background 220ms var(--ease); }
     .nav-cta:hover { background: var(--red); color: #fff; }
     .nav-cta .dot { width: 6px; height: 6px; background: var(--red); display: inline-block; }
+    .nav-cta.marker-muted .dot { background: var(--ink-mute); }
+    .nav-cta.marker-blue .dot { background: var(--blue); }
+    .nav-cta.marker-yellow .dot { background: var(--yellow); }
+    .nav-cta.marker-black .dot { background: var(--ink); }
+    .nav-cta.marker-white .dot { background: #fff; }
     .nav-cta:hover .dot { background: #fff; }
 
     /* ---------- Brand motion-system graphics (playheads, timelines, paths) ---------- */
@@ -1096,6 +1113,9 @@
     }
     .moves-track[data-color="blue"]   .moves-track-marker { background: var(--blue); }
     .moves-track[data-color="yellow"] .moves-track-marker { background: var(--yellow); }
+    .moves-track[data-color="muted"]  .moves-track-marker { background: var(--ink-mute); }
+    .moves-track[data-color="black"]  .moves-track-marker { background: var(--ink); }
+    .moves-track[data-color="white"]  .moves-track-marker { background: #fff; }
     .moves-track:hover .moves-track-marker { transform: translateX(28px); }
 
     /* Number column */
@@ -1123,6 +1143,9 @@
     .moves-track[data-color="red"]:hover    .moves-name::after { background: var(--red); }
     .moves-track[data-color="blue"]:hover   .moves-name::after { background: var(--blue); }
     .moves-track[data-color="yellow"]:hover .moves-name::after { background: var(--yellow); }
+    .moves-track[data-color="muted"]:hover  .moves-name::after { background: var(--ink-mute); }
+    .moves-track[data-color="black"]:hover  .moves-name::after { background: var(--ink); }
+    .moves-track[data-color="white"]:hover  .moves-name::after { background: #fff; }
 
     /* Description column */
     .moves-desc {

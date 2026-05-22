@@ -1,4 +1,4 @@
-import type { CTAItem, RelatedVideo } from "@/lib/types";
+import type { CTAItem, ColorStyle, RelatedVideo } from "@/lib/types";
 
 export function isReelCta(cta?: CTAItem) {
   if (!cta) return false;
@@ -35,6 +35,33 @@ export const HOME_MOTION_CLASS: Record<string, string> = {
 
 export function homeCaseClass(slug: string, index: number) {
   return HOME_CASE_CLASS[slug] || (index % 2 === 0 ? "work work--move" : "work work--volley");
+}
+
+export function joinClasses(...classes: Array<string | false | null | undefined>) {
+  return classes.filter(Boolean).join(" ");
+}
+
+export function getTextColorClass(colorStyle?: ColorStyle) {
+  switch (colorStyle) {
+    case "muted":
+      return "text-muted";
+    case "red":
+      return "text-red";
+    case "blue":
+      return "text-blue";
+    case "yellow":
+      return "text-yellow";
+    case "black":
+      return "text-black";
+    case "white":
+      return "text-white";
+    default:
+      return "";
+  }
+}
+
+export function getMarkerColorClass(colorStyle?: ColorStyle) {
+  return colorStyle && colorStyle !== "default" ? `marker-${colorStyle}` : "";
 }
 
 export function groupRelatedVideos(videos: RelatedVideo[]) {

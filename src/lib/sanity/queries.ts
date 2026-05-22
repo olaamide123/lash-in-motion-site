@@ -76,7 +76,8 @@ const relatedVideoFields = `
 const whatMovesItemFields = `
   label,
   title,
-  body
+  body,
+  accentColor
 `;
 
 export const motionPieceFields = `
@@ -167,6 +168,7 @@ export const siteSettingsQuery = groq`
   *[_type == "siteSettings"][0]{
     siteTitle,
     logoText,
+    defaultAccentColor,
     roundLogo{
       ${imageFields}
     },
@@ -198,6 +200,7 @@ export const homepageQuery = groq`
     heroLabel,
     heroHeadline,
     heroAccentWord,
+    heroAccentColor,
     heroBody,
     heroMetaLine,
     heroPrimaryCTA{
@@ -210,15 +213,18 @@ export const homepageQuery = groq`
     },
     mainReelButtonText,
     selectedWorkLabel,
+    selectedWorkEyebrowColor,
     selectedWorkTitle,
     selectedWorkSubtitle,
     selectedWorkIntro,
     caseStudiesSectionKicker,
     caseStudiesSectionEyebrow,
+    caseStudiesSectionAccentColor,
     caseStudiesSectionTitle,
     caseStudiesSectionIntro,
     motionSectionKicker,
     motionSectionEyebrow,
+    motionSectionAccentColor,
     motionSectionTitle,
     motionSectionIntro,
     selectedCaseStudies[]->{
@@ -228,11 +234,13 @@ export const homepageQuery = groq`
       ${motionPieceFields}
     },
     whyThisExistsLabel,
+    whyThisExistsAccentColor,
     whyThisExistsTitle,
     whyThisExistsBody[]{
       ${portableTextFields}
     },
     whatMovesLabel,
+    whatMovesAccentColor,
     whatMovesTitle,
     whatMovesIntro,
     "whatMovesItems": select(
@@ -248,17 +256,21 @@ export const homepageQuery = groq`
     ),
     finalCTATitle,
     finalCTABody,
-    finalCTAButtonText
+    finalCTAButtonText,
+    finalCTAAccentColor
   }
 `;
 
 export const workPageQuery = groq`
   *[_type == "workPage"][0]{
     pageLabel,
+    pageAccentColor,
     pageTitle,
     introCopy,
+    caseStudiesSectionAccentColor,
     caseStudiesSectionTitle,
     caseStudiesSectionSubtitle,
+    motionSectionAccentColor,
     motionSectionTitle,
     motionSectionSubtitle,
     motionGroups[]{
@@ -279,6 +291,7 @@ export const workPageQuery = groq`
 export const contextPageQuery = groq`
   *[_type == "contextPage"][0]{
     pageLabel,
+    pageAccentColor,
     pageTitle,
     portraitImage{
       ${imageFields}
@@ -287,10 +300,12 @@ export const contextPageQuery = groq`
     portraitLocation,
     portraitRole,
     personHeading,
+    personAccentColor,
     personBody[]{
       ${portableTextFields}
     },
     whyHeading,
+    whyAccentColor,
     whyBody[]{
       ${portableTextFields}
     },
@@ -303,6 +318,7 @@ export const contextPageQuery = groq`
 export const makeSomethingPageQuery = groq`
   *[_type == "makeSomethingPage"][0]{
     pageLabel,
+    pageAccentColor,
     pageTitle,
     introCopy,
     contactEmail,
@@ -312,6 +328,7 @@ export const makeSomethingPageQuery = groq`
     budgetRanges,
     timelineOptions,
     inquiryLabel,
+    contactAccentColor,
     inquiryTitle,
     bestForBody[]{
       ${portableTextFields}

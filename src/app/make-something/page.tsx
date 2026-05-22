@@ -1,5 +1,6 @@
 import { RichTextContent } from "@/components/RichTextContent";
 import { SiteFrame } from "@/components/SiteFrame";
+import { getMarkerColorClass, getTextColorClass, joinClasses } from "@/lib/cms-helpers";
 import { getMakeSomethingPage } from "@/lib/sanity/fetch";
 
 const web3FormsKey = "5facc282-85fb-4c8f-bad3-24d875230b73";
@@ -20,15 +21,17 @@ export default async function MakeSomethingPage() {
             <div className="page-hero-inner">
               <div>
                 <div className="page-kicker">
-                  <span className="red-square"></span>
-                  <span className="mono">{page.pageLabel}</span>
+                  <span className={joinClasses("red-square", getMarkerColorClass(page.pageAccentColor))}></span>
+                  <span className={joinClasses("mono", getTextColorClass(page.pageAccentColor))}>
+                    {page.pageLabel}
+                  </span>
                 </div>
-                <h1 className="page-title">{page.pageTitle}</h1>
+                <h1 className={joinClasses("page-title", getTextColorClass(page.pageAccentColor))}>{page.pageTitle}</h1>
               </div>
               <div className="page-meta-stack">
                 <p className="page-intro">{page.introCopy}</p>
-                <a className="contact-email" href={`mailto:${page.contactEmail}`}>
-                  <span className="red-square"></span>
+                <a className={joinClasses("contact-email", getTextColorClass(page.contactAccentColor))} href={`mailto:${page.contactEmail}`}>
+                  <span className={joinClasses("red-square", getMarkerColorClass(page.contactAccentColor))}></span>
                   {page.contactEmail}
                 </a>
                 {page.emailHelperText ? <p className="page-body">{page.emailHelperText}</p> : null}
@@ -42,10 +45,14 @@ export default async function MakeSomethingPage() {
             <div className="contact-layout">
               <div className="contact-panel">
                 <div className="section-eyebrow">
-                  <span className="red-square"></span>
-                  <span className="mono">{page.inquiryLabel}</span>
+                  <span className={joinClasses("red-square", getMarkerColorClass(page.contactAccentColor))}></span>
+                  <span className={joinClasses("mono", getTextColorClass(page.contactAccentColor))}>
+                    {page.inquiryLabel}
+                  </span>
                 </div>
-                <h2 className="context-title">{page.inquiryTitle}</h2>
+                <h2 className={joinClasses("context-title", getTextColorClass(page.contactAccentColor))}>
+                  {page.inquiryTitle}
+                </h2>
                 <p className="contact-copy">{page.formIntro}</p>
                 <div className="timeline-list">
                   <div className="timeline-row">
@@ -54,9 +61,10 @@ export default async function MakeSomethingPage() {
                     </div>
                     <RichTextContent value={bestForBody} className="prose-stack" />
                   </div>
-                  <div className="timeline-row" data-tone="blue">
+                  <div className="timeline-row">
                     <div className="timeline-row-label">
-                      <span className="marker"></span>Contact
+                      <span className={joinClasses("marker", getMarkerColorClass(page.contactAccentColor))}></span>
+                      Contact
                     </div>
                     <RichTextContent value={contactBody} className="prose-stack" />
                   </div>
