@@ -1,4 +1,18 @@
-import { defineArrayMember, defineField, defineType } from "sanity";
+import { defineArrayMember, defineField, defineType, type StringRule } from "sanity";
+
+/** Accepts https?:// URLs or root-relative local assets under /assets/ */
+const MEDIA_PATH_PATTERN = /^(https?:\/\/|\/assets\/)/;
+
+function isValidMediaPath(value: unknown) {
+  return typeof value === "string" && MEDIA_PATH_PATTERN.test(value);
+}
+
+const mediaPathValidation = (rule: StringRule) =>
+  rule.custom((value) => {
+    if (value === undefined || value === null || value === "") return true;
+    if (isValidMediaPath(value)) return true;
+    return 'Use a full URL (http:// or https://) or a local path starting with /assets/ (e.g. /assets/images/photo.jpeg).';
+  });
 
 const portableTextBlock = defineArrayMember({
   type: "block",
@@ -145,8 +159,9 @@ const imageAssetValue = defineType({
     defineField({
       name: "src",
       title: "Fallback or external image URL",
-      type: "url",
-      description: "Useful for local assets during migration or externally hosted media."
+      type: "string",
+      description: "Full URL (https://…) or local path (/assets/images/…). Used during migration or external hosting.",
+      validation: mediaPathValidation
     }),
     defineField({
       name: "alt",
@@ -189,8 +204,9 @@ const videoAssetValue = defineType({
     defineField({
       name: "videoUrl",
       title: "Video URL",
-      type: "url",
-      description: "Use for local migrated assets or externally hosted MP4 links."
+      type: "string",
+      description: "Full URL (https://…) or local path (/assets/videos/…). Used for migrated files or external MP4 links.",
+      validation: mediaPathValidation
     }),
     defineField({
       name: "embedUrl",
@@ -650,7 +666,13 @@ const motionPiece = defineType({
     defineField({ name: "category", title: "Category", type: "string" }),
     defineField({ name: "description", title: "Description", type: "array", of: [portableTextBlock] }),
     defineField({ name: "videoFile", title: "Video", type: "videoAssetValue" }),
-    defineField({ name: "videoUrl", title: "Direct video URL", type: "url" }),
+    defineField({
+      name: "videoUrl",
+      title: "Direct video URL",
+      type: "string",
+      description: "Full URL (https://…) or local path (/assets/videos/…).",
+      validation: mediaPathValidation
+    }),
     defineField({ name: "thumbnail", title: "Thumbnail", type: "imageAssetValue" }),
     defineField({ name: "client", title: "Client", type: "string" }),
     defineField({ name: "year", title: "Year", type: "string" }),
