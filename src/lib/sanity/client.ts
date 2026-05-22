@@ -9,7 +9,8 @@ export const sanityClient = createClient({
   projectId,
   dataset,
   apiVersion,
-  useCdn: true
+  // Prefer fresh published content over Sanity CDN speed for the live site.
+  useCdn: false
 });
 
 export const imageBuilder = imageUrlBuilder(sanityClient);
