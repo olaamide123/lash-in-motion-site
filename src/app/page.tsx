@@ -220,7 +220,7 @@ export default async function HomePage() {
                     <VideoFigure
                       className={`vid ${index % 2 === 0 ? "video-scale video-scale--left" : "video-scale video-scale--right"}`}
                       media={resolveMotionVideo(piece)}
-                      topLabel={piece.video?.label || piece.title}
+                      topLabel={piece.video?.label || piece.videoFile?.label || piece.title}
                       bottomRight={piece.category}
                     />
                   </article>

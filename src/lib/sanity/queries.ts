@@ -23,7 +23,7 @@ const imageFields = `
 
 const videoFields = `
   title,
-  "videoUrlOrPath": coalesce(videoUrlOrPath, videoUrl),
+  "videoUrl": coalesce(videoUrl, videoUrlOrPath, videoFile.videoUrl),
   embedUrl,
   fit,
   meta,
@@ -86,8 +86,16 @@ export const motionPieceFields = `
     },
     defined(videoFile) => videoFile{
       ${videoFields}
+    },
+    defined(videoUrl) || defined(resolvedVideoUrl) => {
+      "videoUrl": coalesce(videoUrl, resolvedVideoUrl)
     }
   ),
+  videoFile{
+    ${videoFields}
+  },
+  videoUrl,
+  resolvedVideoUrl,
   thumbnail{
     ${imageFields}
   },

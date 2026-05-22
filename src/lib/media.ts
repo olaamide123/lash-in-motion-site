@@ -38,11 +38,11 @@ export function resolvePosterSrc(poster?: SanityImageAsset) {
 /** Resolved URL from external URL or local /assets/ path */
 export function resolveVideoSrc(video?: SanityVideoAsset) {
   if (!video) return undefined;
-  return normalizeMediaPath(video.videoUrlOrPath);
+  return normalizeMediaPath(video.videoUrl || video.videoUrlOrPath);
 }
 
 export function resolveMotionVideo(
-  piece?: Pick<MotionPiece, "video" | "title">
+  piece?: Pick<MotionPiece, "video" | "videoFile" | "videoUrl" | "resolvedVideoUrl" | "title">
 ) {
   if (!piece) return undefined;
 
@@ -50,8 +50,24 @@ export function resolveMotionVideo(
     const resolved = resolveVideoSrc(piece.video);
     return {
       ...piece.video,
-      videoUrlOrPath: resolved || piece.video.videoUrlOrPath,
+      videoUrl: resolved || piece.video.videoUrl || piece.video.videoUrlOrPath,
       title: piece.video.title || piece.title
+    } satisfies VideoAssetValue;
+  }
+
+  if (piece.videoFile) {
+    const resolved = resolveVideoSrc(piece.videoFile);
+    return {
+      ...piece.videoFile,
+      videoUrl: resolved || piece.videoFile.videoUrl || piece.videoFile.videoUrlOrPath,
+      title: piece.videoFile.title || piece.title
+    } satisfies VideoAssetValue;
+  }
+
+  if (piece.videoUrl || piece.resolvedVideoUrl) {
+    return {
+      title: piece.title,
+      videoUrl: normalizeMediaPath(piece.videoUrl || piece.resolvedVideoUrl)
     } satisfies VideoAssetValue;
   }
 

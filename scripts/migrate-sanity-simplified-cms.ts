@@ -25,31 +25,62 @@ function isRecord(value: unknown): value is RecordValue {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
-function normalizeVideoObject(value: unknown): unknown {
-  if (Array.isArray(value)) {
-    return value.map(normalizeVideoObject);
-  }
-
-  if (!isRecord(value)) {
-    return value;
-  }
+function normalizeVideoLeaf(value: unknown): RecordValue | undefined {
+  if (!isRecord(value)) return undefined;
 
   const next: RecordValue = {};
 
   for (const [key, child] of Object.entries(value)) {
-    if (key === "videoFile") continue;
-    next[key] = normalizeVideoObject(child);
+    if (key === "videoFile" || key === "videoUrlOrPath") continue;
+    next[key] = child;
   }
 
-  if (typeof value.videoUrl === "string" && typeof next.videoUrlOrPath !== "string") {
-    next.videoUrlOrPath = value.videoUrl;
+  const nestedVideoFile = isRecord(value.videoFile) ? value.videoFile : undefined;
+  const finalVideoUrl =
+    (typeof value.videoUrl === "string" && value.videoUrl) ||
+    (typeof value.videoUrlOrPath === "string" && value.videoUrlOrPath) ||
+    (nestedVideoFile && typeof nestedVideoFile.videoUrl === "string" ? nestedVideoFile.videoUrl : undefined) ||
+    (nestedVideoFile && typeof nestedVideoFile.videoUrlOrPath === "string" ? nestedVideoFile.videoUrlOrPath : undefined);
+
+  if (finalVideoUrl && typeof next.videoUrl !== "string") {
+    next.videoUrl = finalVideoUrl;
   }
 
-  if (!("video" in next) && value.videoFile) {
-    next.video = normalizeVideoObject(value.videoFile);
+  if (nestedVideoFile) {
+    for (const [key, child] of Object.entries(nestedVideoFile)) {
+      if ((key === "videoUrl" || key === "videoUrlOrPath") && typeof next.videoUrl !== "string") {
+        next.videoUrl = child;
+        continue;
+      }
+
+      if (!(key in next)) {
+        next[key] = child;
+      }
+    }
   }
 
   return next;
+}
+
+function normalizeRelatedVideos(value: unknown): unknown {
+  if (!Array.isArray(value)) return value;
+
+  return value.map((item) => {
+    if (!isRecord(item)) return item;
+    const next = { ...item };
+    if (next.media) {
+      const normalizedMedia = normalizeVideoLeaf(next.media);
+      if (normalizedMedia) {
+        next.media = normalizedMedia;
+      }
+    }
+    return next;
+  });
+}
+
+function hasAnyKey(value: RecordValue | undefined, keys: string[]) {
+  if (!value) return false;
+  return keys.some((key) => key in value);
 }
 
 function sameJson(a: unknown, b: unknown) {
@@ -76,7 +107,7 @@ async function migrateHomepage() {
   if (!homepage?._id) return;
 
   const patch: RecordValue = {};
-  const normalizedMainReel = normalizeVideoObject(homepage.mainReel);
+  const normalizedMainReel = normalizeVideoLeaf(homepage.mainReel);
 
   if (!sameJson(normalizedMainReel, homepage.mainReel)) {
     patch.mainReel = normalizedMainReel;
@@ -111,8 +142,8 @@ async function migrateCaseStudies() {
 
   for (const study of studies) {
     const patch: RecordValue = {};
-    const normalizedHeroVideo = normalizeVideoObject(study.heroVideo);
-    const normalizedRelatedVideos = normalizeVideoObject(study.relatedVideos);
+    const normalizedHeroVideo = normalizeVideoLeaf(study.heroVideo);
+    const normalizedRelatedVideos = normalizeRelatedVideos(study.relatedVideos);
 
     if (!sameJson(normalizedHeroVideo, study.heroVideo)) {
       patch.heroVideo = normalizedHeroVideo;
@@ -135,26 +166,45 @@ async function migrateMotionPieces() {
       _id: string;
       video?: RecordValue;
       videoFile?: RecordValue;
+      videoUrl?: string;
+      resolvedVideoUrl?: string;
     }>
   >(`*[_type == "motionPiece"]{
     _id,
     video,
-    videoFile
+    videoFile,
+    videoUrl,
+    resolvedVideoUrl
   }`);
 
   for (const piece of pieces) {
     const patch: RecordValue = {};
-    const legacyVideo = piece.video || piece.videoFile;
-    const normalizedVideo = normalizeVideoObject(legacyVideo);
+    const legacyVideo =
+      piece.video ||
+      piece.videoFile ||
+      (piece.videoUrl || piece.resolvedVideoUrl ? { videoUrl: piece.videoUrl || piece.resolvedVideoUrl } : undefined);
+    const normalizedVideo = normalizeVideoLeaf(legacyVideo);
 
     if (!sameJson(normalizedVideo, piece.video)) {
       patch.video = normalizedVideo;
     }
 
-    if (Object.keys(patch).length === 0) continue;
+    const shouldUnsetLegacy =
+      !!normalizedVideo &&
+      (piece.videoFile || piece.videoUrl || piece.resolvedVideoUrl || hasAnyKey(piece.video, ["videoUrlOrPath"]));
 
-    await client.patch(piece._id).set(patch).commit();
-    console.log(`Migrated motionPiece ${piece._id} (${Object.keys(patch).join(", ")})`);
+    if (Object.keys(patch).length === 0 && !shouldUnsetLegacy) continue;
+
+    let mutation = client.patch(piece._id);
+    if (Object.keys(patch).length > 0) {
+      mutation = mutation.set(patch);
+    }
+    if (shouldUnsetLegacy) {
+      mutation = mutation.unset(["videoFile", "videoUrl", "resolvedVideoUrl"]);
+    }
+
+    await mutation.commit();
+    console.log(`Migrated motionPiece ${piece._id} (${[...Object.keys(patch), ...(shouldUnsetLegacy ? ["unset legacy video fields"] : [])].join(", ")})`);
   }
 }
 

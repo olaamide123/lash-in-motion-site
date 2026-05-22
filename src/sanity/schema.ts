@@ -182,10 +182,10 @@ const videoAssetValue = defineType({
       type: "string"
     }),
     defineField({
-      name: "videoUrlOrPath",
-      title: "Video URL or path",
+      name: "videoUrl",
+      title: "Video URL or local path",
       type: "string",
-      description: "Full URL (https://…) or local path (/assets/videos/…). Use this for both external MP4 links and local files. Sanity uploads are no longer required.",
+      description: "Use /assets/videos/... for local files or https://... for hosted videos.",
       validation: mediaPathValidation
     }),
     defineField({
@@ -230,7 +230,7 @@ const videoAssetValue = defineType({
   preview: {
     select: {
       title: "title",
-      subtitle: "videoUrlOrPath"
+      subtitle: "videoUrl"
     },
     prepare({ title, subtitle }) {
       return {

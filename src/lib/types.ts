@@ -34,6 +34,7 @@ export interface ImageAssetValue {
 
 export interface VideoAssetValue {
   title?: string;
+  videoUrl?: string;
   videoUrlOrPath?: string;
   embedUrl?: string;
   poster?: ImageAssetValue;
@@ -204,6 +205,9 @@ export interface MotionPiece {
   category: string;
   description: RichTextBlock[];
   video?: VideoAssetValue;
+  videoFile?: VideoAssetValue;
+  videoUrl?: string;
+  resolvedVideoUrl?: string;
   thumbnail?: ImageAssetValue;
   client?: string;
   year?: string;

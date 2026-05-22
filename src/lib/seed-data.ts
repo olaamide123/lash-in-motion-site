@@ -121,7 +121,7 @@ export const homepage: HomepageSeed = {
   },
   mainReel: {
     title: "Reel 2026",
-    videoUrlOrPath: "/assets/Reel/GregLashReel_2026_update.mp4",
+    videoUrl: "/assets/Reel/GregLashReel_2026_update.mp4",
     meta: "Chicago",
     fit: "contain"
   },
@@ -217,7 +217,7 @@ export const caseStudies: CaseStudy[] = [
     services: ["Research", "Scripting", "Editorial", "Motion"],
     heroVideo: {
       title: "MOVE",
-      videoUrlOrPath: "/assets/videos/Case studies/Move Case study/MOVE_v4.mp4",
+      videoUrl: "/assets/videos/Case studies/Move Case study/MOVE_v4.mp4",
       poster: {
         src: "/assets/videos/MOVE Case Study.png",
         alt: "MOVE poster"
@@ -259,7 +259,7 @@ export const caseStudies: CaseStudy[] = [
         subtitle: "Campaign Update",
         media: {
           title: "MOVE",
-          videoUrlOrPath: "/assets/videos/Case studies/Move Case study/MOVE 2025_v2 (1).mp4",
+          videoUrl: "/assets/videos/Case studies/Move Case study/MOVE 2025_v2 (1).mp4",
           meta: "Campaign Update",
           fit: "contain"
         },
@@ -293,7 +293,7 @@ export const caseStudies: CaseStudy[] = [
     services: ["Scripting", "Concept Development", "Motion"],
     heroVideo: {
       title: "Carrum Health – Patient Guide",
-      videoUrlOrPath: "/assets/videos/Case studies/Carrum Health case study/Hysterectomy_v4b.mp4",
+      videoUrl: "/assets/videos/Case studies/Carrum Health case study/Hysterectomy_v4b.mp4",
       meta: "Explainer & Education",
       fit: "contain"
     },
@@ -329,7 +329,7 @@ export const caseStudies: CaseStudy[] = [
         subtitle: "Illustration System",
         media: {
           title: "Cancer Care Overview",
-          videoUrlOrPath: "/assets/videos/Case studies/Carrum Health case study/CC_Illustration_v5.mp4",
+          videoUrl: "/assets/videos/Case studies/Carrum Health case study/CC_Illustration_v5.mp4",
           meta: "Illustration System",
           fit: "contain"
         },
@@ -341,7 +341,7 @@ export const caseStudies: CaseStudy[] = [
         subtitle: "Seasonal Spot",
         media: {
           title: "Fun in the Sun",
-          videoUrlOrPath: "/assets/videos/Case studies/Carrum Health case study/FunInTheSun_v2.mp4",
+          videoUrl: "/assets/videos/Case studies/Carrum Health case study/FunInTheSun_v2.mp4",
           meta: "Seasonal Spot",
           fit: "contain"
         },
@@ -353,7 +353,7 @@ export const caseStudies: CaseStudy[] = [
         subtitle: "Wellness Story",
         media: {
           title: "Mindful Eating",
-          videoUrlOrPath: "/assets/videos/Case studies/Carrum Health case study/CH_Mindful Eating_v2.mp4",
+          videoUrl: "/assets/videos/Case studies/Carrum Health case study/CH_Mindful Eating_v2.mp4",
           meta: "Wellness Story",
           fit: "contain"
         },
@@ -386,7 +386,7 @@ export const caseStudies: CaseStudy[] = [
     services: ["Scripting", "Creative Direction", "Motion"],
     heroVideo: {
       title: "Volley",
-      videoUrlOrPath: "/assets/videos/Case studies/Volley Assessment_FINAL_VO and Music.mp4",
+      videoUrl: "/assets/videos/Case studies/Volley Assessment_FINAL_VO and Music.mp4",
       meta: "Launch Film",
       fit: "contain"
     },
@@ -451,7 +451,7 @@ export const motionPieces: MotionPiece[] = [
     ]),
     video: {
       title: "Dirt Road",
-      videoUrlOrPath: "/assets/videos/additional-spots/dirt-road.mp4",
+      videoUrl: "/assets/videos/additional-spots/dirt-road.mp4",
       meta: "Campaign Film",
       fit: "contain"
     },
@@ -474,7 +474,7 @@ export const motionPieces: MotionPiece[] = [
     ]),
     video: {
       title: "Focus",
-      videoUrlOrPath: "/assets/videos/additional-spots/focus-paloma-aguirre.mp4",
+      videoUrl: "/assets/videos/additional-spots/focus-paloma-aguirre.mp4",
       meta: "Campaign Film",
       fit: "contain"
     },
@@ -496,7 +496,7 @@ export const motionPieces: MotionPiece[] = [
     ]),
     video: {
       title: "Coward",
-      videoUrlOrPath: "/assets/videos/additional-spots/coward-persuasion-spot.mp4",
+      videoUrl: "/assets/videos/additional-spots/coward-persuasion-spot.mp4",
       meta: "Political Persuasion Spot",
       fit: "contain"
     },
@@ -516,7 +516,7 @@ export const motionPieces: MotionPiece[] = [
     ]),
     video: {
       title: "Twice",
-      videoUrlOrPath: "/assets/videos/additional-spots/twice-angie-craig.mp4",
+      videoUrl: "/assets/videos/additional-spots/twice-angie-craig.mp4",
       meta: "Independent Expenditure",
       fit: "contain"
     },
@@ -537,7 +537,7 @@ export const motionPieces: MotionPiece[] = [
     ]),
     video: {
       title: "Public Lands",
-      videoUrlOrPath: "/assets/videos/additional-spots/public-lands.mp4",
+      videoUrl: "/assets/videos/additional-spots/public-lands.mp4",
       meta: "Issue Advocacy Spot",
       fit: "contain"
     },
@@ -559,7 +559,7 @@ export const motionPieces: MotionPiece[] = [
     ]),
     video: {
       title: "Adge.AI",
-      videoUrlOrPath: "/assets/videos/ADGE AI_Sizzle_v1.mp4",
+      videoUrl: "/assets/videos/ADGE AI_Sizzle_v1.mp4",
       poster: {
         src: "/assets/videos/Adidas Case Study.png",
         alt: "Adge.AI poster"
@@ -583,7 +583,7 @@ export const motionPieces: MotionPiece[] = [
     ]),
     video: {
       title: "Maestro Maintenance",
-      videoUrlOrPath: "/assets/videos/additional-spots/maestro-maintenance.mp4",
+      videoUrl: "/assets/videos/additional-spots/maestro-maintenance.mp4",
       meta: "Product Explainer",
       fit: "contain"
     },
@@ -603,7 +603,7 @@ export const motionPieces: MotionPiece[] = [
     ]),
     video: {
       title: "CayMall – E-Commerce Launch",
-      videoUrlOrPath: "/assets/videos/CayMall Promo_60s_v2.mp4",
+      videoUrl: "/assets/videos/CayMall Promo_60s_v2.mp4",
       meta: "Communication & Story",
       fit: "cover"
     },
@@ -624,7 +624,7 @@ export const motionPieces: MotionPiece[] = [
     ]),
     video: {
       title: "HCG S'MORES — Seasonal Campaign",
-      videoUrlOrPath: "/assets/videos/HCG_SmoresAdventure.mp4",
+      videoUrl: "/assets/videos/HCG_SmoresAdventure.mp4",
       meta: "Seasonal Campaign",
       fit: "contain"
     },
@@ -644,7 +644,7 @@ export const motionPieces: MotionPiece[] = [
     ]),
     video: {
       title: "Sexy Fun World",
-      videoUrlOrPath: "/assets/videos/additional-spots/sexy-fun-world.mp4",
+      videoUrl: "/assets/videos/additional-spots/sexy-fun-world.mp4",
       meta: "DTC Social Campaign",
       fit: "contain"
     },
@@ -664,7 +664,7 @@ export const motionPieces: MotionPiece[] = [
     ]),
     video: {
       title: "Carrum Health – Executive Summit Recap",
-      videoUrlOrPath: "/assets/videos/additional-spots/carrum-executive-summit.mp4",
+      videoUrl: "/assets/videos/additional-spots/carrum-executive-summit.mp4",
       meta: "Executive Summit Recap",
       fit: "contain"
     },
@@ -685,7 +685,7 @@ export const motionPieces: MotionPiece[] = [
     ]),
     video: {
       title: "League of Play",
-      videoUrlOrPath: "/assets/videos/additional-spots/league-of-play.mp4",
+      videoUrl: "/assets/videos/additional-spots/league-of-play.mp4",
       meta: "Investor Pitch Film",
       fit: "contain"
     },
@@ -708,7 +708,7 @@ export const motionPieces: MotionPiece[] = [
     video: {
       title: "Infinite Roar",
       embedUrl: "https://player.vimeo.com/video/1119917202?title=0&byline=0&portrait=0",
-      videoUrlOrPath: "https://vimeo.com/1119917202",
+      videoUrl: "https://vimeo.com/1119917202",
       meta: "Hosted on Vimeo",
       fit: "embed"
     },

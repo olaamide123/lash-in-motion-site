@@ -179,7 +179,13 @@ function MotionArchiveItem({ piece, index }: { piece: MotionPiece; index: number
                 ? "archive-item archive-item--wide-shift is-wide"
                 : "archive-item archive-item--feature-alt is-wide";
 
-  const externalUrl = piece.video?.videoUrlOrPath;
+  const externalUrl =
+    piece.video?.videoUrl ||
+    piece.video?.videoUrlOrPath ||
+    piece.videoFile?.videoUrl ||
+    piece.videoFile?.videoUrlOrPath ||
+    piece.videoUrl ||
+    piece.resolvedVideoUrl;
 
   return (
     <article className={layoutClass}>
@@ -187,7 +193,7 @@ function MotionArchiveItem({ piece, index }: { piece: MotionPiece; index: number
         className="vid video-scale video-scale--center"
         media={media}
         topLabel={piece.title}
-        bottomRight={piece.video?.meta || piece.subtitle}
+        bottomRight={piece.video?.meta || piece.videoFile?.meta || piece.subtitle}
       />
       <div className="archive-caption">
         <h3 className={`archive-title${index === 1 || index === 2 || index === 4 ? " small" : ""}`}>
