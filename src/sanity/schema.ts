@@ -182,18 +182,10 @@ const videoAssetValue = defineType({
       type: "string"
     }),
     defineField({
-      name: "videoFile",
-      title: "Upload video file",
-      type: "file",
-      options: {
-        accept: "video/*"
-      }
-    }),
-    defineField({
-      name: "videoUrl",
-      title: "Video URL",
+      name: "videoUrlOrPath",
+      title: "Video URL or path",
       type: "string",
-      description: "Full URL (https://…) or local path (/assets/videos/…). Used for migrated files or external MP4 links.",
+      description: "Full URL (https://…) or local path (/assets/videos/…). Use this for both external MP4 links and local files. Sanity uploads are no longer required.",
       validation: mediaPathValidation
     }),
     defineField({
@@ -238,13 +230,30 @@ const videoAssetValue = defineType({
   preview: {
     select: {
       title: "title",
-      subtitle: "videoUrl"
+      subtitle: "videoUrlOrPath"
     },
     prepare({ title, subtitle }) {
       return {
         title: title || "Video",
         subtitle
       };
+    }
+  }
+});
+
+const whatMovesItem = defineType({
+  name: "whatMovesItem",
+  title: "What Moves item",
+  type: "object",
+  fields: [
+    defineField({ name: "label", title: "Label", type: "string" }),
+    defineField({ name: "title", title: "Title", type: "string", validation: (rule) => rule.required() }),
+    defineField({ name: "body", title: "Body", type: "text", rows: 4 })
+  ],
+  preview: {
+    select: {
+      title: "title",
+      subtitle: "label"
     }
   }
 });
@@ -528,10 +537,10 @@ const homepage = defineType({
     defineField({ name: "whatMovesTitle", title: "What Moves Here title", type: "string" }),
     defineField({ name: "whatMovesIntro", title: "What Moves Here intro", type: "text", rows: 3 }),
     defineField({
-      name: "serviceTracks",
-      title: "Service tracks",
+      name: "whatMovesItems",
+      title: "What Moves Here items",
       type: "array",
-      of: [defineArrayMember({ type: "reference", to: [{ type: "serviceTrack" }] })]
+      of: [defineArrayMember({ type: "whatMovesItem" })]
     }),
     defineField({ name: "finalCTATitle", title: "Final CTA title", type: "string" }),
     defineField({ name: "finalCTABody", title: "Final CTA body", type: "text", rows: 3 }),
@@ -654,14 +663,7 @@ const motionPiece = defineType({
     defineField({ name: "subtitle", title: "Subtitle", type: "string" }),
     defineField({ name: "category", title: "Category", type: "string" }),
     defineField({ name: "description", title: "Description", type: "array", of: [portableTextBlock] }),
-    defineField({ name: "videoFile", title: "Video", type: "videoAssetValue" }),
-    defineField({
-      name: "videoUrl",
-      title: "Direct video URL",
-      type: "string",
-      description: "Full URL (https://…) or local path (/assets/videos/…).",
-      validation: mediaPathValidation
-    }),
+    defineField({ name: "video", title: "Video", type: "videoAssetValue" }),
     defineField({ name: "thumbnail", title: "Thumbnail", type: "imageAssetValue" }),
     defineField({ name: "client", title: "Client", type: "string" }),
     defineField({ name: "year", title: "Year", type: "string" }),
@@ -745,42 +747,13 @@ const makeSomethingPage = defineType({
   ]
 });
 
-const serviceTrack = defineType({
-  name: "serviceTrack",
-  title: "Service Track",
-  type: "document",
-  fields: [
-    defineField({ name: "title", title: "Title", type: "string", validation: (rule) => rule.required() }),
-    defineField({ name: "label", title: "Label", type: "string" }),
-    defineField({ name: "description", title: "Description", type: "text", rows: 4 }),
-    defineField({
-      name: "accentColor",
-      title: "Accent color",
-      type: "string",
-      options: {
-        list: [
-          { title: "Red", value: "red" },
-          { title: "Blue", value: "blue" },
-          { title: "Yellow", value: "yellow" }
-        ]
-      }
-    }),
-    defineField({ name: "order", title: "Order", type: "number" })
-  ],
-  preview: {
-    select: {
-      title: "title",
-      subtitle: "label"
-    }
-  }
-});
-
 export const schemaTypes = [
   linkItem,
   socialLinkItem,
   ctaItem,
   imageAssetValue,
   videoAssetValue,
+  whatMovesItem,
   overviewHighlight,
   relatedVideo,
   motionGroup,
@@ -790,6 +763,5 @@ export const schemaTypes = [
   caseStudy,
   motionPiece,
   contextPage,
-  makeSomethingPage,
-  serviceTrack
+  makeSomethingPage
 ];

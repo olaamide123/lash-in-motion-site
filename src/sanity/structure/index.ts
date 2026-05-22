@@ -35,8 +35,7 @@ export const studioStructure: StructureResolver = (S) =>
             .title("Work Content")
             .items([
               S.documentTypeListItem("caseStudy").title("Case Studies"),
-              S.documentTypeListItem("motionPiece").title("Motion Pieces"),
-              S.documentTypeListItem("serviceTrack").title("Service Tracks")
+              S.documentTypeListItem("motionPiece").title("Motion Pieces")
             ])
         )
     ]);

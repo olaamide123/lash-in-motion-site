@@ -1,7 +1,7 @@
 import type { StringRule } from "sanity";
 
-/** External https?:// URLs or root-relative local assets under /assets/ */
-export const MEDIA_PATH_PATTERN = /^(https?:\/\/|\/assets\/)/;
+/** External http(s):// URLs or root-relative local assets under /assets/ */
+export const MEDIA_PATH_PATTERN = /^(?:\/assets\/.+|https?:\/\/.+)$/;
 
 export function isValidMediaPath(value: unknown) {
   if (value === undefined || value === null || value === "") return true;

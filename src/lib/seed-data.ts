@@ -6,7 +6,7 @@ import type {
   MotionPiece,
   RichTextBlock,
   SeedContent,
-  ServiceTrack,
+  WhatMovesItem,
   SiteSettings,
   WorkPageSeed
 } from "@/lib/types";
@@ -16,6 +16,22 @@ let keyIndex = 0;
 function nextKey(prefix: string) {
   keyIndex += 1;
   return `${prefix}-${keyIndex}`;
+}
+
+function keyPart(value: string) {
+  const normalized = value
+    .toLowerCase()
+    .replace(/&/g, "and")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+  return normalized || nextKey("item");
+}
+
+function withKey<const T extends Record<string, unknown>>(prefix: string, value: string, item: T): T & { _key: string } {
+  return {
+    _key: `${prefix}-${keyPart(value)}`,
+    ...item
+  };
 }
 
 export function pt(paragraphs: string[]): RichTextBlock[] {
@@ -43,10 +59,10 @@ export const siteSettings: SiteSettings = {
     alt: "Lash in Motion round mark"
   },
   mainNavigation: [
-    { label: "Home", href: "/" },
-    { label: "Work", href: "/work" },
-    { label: "Context", href: "/context" },
-    { label: "Make Something.", href: "/make-something" }
+    withKey("nav", "home", { label: "Home", href: "/" }),
+    withKey("nav", "work", { label: "Work", href: "/work" }),
+    withKey("nav", "context", { label: "Context", href: "/context" }),
+    withKey("nav", "make-something", { label: "Make Something.", href: "/make-something" })
   ],
   primaryCTA: {
     label: "Make Something.",
@@ -63,10 +79,10 @@ export const siteSettings: SiteSettings = {
     "Explainers & education"
   ],
   footerExploreLinks: [
-    { label: "Home", href: "/" },
-    { label: "Work", href: "/work" },
-    { label: "Context", href: "/context" },
-    { label: "Make Something.", href: "/make-something" }
+    withKey("footer-link", "home", { label: "Home", href: "/" }),
+    withKey("footer-link", "work", { label: "Work", href: "/work" }),
+    withKey("footer-link", "context", { label: "Context", href: "/context" }),
+    withKey("footer-link", "make-something", { label: "Make Something.", href: "/make-something" })
   ],
   footerContactEmail: "create@lashinmotion.com",
   footerContactHelperText: "Usually the fastest way.",
@@ -74,31 +90,22 @@ export const siteSettings: SiteSettings = {
   socialLinks: []
 };
 
-export const serviceTracks: ServiceTrack[] = [
-  {
-    _id: "service-track-motion-design",
+export const whatMovesItems: WhatMovesItem[] = [
+  withKey("what-moves", "motion-design", {
     title: "Motion Design",
     label: "Track 01",
-    description: "Animation, typography, compositing, explainers, and visual systems designed to communicate clearly and move with purpose.",
-    accentColor: "red",
-    order: 1
-  },
-  {
-    _id: "service-track-editing-storytelling",
+    body: "Animation, typography, compositing, explainers, and visual systems designed to communicate clearly and move with purpose."
+  }),
+  withKey("what-moves", "editing-and-storytelling", {
     title: "Editing & Storytelling",
     label: "Track 02",
-    description: "Projects shaped through pacing, structure, sound, and editorial decisions that help ideas land the way they are meant to.",
-    accentColor: "blue",
-    order: 2
-  },
-  {
-    _id: "service-track-campaign-advocacy",
+    body: "Projects shaped through pacing, structure, sound, and editorial decisions that help ideas land the way they are meant to."
+  }),
+  withKey("what-moves", "campaign-and-advocacy", {
     title: "Campaign & Advocacy",
     label: "Track 03",
-    description: "Political, nonprofit, and purpose-driven work built to connect with people, simplify complexity, and create momentum.",
-    accentColor: "yellow",
-    order: 3
-  }
+    body: "Political, nonprofit, and purpose-driven work built to connect with people, simplify complexity, and create momentum."
+  })
 ];
 
 export const homepage: HomepageSeed = {
@@ -114,7 +121,7 @@ export const homepage: HomepageSeed = {
   },
   mainReel: {
     title: "Reel 2026",
-    videoUrl: "/assets/Reel/GregLashReel_2026_update.mp4",
+    videoUrlOrPath: "/assets/Reel/GregLashReel_2026_update.mp4",
     meta: "Chicago",
     fit: "contain"
   },
@@ -144,7 +151,7 @@ export const homepage: HomepageSeed = {
   whatMovesLabel: "Three Tracks",
   whatMovesTitle: "What Moves Here.",
   whatMovesIntro: "Projects can begin in any of them and usually end somewhere between all three.",
-  serviceTracks: serviceTracks.map((track) => track._id),
+  whatMovesItems,
   finalCTATitle: "Have something worth moving?",
   finalCTABody: "For campaign films, motion, editorial work, and projects where getting it right actually matters.",
   finalCTAButtonText: "See It."
@@ -175,24 +182,24 @@ export const workPage: WorkPageSeed = {
     "infinite-roar"
   ],
   motionGroups: [
-    {
+    withKey("motion-group", "campaign-advocacy", {
       key: "campaign-advocacy",
       label: "Campaign & Advocacy",
       title: "Campaign spots, persuasion work, and advocacy pieces.",
       body: "Political and public-interest work grouped together so the shorter campaign films read like a deliberate body of work instead of scattered single-offs."
-    },
-    {
+    }),
+    withKey("motion-group", "explainers-product", {
       key: "explainers-product",
       label: "Explainers & Product",
       title: "Explainers, product storytelling, and education-focused pieces.",
       body: "The more informational work sits together here so the page reads with a clearer rhythm between advocacy, explanation, and brand-facing storytelling."
-    },
-    {
+    }),
+    withKey("motion-group", "brand-launch-editorial", {
       key: "brand-launch-editorial",
       label: "Brand, Launch & Editorial",
       title: "Launch films, brand motion, social work, and editorial recaps.",
       body: "The brand-facing and editorial pieces now sit together, which makes it easier to scan the archive by intent instead of bouncing between unrelated formats."
-    }
+    })
   ]
 };
 
@@ -210,7 +217,7 @@ export const caseStudies: CaseStudy[] = [
     services: ["Research", "Scripting", "Editorial", "Motion"],
     heroVideo: {
       title: "MOVE",
-      videoUrl: "/assets/videos/Case studies/Move Case study/MOVE_v4.mp4",
+      videoUrlOrPath: "/assets/videos/Case studies/Move Case study/MOVE_v4.mp4",
       poster: {
         src: "/assets/videos/MOVE Case Study.png",
         alt: "MOVE poster"
@@ -222,12 +229,12 @@ export const caseStudies: CaseStudy[] = [
       "MOVE set out to build something ambitious: a civic platform designed to help everyday people feel heard by their elected representatives."
     ]),
     overviewHighlights: [
-      {
+      withKey("overview-highlight", "move-focus", {
         label: "Focus",
         body: pt([
           "A civic message that could evolve with the political moment without becoming part of the noise."
         ])
-      }
+      })
     ],
     challenge: pt([
       "MOVE (Make Our Voices Equal) set out to build something ambitious: a civic platform designed to help everyday people feel heard by their elected representatives.",
@@ -247,19 +254,19 @@ export const caseStudies: CaseStudy[] = [
       "The challenge was not simply evolving the look. It was helping the organization evolve how it wanted to be understood."
     ]),
     relatedVideos: [
-      {
+      withKey("related-video", "move-campaign-update", {
         title: "MOVE",
         subtitle: "Campaign Update",
         media: {
           title: "MOVE",
-          videoUrl: "/assets/videos/Case studies/Move Case study/MOVE 2025_v2 (1).mp4",
+          videoUrlOrPath: "/assets/videos/Case studies/Move Case study/MOVE 2025_v2 (1).mp4",
           meta: "Campaign Update",
           fit: "contain"
         },
         sectionPlacement: "execution",
         afterParagraph: 1,
         description: pt(["A later campaign update kept the same civic message while reflecting a changed political climate."])
-      }
+      })
     ],
     outcome: pt([
       "From research and scripting to visual development, AI generation, editorial structure, and motion design, the result was a flexible system of launch content capable of evolving alongside the organization itself.",
@@ -286,7 +293,7 @@ export const caseStudies: CaseStudy[] = [
     services: ["Scripting", "Concept Development", "Motion"],
     heroVideo: {
       title: "Carrum Health – Patient Guide",
-      videoUrl: "/assets/videos/Case studies/Carrum Health case study/Hysterectomy_v4b.mp4",
+      videoUrlOrPath: "/assets/videos/Case studies/Carrum Health case study/Hysterectomy_v4b.mp4",
       meta: "Explainer & Education",
       fit: "contain"
     },
@@ -294,12 +301,12 @@ export const caseStudies: CaseStudy[] = [
       "Carrum Health needed a way to communicate everything from highly sensitive surgical benefits, including cancer care and hysterectomies, to everyday wellness topics in a way that felt reassuring rather than clinical."
     ]),
     overviewHighlights: [
-      {
+      withKey("overview-highlight", "carrum-focus", {
         label: "Focus",
         body: pt([
           "Make healthcare information feel approachable without losing accuracy."
         ])
-      }
+      })
     ],
     challenge: pt([
       "Healthcare information is rarely short on detail. The harder part is making it feel understandable and human.",
@@ -317,42 +324,42 @@ export const caseStudies: CaseStudy[] = [
       "The challenge was less about making each piece identical and more about making them feel like they belonged in the same conversation."
     ]),
     relatedVideos: [
-      {
+      withKey("related-video", "cancer-care-overview", {
         title: "Cancer Care Overview",
         subtitle: "Illustration System",
         media: {
           title: "Cancer Care Overview",
-          videoUrl: "/assets/videos/Case studies/Carrum Health case study/CC_Illustration_v5.mp4",
+          videoUrlOrPath: "/assets/videos/Case studies/Carrum Health case study/CC_Illustration_v5.mp4",
           meta: "Illustration System",
           fit: "contain"
         },
         sectionPlacement: "execution",
         afterParagraph: 0
-      },
-      {
+      }),
+      withKey("related-video", "fun-in-the-sun", {
         title: "Fun in the Sun",
         subtitle: "Seasonal Spot",
         media: {
           title: "Fun in the Sun",
-          videoUrl: "/assets/videos/Case studies/Carrum Health case study/FunInTheSun_v2.mp4",
+          videoUrlOrPath: "/assets/videos/Case studies/Carrum Health case study/FunInTheSun_v2.mp4",
           meta: "Seasonal Spot",
           fit: "contain"
         },
         sectionPlacement: "execution",
         afterParagraph: 1
-      },
-      {
+      }),
+      withKey("related-video", "mindful-eating", {
         title: "Mindful Eating",
         subtitle: "Wellness Story",
         media: {
           title: "Mindful Eating",
-          videoUrl: "/assets/videos/Case studies/Carrum Health case study/CH_Mindful Eating_v2.mp4",
+          videoUrlOrPath: "/assets/videos/Case studies/Carrum Health case study/CH_Mindful Eating_v2.mp4",
           meta: "Wellness Story",
           fit: "contain"
         },
         sectionPlacement: "execution",
         afterParagraph: 1
-      }
+      })
     ],
     outcome: pt([
       "From scripting and concept development through art direction, storyboarding, animation, and final delivery, the result was a cohesive library of content built to scale.",
@@ -379,7 +386,7 @@ export const caseStudies: CaseStudy[] = [
     services: ["Scripting", "Creative Direction", "Motion"],
     heroVideo: {
       title: "Volley",
-      videoUrl: "/assets/videos/Case studies/Volley Assessment_FINAL_VO and Music.mp4",
+      videoUrlOrPath: "/assets/videos/Case studies/Volley Assessment_FINAL_VO and Music.mp4",
       meta: "Launch Film",
       fit: "contain"
     },
@@ -387,19 +394,19 @@ export const caseStudies: CaseStudy[] = [
       "Volley needed a launch video for a smart athletic training platform built around performance tracking, analytics, and real time feedback."
     ]),
     overviewHighlights: [
-      {
+      withKey("overview-highlight", "volley-focus", {
         label: "Focus",
         body: pt([
           "Build a believable version of the future before the product fully existed on screen."
         ])
-      },
-      {
+      }),
+      withKey("overview-highlight", "volley-emphasis", {
         label: "Emphasis",
         tone: "blue",
         body: pt([
           "Editorial structure, AI assisted visuals, interface graphics, and motion tracking."
         ])
-      }
+      })
     ],
     challenge: pt([
       "Volley needed a launch video for a smart athletic training platform built around performance tracking, analytics, and real time feedback.",
@@ -442,9 +449,9 @@ export const motionPieces: MotionPiece[] = [
     description: pt([
       "A campaign film built around story, memory, and the idea that where people come from still shapes what they fight for. Textured graphics, archival imagery, and symbolic visual moments were used to turn a personal history into something broader: a message about community, progress, and who gets remembered along the way."
     ]),
-    videoFile: {
+    video: {
       title: "Dirt Road",
-      videoUrl: "/assets/videos/additional-spots/dirt-road.mp4",
+      videoUrlOrPath: "/assets/videos/additional-spots/dirt-road.mp4",
       meta: "Campaign Film",
       fit: "contain"
     },
@@ -465,9 +472,9 @@ export const motionPieces: MotionPiece[] = [
     description: pt([
       "A warmer, more optimistic campaign piece designed to build trust and reinforce a record of local results. Clean pacing, thoughtful composition, and a lighter visual touch helped the message feel approachable without losing focus."
     ]),
-    videoFile: {
+    video: {
       title: "Focus",
-      videoUrl: "/assets/videos/additional-spots/focus-paloma-aguirre.mp4",
+      videoUrlOrPath: "/assets/videos/additional-spots/focus-paloma-aguirre.mp4",
       meta: "Campaign Film",
       fit: "contain"
     },
@@ -487,9 +494,9 @@ export const motionPieces: MotionPiece[] = [
       "A fast moving political spot built to make an argument quickly and leave very little room for ambiguity.",
       "Using historical evidence, archival material, and carefully structured pacing, the challenge was turning information into momentum without losing clarity somewhere along the way."
     ]),
-    videoFile: {
+    video: {
       title: "Coward",
-      videoUrl: "/assets/videos/additional-spots/coward-persuasion-spot.mp4",
+      videoUrlOrPath: "/assets/videos/additional-spots/coward-persuasion-spot.mp4",
       meta: "Political Persuasion Spot",
       fit: "contain"
     },
@@ -507,9 +514,9 @@ export const motionPieces: MotionPiece[] = [
     description: pt([
       "A campaign spot built around contrast and repetition to sharpen the choice in front of voters. The challenge was balancing urgency with credibility, allowing critique to land without losing the sense of steadiness the campaign wanted to project."
     ]),
-    videoFile: {
+    video: {
       title: "Twice",
-      videoUrl: "/assets/videos/additional-spots/twice-angie-craig.mp4",
+      videoUrlOrPath: "/assets/videos/additional-spots/twice-angie-craig.mp4",
       meta: "Independent Expenditure",
       fit: "contain"
     },
@@ -528,9 +535,9 @@ export const motionPieces: MotionPiece[] = [
     description: pt([
       "An advocacy piece built around scale, urgency, and emotional clarity. Large landscapes and carefully paced messaging worked together to reinforce what was at stake without losing sight of the people connected to it."
     ]),
-    videoFile: {
+    video: {
       title: "Public Lands",
-      videoUrl: "/assets/videos/additional-spots/public-lands.mp4",
+      videoUrlOrPath: "/assets/videos/additional-spots/public-lands.mp4",
       meta: "Issue Advocacy Spot",
       fit: "contain"
     },
@@ -550,9 +557,9 @@ export const motionPieces: MotionPiece[] = [
       "The challenge was connecting abstract ideas, analytics, and marketing intelligence to something people could quickly understand and actually care about. Geometric motion, kinetic layouts, and fluid transitions helped turn large amounts of information into something more visual, intuitive, and considerably easier to follow.",
       "Because data tends to work a little harder when it does not feel like homework."
     ]),
-    videoFile: {
+    video: {
       title: "Adge.AI",
-      videoUrl: "/assets/videos/ADGE AI_Sizzle_v1.mp4",
+      videoUrlOrPath: "/assets/videos/ADGE AI_Sizzle_v1.mp4",
       poster: {
         src: "/assets/videos/Adidas Case Study.png",
         alt: "Adge.AI poster"
@@ -574,9 +581,9 @@ export const motionPieces: MotionPiece[] = [
     description: pt([
       "A straightforward explainer designed to make a complicated service feel simple, approachable, and easy to understand in under a minute. Sometimes clarity does most of the heavy lifting."
     ]),
-    videoFile: {
+    video: {
       title: "Maestro Maintenance",
-      videoUrl: "/assets/videos/additional-spots/maestro-maintenance.mp4",
+      videoUrlOrPath: "/assets/videos/additional-spots/maestro-maintenance.mp4",
       meta: "Product Explainer",
       fit: "contain"
     },
@@ -594,9 +601,9 @@ export const motionPieces: MotionPiece[] = [
     description: pt([
       "A launch film built to introduce a regional online marketplace by connecting customer shopping, merchant tools, and local business into one approachable, easy-to-follow story."
     ]),
-    videoFile: {
+    video: {
       title: "CayMall – E-Commerce Launch",
-      videoUrl: "/assets/videos/CayMall Promo_60s_v2.mp4",
+      videoUrlOrPath: "/assets/videos/CayMall Promo_60s_v2.mp4",
       meta: "Communication & Story",
       fit: "cover"
     },
@@ -615,9 +622,9 @@ export const motionPieces: MotionPiece[] = [
       "A promotional campaign spot built around campfires, scratch-offs, and the general idea that marshmallows can apparently become recurring characters.",
       "Blending 3D characters with live action storytelling, the challenge was creating something energetic, memorable, and just whimsical enough to stand out without losing sight of the promotion underneath."
     ]),
-    videoFile: {
+    video: {
       title: "HCG S'MORES — Seasonal Campaign",
-      videoUrl: "/assets/videos/HCG_SmoresAdventure.mp4",
+      videoUrlOrPath: "/assets/videos/HCG_SmoresAdventure.mp4",
       meta: "Seasonal Campaign",
       fit: "contain"
     },
@@ -635,9 +642,9 @@ export const motionPieces: MotionPiece[] = [
     description: pt([
       "Some projects ask for subtlety. This was not one of them. Built for fast scrolling and short attention spans, this social campaign leaned into bold visuals, quick pacing, and just enough visual chaos to make stopping feel like the easier option."
     ]),
-    videoFile: {
+    video: {
       title: "Sexy Fun World",
-      videoUrl: "/assets/videos/additional-spots/sexy-fun-world.mp4",
+      videoUrlOrPath: "/assets/videos/additional-spots/sexy-fun-world.mp4",
       meta: "DTC Social Campaign",
       fit: "contain"
     },
@@ -655,9 +662,9 @@ export const motionPieces: MotionPiece[] = [
     description: pt([
       "A documentary style event recap designed to capture the tone of a high level healthcare summit without making it feel overly corporate. Real conversations, executive perspectives, and carefully shaped visuals helped turn a conference into something that felt considerably more human."
     ]),
-    videoFile: {
+    video: {
       title: "Carrum Health – Executive Summit Recap",
-      videoUrl: "/assets/videos/additional-spots/carrum-executive-summit.mp4",
+      videoUrlOrPath: "/assets/videos/additional-spots/carrum-executive-summit.mp4",
       meta: "Executive Summit Recap",
       fit: "contain"
     },
@@ -676,9 +683,9 @@ export const motionPieces: MotionPiece[] = [
     description: pt([
       "A presentation built to make an ambitious idea feel tangible. Complex business goals, product features, and growth opportunities were translated into a fast moving visual story designed to hold attention and make the bigger picture easier to understand."
     ]),
-    videoFile: {
+    video: {
       title: "League of Play",
-      videoUrl: "/assets/videos/additional-spots/league-of-play.mp4",
+      videoUrlOrPath: "/assets/videos/additional-spots/league-of-play.mp4",
       meta: "Investor Pitch Film",
       fit: "contain"
     },
@@ -698,10 +705,10 @@ export const motionPieces: MotionPiece[] = [
       "Built around cinematic pacing, typography, and carefully layered visuals, the goal was to create momentum without simply turning the volume up. Strong brands tend to know who they are. The challenge was making sure that confidence translated onscreen.",
       "There were, admittedly, quite a few lions."
     ]),
-    videoFile: {
+    video: {
       title: "Infinite Roar",
       embedUrl: "https://player.vimeo.com/video/1119917202?title=0&byline=0&portrait=0",
-      videoUrl: "https://vimeo.com/1119917202",
+      videoUrlOrPath: "https://vimeo.com/1119917202",
       meta: "Hosted on Vimeo",
       fit: "embed"
     },
@@ -736,26 +743,26 @@ export const contextPage: ContextPage = {
     "The goal is never just to make something polished. Plenty of polished things still miss the point. The goal is to make something thoughtful, clear, and worth paying attention to."
   ]),
   whyRows: [
-    {
+    withKey("why-row", "premise", {
       label: "Premise",
       body: pt([
         "No one is ever going to care more about a project than the people behind it. If the energy is not there, it shows. Creative work has a way of showing exactly where people stopped paying attention."
       ])
-    },
-    {
+    }),
+    withKey("why-row", "process", {
       label: "Process",
       tone: "blue",
       body: pt([
         "The best results tend to happen when ideas are met with curiosity, enthusiasm, and a willingness to stay engaged in the process. Projects are developed from concept through final delivery with a hands-on approach that keeps momentum intact from beginning to end. Sometimes that means solving problems before they become problems. Sometimes it means figuring things out in real time."
       ])
-    },
-    {
+    }),
+    withKey("why-row", "goal", {
       label: "Goal",
       tone: "yellow",
       body: pt([
         "The goal is never just to make something polished. Plenty of polished things still miss the point. The goal is to make something thoughtful, clear, and worth paying attention to."
       ])
-    }
+    })
   ]
 };
 
@@ -805,6 +812,5 @@ export const seedContent: SeedContent = {
   caseStudies,
   motionPieces,
   contextPage,
-  makeSomethingPage,
-  serviceTracks
+  makeSomethingPage
 };

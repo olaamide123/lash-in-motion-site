@@ -6,6 +6,11 @@ const web3FormsKey = "5facc282-85fb-4c8f-bad3-24d875230b73";
 
 export default async function MakeSomethingPage() {
   const page = await getMakeSomethingPage();
+  const projectTypes = page.projectTypes ?? [];
+  const budgetRanges = page.budgetRanges ?? [];
+  const timelineOptions = page.timelineOptions ?? [];
+  const bestForBody = page.bestForBody ?? [];
+  const contactBody = page.contactBody ?? [];
 
   return (
     <SiteFrame currentPath="/make-something">
@@ -47,13 +52,13 @@ export default async function MakeSomethingPage() {
                     <div className="timeline-row-label">
                       <span className="marker"></span>Best For
                     </div>
-                    <RichTextContent value={page.bestForBody} className="prose-stack" />
+                    <RichTextContent value={bestForBody} className="prose-stack" />
                   </div>
                   <div className="timeline-row" data-tone="blue">
                     <div className="timeline-row-label">
                       <span className="marker"></span>Contact
                     </div>
-                    <RichTextContent value={page.contactBody} className="prose-stack" />
+                    <RichTextContent value={contactBody} className="prose-stack" />
                   </div>
                 </div>
               </div>
@@ -80,7 +85,7 @@ export default async function MakeSomethingPage() {
                       <label htmlFor="project-type">Project Type</label>
                       <select id="project-type" name="project_type" required>
                         <option value="">Select one</option>
-                        {page.projectTypes.map((item) => (
+                        {projectTypes.map((item) => (
                           <option key={item}>{item}</option>
                         ))}
                       </select>
@@ -89,7 +94,7 @@ export default async function MakeSomethingPage() {
                       <label htmlFor="budget">Budget Range</label>
                       <select id="budget" name="budget_range" required>
                         <option value="">Select one</option>
-                        {page.budgetRanges.map((item) => (
+                        {budgetRanges.map((item) => (
                           <option key={item}>{item}</option>
                         ))}
                       </select>
@@ -98,7 +103,7 @@ export default async function MakeSomethingPage() {
                       <label htmlFor="timeline">Timeline</label>
                       <select id="timeline" name="timeline" required>
                         <option value="">Select one</option>
-                        {page.timelineOptions.map((item) => (
+                        {timelineOptions.map((item) => (
                           <option key={item}>{item}</option>
                         ))}
                       </select>

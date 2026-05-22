@@ -47,6 +47,14 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
 
   if (!study) notFound();
 
+  const role = study.role ?? [];
+  const services = study.services ?? [];
+  const overview = study.overview ?? [];
+  const challenge = study.challenge ?? [];
+  const approach = study.approach ?? [];
+  const execution = study.execution ?? [];
+  const outcome = study.outcome ?? [];
+  const overviewHighlights = study.overviewHighlights ?? [];
   const nextStudy = allStudies
     .sort((a, b) => a.order - b.order)
     .find((item) => item.order > study.order);
@@ -58,8 +66,8 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
   const { byParagraph: overviewByParagraph, trailing: overviewTrailing } = groupRelatedVideos(overviewVideos);
   const heroImageSrc = resolveImageSrc(study.heroImage);
   const servicesLabel =
-    study.services.length && study.services.join(", ") !== study.role.join(", ")
-      ? study.services.join(", ")
+    services.length && services.join(", ") !== role.join(", ")
+      ? services.join(", ")
       : null;
 
   return (
@@ -100,7 +108,7 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
                 ) : null}
                 <div className="case-stat">
                   <span className="case-stat-label">Role</span>
-                  <span className="case-stat-value">{study.role.join(", ")}</span>
+                  <span className="case-stat-value">{role.join(", ")}</span>
                 </div>
                 {servicesLabel ? (
                   <div className="case-stat">
@@ -153,7 +161,7 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
                   <span className="red-square"></span>
                   <span className="mono">Overview</span>
                 </div>
-                {study.overview.map((block, index) => (
+                {overview.map((block, index) => (
                   <Fragment key={block._key}>
                     <RichTextContent value={[block]} className="overview-copy" />
                     {overviewByParagraph.get(index)?.length ? (
@@ -163,7 +171,7 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
                 ))}
               </div>
               <div className="timeline-list">
-                {(study.overviewHighlights || []).map((row) => (
+                {overviewHighlights.map((row) => (
                   <div className="timeline-row" data-tone={row.tone === "default" ? undefined : row.tone} key={row.label}>
                     <div className="timeline-row-label">
                       <span className="marker"></span>
@@ -178,10 +186,10 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
           </div>
         </section>
 
-        <CaseStudySection label="The Challenge" body={study.challenge} relatedVideos={sectionVideos("challenge")} />
-        <CaseStudySection label="The Approach" body={study.approach} relatedVideos={sectionVideos("approach")} />
-        <CaseStudySection label="The Execution" body={study.execution} relatedVideos={sectionVideos("execution")} />
-        <CaseStudySection label="The Outcome" body={study.outcome} relatedVideos={sectionVideos("outcome")} />
+        <CaseStudySection label="The Challenge" body={challenge} relatedVideos={sectionVideos("challenge")} />
+        <CaseStudySection label="The Approach" body={approach} relatedVideos={sectionVideos("approach")} />
+        <CaseStudySection label="The Execution" body={execution} relatedVideos={sectionVideos("execution")} />
+        <CaseStudySection label="The Outcome" body={outcome} relatedVideos={sectionVideos("outcome")} />
 
         {study.whatToNotice?.length ? (
           <CaseStudySection label="What to Notice" body={study.whatToNotice} />

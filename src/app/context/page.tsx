@@ -5,11 +5,14 @@ import { resolveImageSrc } from "@/lib/media";
 
 export default async function ContextPage() {
   const context = await getContextPage();
+  const personBody = context.personBody ?? [];
+  const whyBody = context.whyBody ?? [];
+  const whyRows = context.whyRows ?? [];
   const portraitSrc = resolveImageSrc(context.portraitImage);
   const portraitName = context.portraitName || "Greg Green";
   const portraitLocation = context.portraitLocation || "Chicago";
   const portraitRole = context.portraitRole || "Motion + Editorial";
-  const showWhyBody = context.whyBody.length > 0 && context.whyRows.length === 0;
+  const showWhyBody = whyBody.length > 0 && whyRows.length === 0;
 
   return (
     <SiteFrame currentPath="/context">
@@ -50,7 +53,7 @@ export default async function ContextPage() {
             </div>
 
             <div className="context-layout">
-              <RichTextContent value={context.personBody} className="prose-stack" />
+              <RichTextContent value={personBody} className="prose-stack" />
 
               <div className="portrait-card">
                 <div className={`portrait-frame${portraitSrc ? "" : " is-missing"}`}>
@@ -86,10 +89,10 @@ export default async function ContextPage() {
               </div>
             </div>
 
-            {showWhyBody ? <RichTextContent value={context.whyBody} className="prose-stack" /> : null}
+            {showWhyBody ? <RichTextContent value={whyBody} className="prose-stack" /> : null}
 
             <div className="timeline-list">
-              {context.whyRows.map((row) => (
+              {whyRows.map((row) => (
                 <div className="timeline-row" data-tone={row.tone === "default" ? undefined : row.tone} key={row.label}>
                   <div className="timeline-row-label">
                     <span className="marker"></span>

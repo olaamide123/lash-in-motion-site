@@ -1,14 +1,20 @@
 import { CtaControl } from "@/components/CtaControl";
 import { SiteFrame } from "@/components/SiteFrame";
 import { VideoFigure } from "@/components/VideoFigure";
-import { homeCaseClass, homeMotionClass, renderFinalCtaTitle } from "@/lib/cms-helpers";
+import { homeCaseClass, homeMotionClass, renderFinalCtaTitle, splitPageTitleLines } from "@/lib/cms-helpers";
 import { resolveMotionVideo } from "@/lib/media";
 import { getHomepage } from "@/lib/sanity/fetch";
 
 export default async function HomePage() {
   const homepage = await getHomepage();
+  const selectedCaseStudies = homepage.selectedCaseStudies ?? [];
+  const selectedMotionPieces = homepage.selectedMotionPieces ?? [];
+  const whyThisExistsBody = homepage.whyThisExistsBody ?? [];
+  const whatMovesItems = homepage.whatMovesItems ?? [];
   const finalTitle = renderFinalCtaTitle(homepage.finalCTATitle || "Have something worth moving?");
   const heroMeta = homepage.heroMetaLine || "Chicago — Motion + Editorial — Reel 2026";
+  const [whatMovesLead, whatMovesAccent] = splitPageTitleLines(homepage.whatMovesTitle || "What Moves Here.");
+  const moveTrackColors = ["red", "blue", "yellow"] as const;
 
   return (
     <SiteFrame currentPath="/">
@@ -91,15 +97,14 @@ export default async function HomePage() {
               <button className="work-tab" role="tab" data-tab="all" aria-selected="true">
                 All{" "}
                 <span className="count">
-                  {String(homepage.selectedCaseStudies.length + homepage.selectedMotionPieces.length).padStart(2, "0")}
+                  {String(selectedCaseStudies.length + selectedMotionPieces.length).padStart(2, "0")}
                 </span>
               </button>
               <button className="work-tab" role="tab" data-tab="studies" aria-selected="false">
-                Case Studies{" "}
-                <span className="count">{String(homepage.selectedCaseStudies.length).padStart(2, "0")}</span>
+                Case Studies <span className="count">{String(selectedCaseStudies.length).padStart(2, "0")}</span>
               </button>
               <button className="work-tab" role="tab" data-tab="motion" aria-selected="false">
-                Shorter Work <span className="count">{String(homepage.selectedMotionPieces.length).padStart(2, "0")}</span>
+                Shorter Work <span className="count">{String(selectedMotionPieces.length).padStart(2, "0")}</span>
               </button>
             </div>
 
@@ -121,7 +126,7 @@ export default async function HomePage() {
               </div>
 
               <div className="works">
-                {homepage.selectedCaseStudies.map((study, index) => (
+                {selectedCaseStudies.map((study, index) => (
                   <article key={study.slug} className={homeCaseClass(study.slug, index)}>
                     {index === 0 ? (
                       <>
@@ -196,7 +201,7 @@ export default async function HomePage() {
               </div>
 
               <div className="works works--motion">
-                {homepage.selectedMotionPieces.map((piece, index) => (
+                {selectedMotionPieces.map((piece, index) => (
                   <article className={homeMotionClass(piece.slug, index)} key={piece.slug}>
                     <div className="work-caption">
                       <h3 className="work-title">{piece.title}</h3>
@@ -215,7 +220,7 @@ export default async function HomePage() {
                     <VideoFigure
                       className={`vid ${index % 2 === 0 ? "video-scale video-scale--left" : "video-scale video-scale--right"}`}
                       media={resolveMotionVideo(piece)}
-                      topLabel={piece.videoFile?.label || piece.title}
+                      topLabel={piece.video?.label || piece.title}
                       bottomRight={piece.category}
                     />
                   </article>
@@ -240,10 +245,10 @@ export default async function HomePage() {
             </div>
             <div className="why-grid">
               <div className="why-body">
-                <p>{homepage.whyThisExistsBody[0]?.children.map((child) => child.text).join("")}</p>
+                <p>{whyThisExistsBody[0]?.children.map((child) => child.text).join("")}</p>
               </div>
               <div className="why-body">
-                {homepage.whyThisExistsBody.slice(1).map((block) => (
+                {whyThisExistsBody.slice(1).map((block) => (
                   <p key={block._key}>{block.children.map((child) => child.text).join("")}</p>
                 ))}
               </div>
@@ -260,7 +265,13 @@ export default async function HomePage() {
                   <span className="mono">{homepage.whatMovesLabel}</span>
                 </div>
                 <h2 className="section-title">
-                  What Moves <span className="red">Here</span>.
+                  {whatMovesLead}
+                  {whatMovesAccent ? (
+                    <>
+                      {" "}
+                      <span className="red">{whatMovesAccent}</span>
+                    </>
+                  ) : null}
                 </h2>
               </div>
               <div>
@@ -273,12 +284,12 @@ export default async function HomePage() {
                 <span className="ph-square"></span>
               </span>
 
-              {homepage.serviceTracks.map((track, index) => (
-                <div className="moves-track" data-color={track.accentColor} key={track._id}>
+              {whatMovesItems.map((item, index) => (
+                <div className="moves-track" data-color={moveTrackColors[index % moveTrackColors.length]} key={`${item.title}-${index}`}>
                   <span className="moves-track-marker" aria-hidden="true"></span>
-                  <div className="moves-track-num">{track.label || `Track ${String(index + 1).padStart(2, "0")}`}</div>
-                  <h3 className="moves-name">{track.title}</h3>
-                  <p className="moves-desc">{track.description}</p>
+                  <div className="moves-track-num">{item.label || `Track ${String(index + 1).padStart(2, "0")}`}</div>
+                  <h3 className="moves-name">{item.title}</h3>
+                  <p className="moves-desc">{item.body}</p>
                 </div>
               ))}
             </div>

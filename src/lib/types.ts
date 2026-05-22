@@ -34,16 +34,16 @@ export interface ImageAssetValue {
 
 export interface VideoAssetValue {
   title?: string;
-  videoUrl?: string;
+  videoUrlOrPath?: string;
   embedUrl?: string;
   poster?: ImageAssetValue;
   fit?: VideoFit;
   meta?: string;
   label?: string;
-  videoFile?: SanityAssetRef;
 }
 
 export interface LinkItem {
+  _key?: string;
   label: string;
   href: string;
   newTab?: boolean;
@@ -56,6 +56,7 @@ export interface CTAItem {
 }
 
 export interface FooterSocialLink {
+  _key?: string;
   label: string;
   href: string;
   iconLabel?: string;
@@ -78,13 +79,11 @@ export interface SiteSettings {
   socialLinks: FooterSocialLink[];
 }
 
-export interface ServiceTrack {
-  _id: string;
+export interface WhatMovesItem {
+  _key?: string;
+  label?: string;
   title: string;
-  label: string;
-  description: string;
-  accentColor: "red" | "blue" | "yellow";
-  order: number;
+  body?: string;
 }
 
 export interface HomepageSeed {
@@ -116,19 +115,19 @@ export interface HomepageSeed {
   whatMovesLabel: string;
   whatMovesTitle: string;
   whatMovesIntro: string;
-  serviceTracks: string[];
+  whatMovesItems: WhatMovesItem[];
   finalCTATitle: string;
   finalCTABody: string;
   finalCTAButtonText: string;
 }
 
-export interface Homepage extends Omit<HomepageSeed, "selectedCaseStudies" | "selectedMotionPieces" | "serviceTracks"> {
+export interface Homepage extends Omit<HomepageSeed, "selectedCaseStudies" | "selectedMotionPieces"> {
   selectedCaseStudies: CaseStudy[];
   selectedMotionPieces: MotionPiece[];
-  serviceTracks: ServiceTrack[];
 }
 
 export interface MotionGroup {
+  _key?: string;
   key: string;
   label: string;
   title: string;
@@ -154,12 +153,14 @@ export interface WorkPage extends Omit<WorkPageSeed, "featuredCaseStudies" | "fe
 }
 
 export interface OverviewHighlight {
+  _key?: string;
   label: string;
   tone?: Tone;
   body: RichTextBlock[];
 }
 
 export interface RelatedVideo {
+  _key?: string;
   title: string;
   subtitle?: string;
   description?: RichTextBlock[];
@@ -202,9 +203,7 @@ export interface MotionPiece {
   subtitle: string;
   category: string;
   description: RichTextBlock[];
-  videoFile?: VideoAssetValue;
-  videoUrl?: string;
-  resolvedVideoUrl?: string;
+  video?: VideoAssetValue;
   thumbnail?: ImageAssetValue;
   client?: string;
   year?: string;
@@ -254,5 +253,4 @@ export interface SeedContent {
   motionPieces: MotionPiece[];
   contextPage: ContextPage;
   makeSomethingPage: MakeSomethingPage;
-  serviceTracks: ServiceTrack[];
 }

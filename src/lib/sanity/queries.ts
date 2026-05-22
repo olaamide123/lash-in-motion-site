@@ -23,14 +23,11 @@ const imageFields = `
 
 const videoFields = `
   title,
-  videoUrl,
+  "videoUrlOrPath": coalesce(videoUrlOrPath, videoUrl),
   embedUrl,
   fit,
   meta,
   label,
-  videoFile{
-    asset->
-  },
   poster{
     ${imageFields}
   }
@@ -68,13 +65,10 @@ const relatedVideoFields = `
   }
 `;
 
-export const serviceTrackFields = `
-  _id,
-  title,
+const whatMovesItemFields = `
   label,
-  description,
-  accentColor,
-  order
+  title,
+  body
 `;
 
 export const motionPieceFields = `
@@ -86,11 +80,14 @@ export const motionPieceFields = `
   description[]{
     ${portableTextFields}
   },
-  videoFile{
-    ${videoFields}
-  },
-  videoUrl,
-  "resolvedVideoUrl": coalesce(videoUrl, videoFile.videoUrl),
+  "video": select(
+    defined(video) => video{
+      ${videoFields}
+    },
+    defined(videoFile) => videoFile{
+      ${videoFields}
+    }
+  ),
   thumbnail{
     ${imageFields}
   },
@@ -222,9 +219,17 @@ export const homepageQuery = groq`
     whatMovesLabel,
     whatMovesTitle,
     whatMovesIntro,
-    serviceTracks[]->{
-      ${serviceTrackFields}
-    },
+    "whatMovesItems": select(
+      defined(whatMovesItems) => whatMovesItems[]{
+        ${whatMovesItemFields}
+      },
+      defined(serviceTracks) => serviceTracks[]->{
+        label,
+        title,
+        "body": description
+      },
+      []
+    ),
     finalCTATitle,
     finalCTABody,
     finalCTAButtonText
@@ -317,11 +322,5 @@ export const caseStudyBySlugQuery = groq`
 export const motionPiecesQuery = groq`
   *[_type == "motionPiece"] | order(order asc){
     ${motionPieceFields}
-  }
-`;
-
-export const serviceTracksQuery = groq`
-  *[_type == "serviceTrack"] | order(order asc){
-    ${serviceTrackFields}
   }
 `;

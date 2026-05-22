@@ -5,7 +5,6 @@ import type {
   Homepage,
   MakeSomethingPage,
   MotionPiece,
-  ServiceTrack,
   SiteSettings,
   WorkPage
 } from "@/lib/types";
@@ -18,7 +17,6 @@ import {
   homepageQuery,
   makeSomethingPageQuery,
   motionPiecesQuery,
-  serviceTracksQuery,
   siteSettingsQuery,
   workPageQuery
 } from "@/lib/sanity/queries";
@@ -46,8 +44,7 @@ export async function getHomepage(): Promise<Homepage> {
     ),
     selectedMotionPieces: seedContent.motionPieces.filter((item) =>
       seedContent.homepage.selectedMotionPieces.includes(item.slug)
-    ),
-    serviceTracks: seedContent.serviceTracks
+    )
   };
   return fetchWithFallback(homepageQuery, fallback);
 }
@@ -79,10 +76,6 @@ export async function getCaseStudies(): Promise<CaseStudy[]> {
 
 export async function getMotionPieces(): Promise<MotionPiece[]> {
   return fetchWithFallback(motionPiecesQuery, seedContent.motionPieces);
-}
-
-export async function getServiceTracks(): Promise<ServiceTrack[]> {
-  return fetchWithFallback(serviceTracksQuery, seedContent.serviceTracks);
 }
 
 export async function getCaseStudyBySlug(slug: string): Promise<CaseStudy | null> {

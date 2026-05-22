@@ -21,7 +21,101 @@ const client = createClient({
   useCdn: false
 });
 
-const ref = (_ref: string) => ({ _type: "reference", _ref });
+type RecordValue = Record<string, unknown>;
+
+const ref = (_ref: string, _key?: string) => ({ _type: "reference", _ref, _key });
+
+function slugify(value: string) {
+  return value
+    .toLowerCase()
+    .replace(/&/g, "and")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+function deriveArrayItemKey(item: RecordValue, prefix: string, index: number) {
+  const refValue = typeof item._ref === "string" ? item._ref : undefined;
+  const explicitValue =
+    typeof item.key === "string"
+      ? item.key
+      : typeof item.title === "string"
+        ? item.title
+        : typeof item.label === "string"
+          ? item.label
+          : typeof item.href === "string"
+            ? item.href
+            : typeof item._type === "string"
+              ? item._type
+              : `${index + 1}`;
+
+  const keyValue = slugify(refValue || explicitValue) || `${index + 1}`;
+  return `${prefix}-${keyValue}`;
+}
+
+function normalizeArrayKeys(value: unknown, prefix: string): { value: unknown; changed: boolean } {
+  if (Array.isArray(value)) {
+    let changed = false;
+
+    const normalized = value.map((item, index) => {
+      if (!item || typeof item !== "object" || Array.isArray(item)) {
+        return item;
+      }
+
+      const itemRecord = item as RecordValue;
+      let nextItem: RecordValue = itemRecord;
+      let itemChanged = false;
+
+      if (typeof itemRecord._key !== "string" || itemRecord._key.trim() === "") {
+        nextItem = {
+          ...nextItem,
+          _key: deriveArrayItemKey(itemRecord, prefix, index)
+        };
+        itemChanged = true;
+      }
+
+      for (const [key, child] of Object.entries(nextItem)) {
+        if (key === "_key") continue;
+        const nested = normalizeArrayKeys(child, `${prefix}-${key}`);
+        if (nested.changed) {
+          if (nextItem === itemRecord) {
+            nextItem = { ...nextItem };
+          }
+          nextItem[key] = nested.value;
+          itemChanged = true;
+        }
+      }
+
+      if (itemChanged) {
+        changed = true;
+      }
+
+      return nextItem;
+    });
+
+    return { value: normalized, changed };
+  }
+
+  if (value && typeof value === "object") {
+    const input = value as RecordValue;
+    let changed = false;
+    let nextValue: RecordValue = input;
+
+    for (const [key, child] of Object.entries(input)) {
+      const nested = normalizeArrayKeys(child, `${prefix}-${key}`);
+      if (nested.changed) {
+        if (nextValue === input) {
+          nextValue = { ...nextValue };
+        }
+        nextValue[key] = nested.value;
+        changed = true;
+      }
+    }
+
+    return { value: nextValue, changed };
+  }
+
+  return { value, changed: false };
+}
 
 function isEmpty(value: unknown) {
   if (value === undefined || value === null) return true;
@@ -30,8 +124,8 @@ function isEmpty(value: unknown) {
   return false;
 }
 
-function buildPatchSet(existing: Record<string, unknown>, seed: Record<string, unknown>) {
-  const patch: Record<string, unknown> = {};
+function buildPatchSet(existing: RecordValue, seed: RecordValue) {
+  const patch: RecordValue = {};
 
   for (const [key, value] of Object.entries(seed)) {
     if (key === "_id" || key === "_type" || key === "_rev") continue;
@@ -43,7 +137,21 @@ function buildPatchSet(existing: Record<string, unknown>, seed: Record<string, u
   return patch;
 }
 
-async function patchOrCreate(id: string, type: string, seed: Record<string, unknown>) {
+function buildMissingKeyPatch(existing: RecordValue, prefix: string) {
+  const patch: RecordValue = {};
+
+  for (const [key, value] of Object.entries(existing)) {
+    if (key === "_id" || key === "_type" || key === "_rev") continue;
+    const normalized = normalizeArrayKeys(value, `${prefix}-${key}`);
+    if (normalized.changed) {
+      patch[key] = normalized.value;
+    }
+  }
+
+  return patch;
+}
+
+async function patchOrCreate(id: string, type: string, seed: RecordValue) {
   const existing = await client.getDocument(id);
 
   if (!existing) {
@@ -56,7 +164,10 @@ async function patchOrCreate(id: string, type: string, seed: Record<string, unkn
     return;
   }
 
-  const patchValues = buildPatchSet(existing as Record<string, unknown>, seed);
+  const patchValues = {
+    ...buildPatchSet(existing as RecordValue, seed),
+    ...buildMissingKeyPatch(existing as RecordValue, `${type}-${id}`)
+  };
   if (Object.keys(patchValues).length === 0) {
     console.log(`Skipped ${type}: ${id} (no missing fields)`);
     return;
@@ -66,11 +177,14 @@ async function patchOrCreate(id: string, type: string, seed: Record<string, unkn
   console.log(`Patched ${type}: ${id} (${Object.keys(patchValues).join(", ")})`);
 }
 
-async function patchWorkDocument(id: string, type: string, seed: Record<string, unknown>) {
+async function patchWorkDocument(id: string, type: string, seed: RecordValue) {
   const existing = await client.getDocument(id);
-  const patchValues = buildPatchSet((existing || {}) as Record<string, unknown>, seed);
+  const patchValues = {
+    ...buildPatchSet((existing || {}) as RecordValue, seed),
+    ...buildMissingKeyPatch((existing || {}) as RecordValue, `${type}-${id}`)
+  };
 
-  const referenceFields = ["selectedCaseStudies", "selectedMotionPieces", "serviceTracks", "featuredCaseStudies", "featuredMotionPieces"] as const;
+  const referenceFields = ["selectedCaseStudies", "selectedMotionPieces", "featuredCaseStudies", "featuredMotionPieces"] as const;
 
   for (const field of referenceFields) {
     if (field in seed && isEmpty(existing?.[field])) {
@@ -119,11 +233,6 @@ const motionPieceDocs = seedContent.motionPieces.map((piece) => {
   };
 });
 
-const serviceTrackDocs = seedContent.serviceTracks.map((track) => ({
-  ...track,
-  _type: "serviceTrack"
-}));
-
 const homepageDoc = {
   _id: "homepage",
   _type: "homepage",
@@ -131,12 +240,11 @@ const homepageDoc = {
   selectedCaseStudies: seedContent.homepage.selectedCaseStudies
     .map((slug) => seedContent.caseStudies.find((item) => item.slug === slug))
     .filter(Boolean)
-    .map((item) => ref(item!._id)),
+    .map((item) => ref(item!._id, `selected-case-${slugify(item!.slug)}`)),
   selectedMotionPieces: seedContent.homepage.selectedMotionPieces
     .map((slug) => seedContent.motionPieces.find((item) => item.slug === slug))
     .filter(Boolean)
-    .map((item) => ref(item!._id)),
-  serviceTracks: seedContent.homepage.serviceTracks.map((id) => ref(id))
+    .map((item) => ref(item!._id, `selected-motion-${slugify(item!.slug)}`))
 };
 
 const workPageDoc = {
@@ -146,18 +254,14 @@ const workPageDoc = {
   featuredCaseStudies: seedContent.workPage.featuredCaseStudies
     .map((slug) => seedContent.caseStudies.find((item) => item.slug === slug))
     .filter(Boolean)
-    .map((item) => ref(item!._id)),
+    .map((item) => ref(item!._id, `featured-case-${slugify(item!.slug)}`)),
   featuredMotionPieces: seedContent.workPage.featuredMotionPieces
     .map((slug) => seedContent.motionPieces.find((item) => item.slug === slug))
     .filter(Boolean)
-    .map((item) => ref(item!._id))
+    .map((item) => ref(item!._id, `featured-motion-${slugify(item!.slug)}`))
 };
 
 async function run() {
-  for (const track of serviceTrackDocs) {
-    await patchOrCreate(track._id, "serviceTrack", track as Record<string, unknown>);
-  }
-
   for (const study of caseStudyDocs) {
     await patchOrCreate(study._id, "caseStudy", study as Record<string, unknown>);
   }

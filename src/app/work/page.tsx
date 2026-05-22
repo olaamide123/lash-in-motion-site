@@ -12,10 +12,13 @@ function linkedVideoCount(study: { relatedVideos?: unknown[]; heroVideo?: unknow
 export default async function WorkPage() {
   const workPage = await getWorkPage();
   const [titleLineOne, titleLineTwo] = splitPageTitleLines(workPage.pageTitle || "Selected Work.");
+  const motionGroups = workPage.motionGroups ?? [];
+  const featuredCaseStudies = workPage.featuredCaseStudies ?? [];
+  const featuredMotionPieces = workPage.featuredMotionPieces ?? [];
 
-  const piecesByGroup = workPage.motionGroups.map((group) => ({
+  const piecesByGroup = motionGroups.map((group) => ({
     ...group,
-    items: workPage.featuredMotionPieces
+    items: featuredMotionPieces
       .filter((piece) => piece.groupKey === group.key)
       .sort((a, b) => a.order - b.order)
   }));
@@ -59,10 +62,10 @@ export default async function WorkPage() {
             <div className="work-tabs" role="tablist" aria-label="Filter Work Archive">
               <span className="work-tabs-label">View</span>
               <button className="work-tab" role="tab" data-tab="studies" aria-selected="true">
-                Case Studies <span className="count">{String(workPage.featuredCaseStudies.length).padStart(2, "0")}</span>
+                Case Studies <span className="count">{String(featuredCaseStudies.length).padStart(2, "0")}</span>
               </button>
               <button className="work-tab" role="tab" data-tab="motion" aria-selected="false">
-                Shorter Work <span className="count">{String(workPage.featuredMotionPieces.length).padStart(2, "0")}</span>
+                Shorter Work <span className="count">{String(featuredMotionPieces.length).padStart(2, "0")}</span>
               </button>
             </div>
 
@@ -80,7 +83,7 @@ export default async function WorkPage() {
               </div>
 
               <div className="case-card-grid case-card-grid--editorial" id="case-studies">
-                {workPage.featuredCaseStudies.map((study, index) => (
+                {featuredCaseStudies.map((study, index) => (
                   <article
                     key={study.slug}
                     className={
@@ -176,7 +179,7 @@ function MotionArchiveItem({ piece, index }: { piece: MotionPiece; index: number
                 ? "archive-item archive-item--wide-shift is-wide"
                 : "archive-item archive-item--feature-alt is-wide";
 
-  const externalUrl = piece.videoFile?.videoUrl || piece.videoUrl || piece.resolvedVideoUrl;
+  const externalUrl = piece.video?.videoUrlOrPath;
 
   return (
     <article className={layoutClass}>
@@ -184,7 +187,7 @@ function MotionArchiveItem({ piece, index }: { piece: MotionPiece; index: number
         className="vid video-scale video-scale--center"
         media={media}
         topLabel={piece.title}
-        bottomRight={piece.videoFile?.meta || piece.subtitle}
+        bottomRight={piece.video?.meta || piece.subtitle}
       />
       <div className="archive-caption">
         <h3 className={`archive-title${index === 1 || index === 2 || index === 4 ? " small" : ""}`}>

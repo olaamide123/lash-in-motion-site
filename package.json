@@ -9,6 +9,7 @@
     "start": "next start",
     "lint": "next lint",
     "seed:sanity": "tsx --env-file=.env.local scripts/seed-sanity.ts",
+    "migrate:sanity-cms": "tsx --env-file=.env.local scripts/migrate-sanity-simplified-cms.ts",
     "vercel-build": "npm run build"
   },
   "dependencies": {
