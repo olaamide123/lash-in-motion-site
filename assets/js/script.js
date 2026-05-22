@@ -1,7 +1,10 @@
 (function () {
+  var lightboxState = null;
+
   function initWorkTabs() {
     var tabBar = document.querySelector('.work-tabs');
-    if (!tabBar) return;
+    if (!tabBar || tabBar.getAttribute('data-tabs-init') === 'true') return;
+    tabBar.setAttribute('data-tabs-init', 'true');
 
     var tabs = Array.prototype.slice.call(tabBar.querySelectorAll('.work-tab'));
     var sections = Array.prototype.slice.call(document.querySelectorAll('.work-section'));
@@ -58,9 +61,10 @@
   }
 
   function initVideos() {
-    var frames = Array.prototype.slice.call(document.querySelectorAll('.vid-frame.js-video'));
+    var frames = Array.prototype.slice.call(document.querySelectorAll('.vid-frame.js-video:not([data-video-init="true"])'));
 
     frames.forEach(function (frame) {
+      frame.setAttribute('data-video-init', 'true');
       var figure = frame.closest('.vid');
       var video = frame.querySelector('video');
       var bar = frame.querySelector('.v-progress .bar');
@@ -247,30 +251,46 @@
         });
       }, { threshold: 0.18, rootMargin: '0px 0px -8% 0px' });
 
-      document.querySelectorAll(selector).forEach(function (el) { revealObs.observe(el); });
+      document.querySelectorAll(selector).forEach(function (el) {
+        if (el.getAttribute('data-reveal-init') === 'true') return;
+        el.setAttribute('data-reveal-init', 'true');
+        revealObs.observe(el);
+      });
     } else {
-      document.querySelectorAll(selector).forEach(function (el) { el.classList.add('in-view'); });
+      document.querySelectorAll(selector).forEach(function (el) {
+        el.classList.add('in-view');
+      });
     }
   }
 
   function initMediaLightbox() {
-    var lightbox = document.createElement('div');
-    lightbox.className = 'media-lightbox';
-    lightbox.id = 'media-lightbox';
-    lightbox.setAttribute('role', 'dialog');
-    lightbox.setAttribute('aria-modal', 'true');
-    lightbox.setAttribute('aria-label', 'Expanded media');
-    lightbox.hidden = true;
-    lightbox.innerHTML =
-      '<span class="media-lightbox-label" aria-hidden="true"><span class="sq"></span><span data-media-label>Expanded View</span></span>' +
-      '<button type="button" class="media-lightbox-close" aria-label="Close media"><span class="x" aria-hidden="true">✕</span><span>Close</span></button>' +
-      '<div class="media-lightbox-stage" data-media-stage></div>';
-    document.body.appendChild(lightbox);
+    if (!lightboxState) {
+      var lightbox = document.createElement('div');
+      lightbox.className = 'media-lightbox';
+      lightbox.id = 'media-lightbox';
+      lightbox.setAttribute('role', 'dialog');
+      lightbox.setAttribute('aria-modal', 'true');
+      lightbox.setAttribute('aria-label', 'Expanded media');
+      lightbox.hidden = true;
+      lightbox.innerHTML =
+        '<span class="media-lightbox-label" aria-hidden="true"><span class="sq"></span><span data-media-label>Expanded View</span></span>' +
+        '<button type="button" class="media-lightbox-close" aria-label="Close media"><span class="x" aria-hidden="true">✕</span><span>Close</span></button>' +
+        '<div class="media-lightbox-stage" data-media-stage></div>';
+      document.body.appendChild(lightbox);
 
-    var stage = lightbox.querySelector('[data-media-stage]');
-    var closeButton = lightbox.querySelector('.media-lightbox-close');
-    var label = lightbox.querySelector('[data-media-label]');
-    var activeMedia = null;
+      lightboxState = {
+        lightbox: lightbox,
+        stage: lightbox.querySelector('[data-media-stage]'),
+        closeButton: lightbox.querySelector('.media-lightbox-close'),
+        label: lightbox.querySelector('[data-media-label]'),
+        activeMedia: null
+      };
+    }
+
+    var lightbox = lightboxState.lightbox;
+    var stage = lightboxState.stage;
+    var closeButton = lightboxState.closeButton;
+    var label = lightboxState.label;
 
     function pauseInlineMedia() {
       document.querySelectorAll('.vid-frame video').forEach(function (video) {
@@ -279,11 +299,11 @@
     }
 
     function clearStage() {
-      if (activeMedia && activeMedia.tagName === 'VIDEO') {
-        try { activeMedia.pause(); } catch (e) {}
+      if (lightboxState.activeMedia && lightboxState.activeMedia.tagName === 'VIDEO') {
+        try { lightboxState.activeMedia.pause(); } catch (e) {}
       }
       stage.innerHTML = '';
-      activeMedia = null;
+      lightboxState.activeMedia = null;
     }
 
     function openLightbox(type, source, title) {
@@ -293,32 +313,32 @@
       label.textContent = title ? title + ' — Expanded View' : 'Expanded View';
 
       if (type === 'embed') {
-        activeMedia = document.createElement('iframe');
-        activeMedia.className = 'media-lightbox-embed';
-        activeMedia.src = source;
-        activeMedia.title = title || 'Expanded media';
-        activeMedia.loading = 'eager';
-        activeMedia.allow = 'autoplay; fullscreen; picture-in-picture';
-        activeMedia.allowFullscreen = true;
+        lightboxState.activeMedia = document.createElement('iframe');
+        lightboxState.activeMedia.className = 'media-lightbox-embed';
+        lightboxState.activeMedia.src = source;
+        lightboxState.activeMedia.title = title || 'Expanded media';
+        lightboxState.activeMedia.loading = 'eager';
+        lightboxState.activeMedia.allow = 'autoplay; fullscreen; picture-in-picture';
+        lightboxState.activeMedia.allowFullscreen = true;
       } else {
-        activeMedia = document.createElement('video');
-        activeMedia.className = 'media-lightbox-video';
-        activeMedia.controls = true;
-        activeMedia.playsInline = true;
-        activeMedia.preload = 'metadata';
-        activeMedia.src = source;
+        lightboxState.activeMedia = document.createElement('video');
+        lightboxState.activeMedia.className = 'media-lightbox-video';
+        lightboxState.activeMedia.controls = true;
+        lightboxState.activeMedia.playsInline = true;
+        lightboxState.activeMedia.preload = 'metadata';
+        lightboxState.activeMedia.src = source;
       }
 
-      stage.appendChild(activeMedia);
+      stage.appendChild(lightboxState.activeMedia);
       lightbox.hidden = false;
       document.body.classList.add('media-open');
       requestAnimationFrame(function () { lightbox.classList.add('is-open'); });
 
       if (type !== 'embed') {
         try {
-          activeMedia.currentTime = 0;
-          activeMedia.muted = false;
-          var promise = activeMedia.play();
+          lightboxState.activeMedia.currentTime = 0;
+          lightboxState.activeMedia.muted = false;
+          var promise = lightboxState.activeMedia.play();
           if (promise && promise.catch) promise.catch(function () {});
         } catch (e) {}
       }
@@ -333,6 +353,8 @@
 
     document.querySelectorAll('.vid-frame').forEach(function (frame) {
       if (!frame.querySelector('video') && !frame.querySelector('iframe')) return;
+      if (frame.getAttribute('data-expand-init') === 'true') return;
+      frame.setAttribute('data-expand-init', 'true');
 
       var expandButton = document.createElement('button');
       expandButton.type = 'button';
@@ -364,24 +386,36 @@
     });
 
     document.querySelectorAll('.js-open-reel').forEach(function (el) {
+      if (el.getAttribute('data-reel-init') === 'true') return;
+      el.setAttribute('data-reel-init', 'true');
       el.addEventListener('click', function (event) {
         event.preventDefault();
-        var heroSource = 'assets/Reel/GregLashReel_2026_update.mp4';
+        var heroSource = '/assets/Reel/GregLashReel_2026_update.mp4';
         openLightbox('video', heroSource, 'Reel 2026');
       });
     });
 
-    closeButton.addEventListener('click', closeLightbox);
-    lightbox.addEventListener('click', function (event) {
-      if (event.target === lightbox) closeLightbox();
-    });
-    document.addEventListener('keydown', function (event) {
-      if (event.key === 'Escape' && !lightbox.hidden) closeLightbox();
-    });
+    if (!lightbox.getAttribute('data-lightbox-init')) {
+      lightbox.setAttribute('data-lightbox-init', 'true');
+      closeButton.addEventListener('click', closeLightbox);
+      lightbox.addEventListener('click', function (event) {
+        if (event.target === lightbox) closeLightbox();
+      });
+      document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape' && !lightbox.hidden) closeLightbox();
+      });
+    }
   }
 
-  initWorkTabs();
-  initVideos();
-  initMotionReveal();
-  initMediaLightbox();
+  function initSite() {
+    initWorkTabs();
+    initVideos();
+    initMotionReveal();
+    initMediaLightbox();
+  }
+
+  window.LIMSite = window.LIMSite || {};
+  window.LIMSite.init = initSite;
+
+  initSite();
 })();
