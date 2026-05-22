@@ -1,3 +1,4 @@
+import { resolveImageSrc } from "@/lib/media";
 import type { SiteSettings } from "@/lib/types";
 
 interface FooterProps {
@@ -6,7 +7,8 @@ interface FooterProps {
 }
 
 export function Footer({ settings, currentPath }: FooterProps) {
-  const logoSrc = settings.roundLogo.src || "/assets/images/lim-round-mark.png";
+  const logoSrc = resolveImageSrc(settings.roundLogo) || "/assets/images/lim-round-mark.png";
+  const location = settings.footerLocation || "Chicago, IL";
 
   return (
     <footer>
@@ -24,7 +26,7 @@ export function Footer({ settings, currentPath }: FooterProps) {
               </span>
               <div>
                 <div className="lim">{settings.logoText}</div>
-                <div className="mono-soft sub">Chicago, IL</div>
+                <div className="mono-soft sub">{location}</div>
               </div>
             </div>
           </div>
@@ -53,6 +55,21 @@ export function Footer({ settings, currentPath }: FooterProps) {
             <h4>Connect</h4>
             <a href={`mailto:${settings.footerContactEmail}`}>{settings.footerContactEmail}</a>
             <div className="foot-note">{settings.footerContactHelperText}</div>
+            {settings.socialLinks?.length ? (
+              <div className="foot-social">
+                {settings.socialLinks.map((item) => (
+                  <a
+                    key={item.href}
+                    href={item.href}
+                    target={item.newTab ? "_blank" : undefined}
+                    rel={item.newTab ? "noreferrer" : undefined}
+                    aria-label={item.iconLabel || item.label}
+                  >
+                    {item.iconLabel || item.label}
+                  </a>
+                ))}
+              </div>
+            ) : null}
           </div>
           <div className="foot-col">
             <h4>WORTH MAKING</h4>

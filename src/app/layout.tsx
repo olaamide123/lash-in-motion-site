@@ -2,14 +2,23 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 
 import { SiteScripts } from "@/components/SiteScripts";
+import { getSiteSettings } from "@/lib/sanity/fetch";
 
-export const metadata: Metadata = {
-  title: "Lash In Motion",
-  description: "Lash In Motion — Chicago. Motion, editing, and campaign films shaped with clarity, rhythm, and care.",
-  icons: {
-    icon: "/assets/images/lim-round-mark.png"
-  }
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getSiteSettings();
+
+  return {
+    title: {
+      default: settings.siteTitle || "Lash In Motion",
+      template: `%s — ${settings.siteTitle || "Lash In Motion"}`
+    },
+    description:
+      "Lash In Motion — Chicago. Motion, editing, and campaign films shaped with clarity, rhythm, and care.",
+    icons: {
+      icon: "/assets/images/lim-round-mark.png"
+    }
+  };
+}
 
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
   return (

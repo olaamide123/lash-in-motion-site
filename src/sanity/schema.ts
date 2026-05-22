@@ -1,5 +1,32 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
 
+const portableTextBlock = defineArrayMember({
+  type: "block",
+  marks: {
+    annotations: [
+      {
+        name: "link",
+        type: "object",
+        title: "Link",
+        fields: [
+          defineField({
+            name: "href",
+            title: "URL",
+            type: "url",
+            validation: (rule) => rule.required()
+          }),
+          defineField({
+            name: "blank",
+            title: "Open in new tab",
+            type: "boolean",
+            initialValue: false
+          })
+        ]
+      }
+    ]
+  }
+});
+
 const linkItem = defineType({
   name: "linkItem",
   title: "Link Item",
@@ -23,6 +50,44 @@ const linkItem = defineType({
       title: "Open in new tab",
       type: "boolean",
       initialValue: false
+    })
+  ],
+  preview: {
+    select: {
+      title: "label",
+      subtitle: "href"
+    }
+  }
+});
+
+const socialLinkItem = defineType({
+  name: "socialLinkItem",
+  title: "Social Link",
+  type: "object",
+  fields: [
+    defineField({
+      name: "label",
+      title: "Label",
+      type: "string",
+      validation: (rule) => rule.required()
+    }),
+    defineField({
+      name: "iconLabel",
+      title: "Icon label",
+      type: "string",
+      description: "Short label for screen readers or compact display, e.g. IG or Vimeo."
+    }),
+    defineField({
+      name: "href",
+      title: "Link",
+      type: "string",
+      validation: (rule) => rule.required()
+    }),
+    defineField({
+      name: "newTab",
+      title: "Open in new tab",
+      type: "boolean",
+      initialValue: true
     })
   ],
   preview: {
@@ -207,7 +272,7 @@ const overviewHighlight = defineType({
       name: "body",
       title: "Body",
       type: "array",
-      of: [{ type: "block" }],
+      of: [portableTextBlock],
       validation: (rule) => rule.required()
     })
   ]
@@ -234,7 +299,7 @@ const relatedVideo = defineType({
       name: "description",
       title: "Description",
       type: "array",
-      of: [{ type: "block" }]
+      of: [portableTextBlock]
     }),
     defineField({
       name: "media",
@@ -386,10 +451,17 @@ const siteSettings = defineType({
       group: "footer"
     }),
     defineField({
+      name: "footerLocation",
+      title: "Footer location",
+      type: "string",
+      group: "footer",
+      description: "Shown under the logo in the footer, e.g. Chicago, IL."
+    }),
+    defineField({
       name: "socialLinks",
       title: "Social links",
       type: "array",
-      of: [defineArrayMember({ type: "linkItem" })],
+      of: [defineArrayMember({ type: "socialLinkItem" })],
       group: "footer"
     })
   ]
@@ -404,6 +476,12 @@ const homepage = defineType({
     defineField({ name: "heroHeadline", title: "Hero headline", type: "text", rows: 2 }),
     defineField({ name: "heroAccentWord", title: "Hero accent word", type: "string" }),
     defineField({ name: "heroBody", title: "Hero body", type: "text", rows: 4 }),
+    defineField({
+      name: "heroMetaLine",
+      title: "Hero meta line",
+      type: "string",
+      description: "Small line under the hero copy, e.g. Chicago — Motion + Editorial — Reel 2026."
+    }),
     defineField({ name: "heroPrimaryCTA", title: "Hero primary CTA", type: "ctaItem" }),
     defineField({ name: "mainReel", title: "Main reel", type: "videoAssetValue" }),
     defineField({ name: "mainReelButtonText", title: "Main reel button text", type: "string" }),
@@ -411,6 +489,14 @@ const homepage = defineType({
     defineField({ name: "selectedWorkTitle", title: "Selected work title", type: "string" }),
     defineField({ name: "selectedWorkSubtitle", title: "Selected work subtitle", type: "string" }),
     defineField({ name: "selectedWorkIntro", title: "Selected work intro", type: "text", rows: 4 }),
+    defineField({ name: "caseStudiesSectionKicker", title: "Case studies kicker", type: "string" }),
+    defineField({ name: "caseStudiesSectionEyebrow", title: "Case studies eyebrow", type: "string" }),
+    defineField({ name: "caseStudiesSectionTitle", title: "Case studies section title", type: "string" }),
+    defineField({ name: "caseStudiesSectionIntro", title: "Case studies section intro", type: "text", rows: 3 }),
+    defineField({ name: "motionSectionKicker", title: "Motion section kicker", type: "string" }),
+    defineField({ name: "motionSectionEyebrow", title: "Motion section eyebrow", type: "string" }),
+    defineField({ name: "motionSectionTitle", title: "Motion section title", type: "string" }),
+    defineField({ name: "motionSectionIntro", title: "Motion section intro", type: "text", rows: 3 }),
     defineField({
       name: "selectedCaseStudies",
       title: "Selected case studies",
@@ -431,7 +517,7 @@ const homepage = defineType({
       name: "whyThisExistsBody",
       title: "Why This Exists body",
       type: "array",
-      of: [{ type: "block" }]
+      of: [portableTextBlock]
     }),
     defineField({ name: "whatMovesLabel", title: "What Moves Here label", type: "string" }),
     defineField({ name: "whatMovesTitle", title: "What Moves Here title", type: "string" }),
@@ -514,7 +600,7 @@ const caseStudy = defineType({
     }),
     defineField({ name: "heroVideo", title: "Hero video", type: "videoAssetValue" }),
     defineField({ name: "heroImage", title: "Hero image", type: "imageAssetValue" }),
-    defineField({ name: "overview", title: "Overview", type: "array", of: [{ type: "block" }] }),
+    defineField({ name: "overview", title: "Overview", type: "array", of: [portableTextBlock] }),
     defineField({
       name: "overviewHighlights",
       title: "Overview highlights",
@@ -522,11 +608,11 @@ const caseStudy = defineType({
       of: [defineArrayMember({ type: "overviewHighlight" })],
       description: "Optional small overview rows like Focus or Emphasis."
     }),
-    defineField({ name: "challenge", title: "Challenge", type: "array", of: [{ type: "block" }] }),
-    defineField({ name: "approach", title: "Approach", type: "array", of: [{ type: "block" }] }),
-    defineField({ name: "execution", title: "Execution", type: "array", of: [{ type: "block" }] }),
-    defineField({ name: "outcome", title: "Outcome", type: "array", of: [{ type: "block" }] }),
-    defineField({ name: "whatToNotice", title: "What to notice", type: "array", of: [{ type: "block" }] }),
+    defineField({ name: "challenge", title: "Challenge", type: "array", of: [portableTextBlock] }),
+    defineField({ name: "approach", title: "Approach", type: "array", of: [portableTextBlock] }),
+    defineField({ name: "execution", title: "Execution", type: "array", of: [portableTextBlock] }),
+    defineField({ name: "outcome", title: "Outcome", type: "array", of: [portableTextBlock] }),
+    defineField({ name: "whatToNotice", title: "What to notice", type: "array", of: [portableTextBlock] }),
     defineField({
       name: "relatedVideos",
       title: "Related videos",
@@ -562,7 +648,7 @@ const motionPiece = defineType({
     }),
     defineField({ name: "subtitle", title: "Subtitle", type: "string" }),
     defineField({ name: "category", title: "Category", type: "string" }),
-    defineField({ name: "description", title: "Description", type: "array", of: [{ type: "block" }] }),
+    defineField({ name: "description", title: "Description", type: "array", of: [portableTextBlock] }),
     defineField({ name: "videoFile", title: "Video", type: "videoAssetValue" }),
     defineField({ name: "videoUrl", title: "Direct video URL", type: "url" }),
     defineField({ name: "thumbnail", title: "Thumbnail", type: "imageAssetValue" }),
@@ -595,10 +681,13 @@ const contextPage = defineType({
     defineField({ name: "pageLabel", title: "Page label", type: "string" }),
     defineField({ name: "pageTitle", title: "Page title", type: "string" }),
     defineField({ name: "portraitImage", title: "Portrait image", type: "imageAssetValue" }),
+    defineField({ name: "portraitName", title: "Portrait name", type: "string" }),
+    defineField({ name: "portraitLocation", title: "Portrait location", type: "string" }),
+    defineField({ name: "portraitRole", title: "Portrait role", type: "string" }),
     defineField({ name: "personHeading", title: "Person heading", type: "string" }),
-    defineField({ name: "personBody", title: "Person body", type: "array", of: [{ type: "block" }] }),
+    defineField({ name: "personBody", title: "Person body", type: "array", of: [portableTextBlock] }),
     defineField({ name: "whyHeading", title: "Why heading", type: "string" }),
-    defineField({ name: "whyBody", title: "Why body", type: "array", of: [{ type: "block" }] }),
+    defineField({ name: "whyBody", title: "Why body", type: "array", of: [portableTextBlock] }),
     defineField({
       name: "whyRows",
       title: "Why rows",
@@ -621,8 +710,8 @@ const makeSomethingPage = defineType({
     defineField({ name: "formIntro", title: "Form intro", type: "text", rows: 4 }),
     defineField({ name: "inquiryLabel", title: "Inquiry label", type: "string" }),
     defineField({ name: "inquiryTitle", title: "Inquiry title", type: "string" }),
-    defineField({ name: "bestForBody", title: "Best for copy", type: "array", of: [{ type: "block" }] }),
-    defineField({ name: "contactBody", title: "Contact helper copy", type: "array", of: [{ type: "block" }] }),
+    defineField({ name: "bestForBody", title: "Best for copy", type: "array", of: [portableTextBlock] }),
+    defineField({ name: "contactBody", title: "Contact helper copy", type: "array", of: [portableTextBlock] }),
     defineField({
       name: "projectTypes",
       title: "Project types",
@@ -677,6 +766,7 @@ const serviceTrack = defineType({
 
 export const schemaTypes = [
   linkItem,
+  socialLinkItem,
   ctaItem,
   imageAssetValue,
   videoAssetValue,

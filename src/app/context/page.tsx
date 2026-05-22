@@ -6,6 +6,10 @@ import { resolveImageSrc } from "@/lib/media";
 export default async function ContextPage() {
   const context = await getContextPage();
   const portraitSrc = resolveImageSrc(context.portraitImage);
+  const portraitName = context.portraitName || "Greg Green";
+  const portraitLocation = context.portraitLocation || "Chicago";
+  const portraitRole = context.portraitRole || "Motion + Editorial";
+  const showWhyBody = context.whyBody.length > 0 && context.whyRows.length === 0;
 
   return (
     <SiteFrame currentPath="/context">
@@ -41,7 +45,7 @@ export default async function ContextPage() {
                   <span className="red-square"></span>
                   <span className="mono">{context.personHeading}</span>
                 </div>
-                <h2 className="section-title">{context.personHeading}</h2>
+                <h2 className="section-title">{context.pageTitle || context.personHeading}</h2>
               </div>
             </div>
 
@@ -50,14 +54,16 @@ export default async function ContextPage() {
 
               <div className="portrait-card">
                 <div className={`portrait-frame${portraitSrc ? "" : " is-missing"}`}>
-                  {portraitSrc ? <img src={portraitSrc} alt={context.portraitImage.alt || "Portrait"} loading="lazy" /> : null}
+                  {portraitSrc ? (
+                    <img src={portraitSrc} alt={context.portraitImage.alt || portraitName} loading="lazy" />
+                  ) : null}
                   {!portraitSrc ? <span className="portrait-fallback">Add portrait image</span> : null}
                 </div>
                 <div className="archive-caption">
                   <div className="archive-meta">
-                    <span>Greg Green</span>
-                    <span>Chicago</span>
-                    <span>Motion + Editorial</span>
+                    <span>{portraitName}</span>
+                    <span>{portraitLocation}</span>
+                    <span>{portraitRole}</span>
                   </div>
                 </div>
               </div>
@@ -79,6 +85,8 @@ export default async function ContextPage() {
                 </h2>
               </div>
             </div>
+
+            {showWhyBody ? <RichTextContent value={context.whyBody} className="prose-stack" /> : null}
 
             <div className="timeline-list">
               {context.whyRows.map((row) => (

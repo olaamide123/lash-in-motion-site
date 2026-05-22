@@ -1,8 +1,8 @@
 import type { VideoAssetValue } from "@/lib/types";
-import { resolveVideoSrc } from "@/lib/media";
+import { resolvePosterSrc, resolveVideoSrc, type SanityVideoAsset } from "@/lib/media";
 
 interface VideoFigureProps {
-  media?: VideoAssetValue & { videoFile?: { asset?: { url?: string } } };
+  media?: VideoAssetValue & SanityVideoAsset;
   className?: string;
   frameClassName?: string;
   topLabel?: string;
@@ -19,6 +19,7 @@ export function VideoFigure({
   if (!media) return null;
 
   const source = resolveVideoSrc(media);
+  const posterSrc = resolvePosterSrc(media.poster);
   const fitClass =
     media.fit === "cover"
       ? "vid-frame--cover"
@@ -61,7 +62,7 @@ export function VideoFigure({
               loop
               playsInline
               preload="metadata"
-              poster={media.poster?.src}
+              poster={posterSrc}
               disablePictureInPicture
               controlsList="nodownload nofullscreen noremoteplayback noplaybackrate"
             >

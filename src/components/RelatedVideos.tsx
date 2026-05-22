@@ -1,5 +1,6 @@
-import type { RelatedVideo } from "@/lib/types";
+import { RichTextContent } from "@/components/RichTextContent";
 import { VideoFigure } from "@/components/VideoFigure";
+import type { RelatedVideo } from "@/lib/types";
 
 interface RelatedVideosProps {
   items: RelatedVideo[];
@@ -21,6 +22,14 @@ export function RelatedVideos({ items }: RelatedVideosProps) {
               topLabel={item.title}
               bottomRight={item.media.meta || item.subtitle}
             />
+            {item.subtitle ? (
+              <div className="archive-meta">
+                <span>{item.subtitle}</span>
+              </div>
+            ) : null}
+            {item.description?.length ? (
+              <RichTextContent value={item.description} className="page-body" />
+            ) : null}
           </article>
         ))}
       </div>

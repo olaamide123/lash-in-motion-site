@@ -1,16 +1,14 @@
+import { CtaControl } from "@/components/CtaControl";
 import { SiteFrame } from "@/components/SiteFrame";
 import { VideoFigure } from "@/components/VideoFigure";
+import { homeCaseClass, homeMotionClass, renderFinalCtaTitle } from "@/lib/cms-helpers";
+import { resolveMotionVideo } from "@/lib/media";
 import { getHomepage } from "@/lib/sanity/fetch";
-
-const motionClasses = [
-  "work work--motion work--motion-a",
-  "work work--motion work--motion-b",
-  "work work--motion work--motion-c",
-  "work work--motion work--motion-d"
-];
 
 export default async function HomePage() {
   const homepage = await getHomepage();
+  const finalTitle = renderFinalCtaTitle(homepage.finalCTATitle || "Have something worth moving?");
+  const heroMeta = homepage.heroMetaLine || "Chicago — Motion + Editorial — Reel 2026";
 
   return (
     <SiteFrame currentPath="/">
@@ -46,13 +44,16 @@ export default async function HomePage() {
                   ))}
                 </h1>
                 <p className="hero-sub">{homepage.heroBody}</p>
+                <div className="hero-cta-row">
+                  <CtaControl cta={homepage.heroPrimaryCTA} className="btn-primary" />
+                </div>
                 <div className="hero-meta-markers" aria-hidden="true">
                   <span className="swatches">
                     <i className="r"></i>
                     <i className="b"></i>
                     <i className="y"></i>
                   </span>
-                  <span>Chicago — Motion + Editorial — Reel 2026</span>
+                  <span>{heroMeta}</span>
                 </div>
               </div>
 
@@ -76,6 +77,9 @@ export default async function HomePage() {
                   <span className="mono">{homepage.selectedWorkLabel}</span>
                 </div>
                 <h2 className="section-title">{homepage.selectedWorkTitle}</h2>
+                {homepage.selectedWorkSubtitle ? (
+                  <p className="section-subtitle">{homepage.selectedWorkSubtitle}</p>
+                ) : null}
               </div>
               <div>
                 <p className="section-intro">{homepage.selectedWorkIntro}</p>
@@ -85,10 +89,14 @@ export default async function HomePage() {
             <div className="work-tabs" role="tablist" aria-label="Filter Selected Work">
               <span className="work-tabs-label">View</span>
               <button className="work-tab" role="tab" data-tab="all" aria-selected="true">
-                All <span className="count">{String(homepage.selectedCaseStudies.length + homepage.selectedMotionPieces.length).padStart(2, "0")}</span>
+                All{" "}
+                <span className="count">
+                  {String(homepage.selectedCaseStudies.length + homepage.selectedMotionPieces.length).padStart(2, "0")}
+                </span>
               </button>
               <button className="work-tab" role="tab" data-tab="studies" aria-selected="false">
-                Case Studies <span className="count">{String(homepage.selectedCaseStudies.length).padStart(2, "0")}</span>
+                Case Studies{" "}
+                <span className="count">{String(homepage.selectedCaseStudies.length).padStart(2, "0")}</span>
               </button>
               <button className="work-tab" role="tab" data-tab="motion" aria-selected="false">
                 Shorter Work <span className="count">{String(homepage.selectedMotionPieces.length).padStart(2, "0")}</span>
@@ -98,22 +106,23 @@ export default async function HomePage() {
             <div className="work-section" data-section="studies">
               <div className="work-section-head">
                 <div className="section-stack">
-                  <div className="section-kicker">The Full Story.</div>
+                  <div className="section-kicker">{homepage.caseStudiesSectionKicker || "The Full Story."}</div>
                   <div className="work-section-eyebrow">
                     <span className="red-square"></span>
-                    <span className="mono">Case Studies</span>
+                    <span className="mono">{homepage.caseStudiesSectionEyebrow || "Case Studies"}</span>
                   </div>
-                  <h3 className="work-section-title">Projects That Made the Cut.</h3>
+                  <h3 className="work-section-title">
+                    {homepage.caseStudiesSectionTitle || "Projects That Made the Cut."}
+                  </h3>
                 </div>
-                <p className="work-section-intro">Some projects benefit from a little more context.</p>
+                <p className="work-section-intro">
+                  {homepage.caseStudiesSectionIntro || "Some projects benefit from a little more context."}
+                </p>
               </div>
 
               <div className="works">
                 {homepage.selectedCaseStudies.map((study, index) => (
-                  <article
-                    key={study.slug}
-                    className={index === 0 ? "work work--move" : "work work--volley"}
-                  >
+                  <article key={study.slug} className={homeCaseClass(study.slug, index)}>
                     {index === 0 ? (
                       <>
                         <VideoFigure
@@ -167,23 +176,28 @@ export default async function HomePage() {
             <div className="work-section" data-section="motion">
               <div className="work-section-head">
                 <div className="section-stack">
-                  <div className="section-kicker">Shorter Work.</div>
+                  <div className="section-kicker">{homepage.motionSectionKicker || "Shorter Work."}</div>
                   <div className="work-section-eyebrow">
                     <span className="brand-swatches sm" aria-hidden="true">
                       <i className="r"></i>
                       <i className="b"></i>
                       <i className="y"></i>
                     </span>
-                    <span className="mono">Standalone Pieces</span>
+                    <span className="mono">{homepage.motionSectionEyebrow || "Standalone Pieces"}</span>
                   </div>
-                  <h3 className="work-section-title">Motion, spots, and standalone pieces.</h3>
+                  <h3 className="work-section-title">
+                    {homepage.motionSectionTitle || "Motion, spots, and standalone pieces."}
+                  </h3>
                 </div>
-                <p className="work-section-intro">Shorter work that still carries the same attention to pace, clarity, and editorial shape.</p>
+                <p className="work-section-intro">
+                  {homepage.motionSectionIntro ||
+                    "Shorter work that still carries the same attention to pace, clarity, and editorial shape."}
+                </p>
               </div>
 
               <div className="works works--motion">
                 {homepage.selectedMotionPieces.map((piece, index) => (
-                  <article className={motionClasses[index] || "work work--motion"} key={piece.slug}>
+                  <article className={homeMotionClass(piece.slug, index)} key={piece.slug}>
                     <div className="work-caption">
                       <h3 className="work-title">{piece.title}</h3>
                       <span className="work-cat">
@@ -200,7 +214,7 @@ export default async function HomePage() {
                     </div>
                     <VideoFigure
                       className={`vid ${index % 2 === 0 ? "video-scale video-scale--left" : "video-scale video-scale--right"}`}
-                      media={piece.videoFile}
+                      media={resolveMotionVideo(piece)}
                       topLabel={piece.videoFile?.label || piece.title}
                       bottomRight={piece.category}
                     />
@@ -279,14 +293,21 @@ export default async function HomePage() {
             <div className="contact-inner">
               <div>
                 <h2>
-                  Have something <span className="italic ed-italic">worth moving?</span>
+                  {typeof finalTitle === "string" ? (
+                    finalTitle
+                  ) : (
+                    <>
+                      {finalTitle.lead}
+                      <span className="italic ed-italic">{finalTitle.accent}</span>
+                    </>
+                  )}
                 </h2>
               </div>
               <div>
                 <p className="body">{homepage.finalCTABody}</p>
                 <div className="contact-cta-row">
                   <button type="button" className="btn-ghost js-open-reel">
-                    <span className="red-square"></span> {homepage.finalCTAButtonText}
+                    <span className="red-square"></span> {homepage.finalCTAButtonText || homepage.mainReelButtonText}
                   </button>
                 </div>
               </div>

@@ -1,5 +1,7 @@
 import { SiteFrame } from "@/components/SiteFrame";
 import { VideoFigure } from "@/components/VideoFigure";
+import { splitPageTitleLines } from "@/lib/cms-helpers";
+import { resolveMotionVideo } from "@/lib/media";
 import { getWorkPage } from "@/lib/sanity/fetch";
 import type { MotionPiece } from "@/lib/types";
 
@@ -9,6 +11,7 @@ function linkedVideoCount(study: { relatedVideos?: unknown[]; heroVideo?: unknow
 
 export default async function WorkPage() {
   const workPage = await getWorkPage();
+  const [titleLineOne, titleLineTwo] = splitPageTitleLines(workPage.pageTitle || "Selected Work.");
 
   const piecesByGroup = workPage.motionGroups.map((group) => ({
     ...group,
@@ -29,8 +32,8 @@ export default async function WorkPage() {
                   <span className="mono">{workPage.pageLabel}</span>
                 </div>
                 <h1 className="page-title">
-                  <span className="page-title-line">Selected</span>
-                  <span className="page-title-line">Work.</span>
+                  <span className="page-title-line">{titleLineOne}</span>
+                  {titleLineTwo ? <span className="page-title-line">{titleLineTwo}</span> : null}
                 </h1>
               </div>
               <div className="page-meta-stack">
@@ -157,6 +160,7 @@ export default async function WorkPage() {
 }
 
 function MotionArchiveItem({ piece, index }: { piece: MotionPiece; index: number }) {
+  const media = resolveMotionVideo(piece);
   const layoutClass =
     index === 0
       ? "archive-item archive-item--feature is-wide"
@@ -172,11 +176,13 @@ function MotionArchiveItem({ piece, index }: { piece: MotionPiece; index: number
                 ? "archive-item archive-item--wide-shift is-wide"
                 : "archive-item archive-item--feature-alt is-wide";
 
+  const externalUrl = piece.videoFile?.videoUrl || piece.videoUrl || piece.resolvedVideoUrl;
+
   return (
     <article className={layoutClass}>
       <VideoFigure
         className="vid video-scale video-scale--center"
-        media={piece.videoFile}
+        media={media}
         topLabel={piece.title}
         bottomRight={piece.videoFile?.meta || piece.subtitle}
       />
@@ -187,14 +193,16 @@ function MotionArchiveItem({ piece, index }: { piece: MotionPiece; index: number
         <div className="archive-meta">
           <span>{piece.subtitle}</span>
           <span>{piece.category}</span>
+          {piece.year ? <span>{piece.year}</span> : null}
+          {piece.duration ? <span>{piece.duration}</span> : null}
         </div>
         {piece.description.map((block) => (
           <p className="page-body" key={block._key}>
             {block.children.map((child) => child.text).join("")}
           </p>
         ))}
-        {piece.videoFile?.embedUrl ? (
-          <a className="link-arrow" href={piece.videoFile.videoUrl} target="_blank" rel="noreferrer">
+        {media?.embedUrl && externalUrl ? (
+          <a className="link-arrow" href={externalUrl} target="_blank" rel="noreferrer">
             <span className="red-square"></span>Watch on Vimeo
           </a>
         ) : null}

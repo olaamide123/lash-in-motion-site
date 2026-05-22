@@ -1,10 +1,14 @@
 import type { Metadata } from "next";
+import { Fragment } from "react";
 import { notFound } from "next/navigation";
 
 import { CaseStudySection } from "@/components/CaseStudySection";
+import { RelatedVideos } from "@/components/RelatedVideos";
 import { RichTextContent } from "@/components/RichTextContent";
 import { SiteFrame } from "@/components/SiteFrame";
 import { VideoFigure } from "@/components/VideoFigure";
+import { groupRelatedVideos } from "@/lib/cms-helpers";
+import { resolveImageSrc } from "@/lib/media";
 import { getCaseStudies, getCaseStudyBySlug } from "@/lib/sanity/fetch";
 
 interface CaseStudyPageProps {
@@ -26,12 +30,12 @@ export async function generateMetadata({ params }: CaseStudyPageProps): Promise<
 
   if (!study) {
     return {
-      title: "Case Study — Lash In Motion"
+      title: "Case Study"
     };
   }
 
   return {
-    title: study.seoTitle || `${study.title} — Lash In Motion`,
+    title: study.seoTitle || study.title,
     description: study.seoDescription || study.summary
   };
 }
@@ -50,6 +54,14 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
   const sectionVideos = (section: string) =>
     (study.relatedVideos || []).filter((item) => (item.sectionPlacement || "execution") === section);
 
+  const overviewVideos = sectionVideos("overview");
+  const { byParagraph: overviewByParagraph, trailing: overviewTrailing } = groupRelatedVideos(overviewVideos);
+  const heroImageSrc = resolveImageSrc(study.heroImage);
+  const servicesLabel =
+    study.services.length && study.services.join(", ") !== study.role.join(", ")
+      ? study.services.join(", ")
+      : null;
+
   return (
     <SiteFrame currentPath="/work">
       <main>
@@ -63,6 +75,7 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
                 </div>
                 <h1 className="page-title">{study.title}</h1>
                 <p className="case-summary">{study.subtitle}</p>
+                {study.summary ? <p className="page-body">{study.summary}</p> : null}
                 <div className="case-actions" style={{ marginTop: 20 }}>
                   <a className="btn-primary" href="#main-video">
                     View Motion <span className="arrow">→</span>
@@ -73,18 +86,37 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
                 </div>
               </div>
               <div className="case-stat-grid">
+                {study.client ? (
+                  <div className="case-stat">
+                    <span className="case-stat-label">Client</span>
+                    <span className="case-stat-value">{study.client}</span>
+                  </div>
+                ) : null}
+                {study.year ? (
+                  <div className="case-stat">
+                    <span className="case-stat-label">Year</span>
+                    <span className="case-stat-value">{study.year}</span>
+                  </div>
+                ) : null}
                 <div className="case-stat">
                   <span className="case-stat-label">Role</span>
                   <span className="case-stat-value">{study.role.join(", ")}</span>
                 </div>
-                <div className="case-stat">
-                  <span className="case-stat-label">Category</span>
-                  <span className="case-stat-value">{study.category}</span>
-                </div>
+                {servicesLabel ? (
+                  <div className="case-stat">
+                    <span className="case-stat-label">Services</span>
+                    <span className="case-stat-value">{servicesLabel}</span>
+                  </div>
+                ) : (
+                  <div className="case-stat">
+                    <span className="case-stat-label">Category</span>
+                    <span className="case-stat-value">{study.category}</span>
+                  </div>
+                )}
                 <div className="case-stat">
                   <span className="case-stat-label">Videos</span>
                   <span className="case-stat-value">
-                    {(study.heroVideo ? 1 : 0) + (study.relatedVideos?.length || 0)}
+                    {(study.heroVideo || study.heroImage ? 1 : 0) + (study.relatedVideos?.length || 0)}
                   </span>
                 </div>
               </div>
@@ -103,6 +135,14 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
               />
             </div>
           </section>
+        ) : heroImageSrc ? (
+          <section className="page-section page-section--tight-top case-main-media" id="main-video">
+            <div className="container">
+              <figure className="vid video-scale video-scale--center">
+                <img src={heroImageSrc} alt={study.heroImage?.alt || study.title} loading="lazy" />
+              </figure>
+            </div>
+          </section>
         ) : null}
 
         <section className="page-section">
@@ -113,7 +153,14 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
                   <span className="red-square"></span>
                   <span className="mono">Overview</span>
                 </div>
-                <RichTextContent value={study.overview} className="overview-copy" />
+                {study.overview.map((block, index) => (
+                  <Fragment key={block._key}>
+                    <RichTextContent value={[block]} className="overview-copy" />
+                    {overviewByParagraph.get(index)?.length ? (
+                      <RelatedVideos items={overviewByParagraph.get(index) || []} />
+                    ) : null}
+                  </Fragment>
+                ))}
               </div>
               <div className="timeline-list">
                 {(study.overviewHighlights || []).map((row) => (
@@ -127,6 +174,7 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
                 ))}
               </div>
             </div>
+            {overviewTrailing.length ? <RelatedVideos items={overviewTrailing} /> : null}
           </div>
         </section>
 
@@ -134,6 +182,10 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
         <CaseStudySection label="The Approach" body={study.approach} relatedVideos={sectionVideos("approach")} />
         <CaseStudySection label="The Execution" body={study.execution} relatedVideos={sectionVideos("execution")} />
         <CaseStudySection label="The Outcome" body={study.outcome} relatedVideos={sectionVideos("outcome")} />
+
+        {study.whatToNotice?.length ? (
+          <CaseStudySection label="What to Notice" body={study.whatToNotice} />
+        ) : null}
 
         <section className="page-section">
           <div className="container">

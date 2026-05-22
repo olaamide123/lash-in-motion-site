@@ -6,6 +6,13 @@ const linkFields = `
   newTab
 `;
 
+const socialLinkFields = `
+  label,
+  iconLabel,
+  href,
+  newTab
+`;
+
 const imageFields = `
   alt,
   src,
@@ -83,6 +90,7 @@ export const motionPieceFields = `
     ${videoFields}
   },
   videoUrl,
+  "resolvedVideoUrl": coalesce(videoUrl, videoFile.videoUrl),
   thumbnail{
     ${imageFields}
   },
@@ -165,8 +173,9 @@ export const siteSettingsQuery = groq`
     },
     footerContactEmail,
     footerContactHelperText,
+    footerLocation,
     socialLinks[]{
-      ${linkFields}
+      ${socialLinkFields}
     }
   }
 `;
@@ -177,6 +186,7 @@ export const homepageQuery = groq`
     heroHeadline,
     heroAccentWord,
     heroBody,
+    heroMetaLine,
     heroPrimaryCTA{
       label,
       href,
@@ -190,6 +200,14 @@ export const homepageQuery = groq`
     selectedWorkTitle,
     selectedWorkSubtitle,
     selectedWorkIntro,
+    caseStudiesSectionKicker,
+    caseStudiesSectionEyebrow,
+    caseStudiesSectionTitle,
+    caseStudiesSectionIntro,
+    motionSectionKicker,
+    motionSectionEyebrow,
+    motionSectionTitle,
+    motionSectionIntro,
     selectedCaseStudies[]->{
       ${caseStudyFields}
     },
@@ -244,6 +262,9 @@ export const contextPageQuery = groq`
     portraitImage{
       ${imageFields}
     },
+    portraitName,
+    portraitLocation,
+    portraitRole,
     personHeading,
     personBody[]{
       ${portableTextFields}

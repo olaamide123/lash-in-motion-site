@@ -1,8 +1,13 @@
 export type RichTextBlock = {
   _type: "block";
   _key: string;
-  style: "normal";
-  markDefs: [];
+  style?: string;
+  markDefs?: Array<{
+    _key?: string;
+    _type: "link";
+    href?: string;
+    blank?: boolean;
+  }>;
   children: Array<{
     _type: "span";
     _key: string;
@@ -14,9 +19,17 @@ export type RichTextBlock = {
 export type Tone = "default" | "blue" | "yellow";
 export type VideoFit = "contain" | "cover" | "embed";
 
+export interface SanityAssetRef {
+  asset?: {
+    _ref?: string;
+    url?: string;
+  };
+}
+
 export interface ImageAssetValue {
   src?: string;
   alt?: string;
+  image?: SanityAssetRef;
 }
 
 export interface VideoAssetValue {
@@ -27,6 +40,7 @@ export interface VideoAssetValue {
   fit?: VideoFit;
   meta?: string;
   label?: string;
+  videoFile?: SanityAssetRef;
 }
 
 export interface LinkItem {
@@ -41,8 +55,11 @@ export interface CTAItem {
   action?: "link" | "reel";
 }
 
-export interface FooterSocialLink extends LinkItem {
+export interface FooterSocialLink {
+  label: string;
+  href: string;
   iconLabel?: string;
+  newTab?: boolean;
 }
 
 export interface SiteSettings {
@@ -57,6 +74,7 @@ export interface SiteSettings {
   footerExploreLinks: LinkItem[];
   footerContactEmail: string;
   footerContactHelperText: string;
+  footerLocation?: string;
   socialLinks: FooterSocialLink[];
 }
 
@@ -69,11 +87,12 @@ export interface ServiceTrack {
   order: number;
 }
 
-export interface Homepage {
+export interface HomepageSeed {
   heroLabel: string;
   heroHeadline: string;
   heroAccentWord: string;
   heroBody: string;
+  heroMetaLine?: string;
   heroPrimaryCTA: CTAItem;
   mainReel: VideoAssetValue;
   mainReelButtonText: string;
@@ -83,6 +102,14 @@ export interface Homepage {
   selectedWorkIntro: string;
   selectedCaseStudies: string[];
   selectedMotionPieces: string[];
+  caseStudiesSectionKicker?: string;
+  caseStudiesSectionEyebrow?: string;
+  caseStudiesSectionTitle?: string;
+  caseStudiesSectionIntro?: string;
+  motionSectionKicker?: string;
+  motionSectionEyebrow?: string;
+  motionSectionTitle?: string;
+  motionSectionIntro?: string;
   whyThisExistsLabel: string;
   whyThisExistsTitle: string;
   whyThisExistsBody: RichTextBlock[];
@@ -95,6 +122,12 @@ export interface Homepage {
   finalCTAButtonText: string;
 }
 
+export interface Homepage extends Omit<HomepageSeed, "selectedCaseStudies" | "selectedMotionPieces" | "serviceTracks"> {
+  selectedCaseStudies: CaseStudy[];
+  selectedMotionPieces: MotionPiece[];
+  serviceTracks: ServiceTrack[];
+}
+
 export interface MotionGroup {
   key: string;
   label: string;
@@ -102,7 +135,7 @@ export interface MotionGroup {
   body: string;
 }
 
-export interface WorkPage {
+export interface WorkPageSeed {
   pageLabel: string;
   pageTitle: string;
   introCopy: string;
@@ -113,6 +146,11 @@ export interface WorkPage {
   featuredCaseStudies: string[];
   featuredMotionPieces: string[];
   motionGroups: MotionGroup[];
+}
+
+export interface WorkPage extends Omit<WorkPageSeed, "featuredCaseStudies" | "featuredMotionPieces"> {
+  featuredCaseStudies: CaseStudy[];
+  featuredMotionPieces: MotionPiece[];
 }
 
 export interface OverviewHighlight {
@@ -166,6 +204,7 @@ export interface MotionPiece {
   description: RichTextBlock[];
   videoFile?: VideoAssetValue;
   videoUrl?: string;
+  resolvedVideoUrl?: string;
   thumbnail?: ImageAssetValue;
   client?: string;
   year?: string;
@@ -180,6 +219,9 @@ export interface ContextPage {
   pageLabel: string;
   pageTitle: string;
   portraitImage: ImageAssetValue;
+  portraitName?: string;
+  portraitLocation?: string;
+  portraitRole?: string;
   personHeading: string;
   personBody: RichTextBlock[];
   whyHeading: string;
@@ -206,8 +248,8 @@ export interface MakeSomethingPage {
 
 export interface SeedContent {
   siteSettings: SiteSettings;
-  homepage: Homepage;
-  workPage: WorkPage;
+  homepage: HomepageSeed;
+  workPage: WorkPageSeed;
   caseStudies: CaseStudy[];
   motionPieces: MotionPiece[];
   contextPage: ContextPage;

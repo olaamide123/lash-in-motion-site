@@ -37,18 +37,7 @@ export async function getSiteSettings(): Promise<SiteSettings> {
   return fetchWithFallback(siteSettingsQuery, seedContent.siteSettings);
 }
 
-type HomepageResolved = Omit<Homepage, "selectedCaseStudies" | "selectedMotionPieces" | "serviceTracks"> & {
-  selectedCaseStudies: CaseStudy[];
-  selectedMotionPieces: MotionPiece[];
-  serviceTracks: ServiceTrack[];
-};
-
-type WorkPageResolved = Omit<WorkPage, "featuredCaseStudies" | "featuredMotionPieces"> & {
-  featuredCaseStudies: CaseStudy[];
-  featuredMotionPieces: MotionPiece[];
-};
-
-export async function getHomepage(): Promise<HomepageResolved> {
+export async function getHomepage(): Promise<Homepage> {
   const fallback = {
     ...seedContent.homepage,
     selectedCaseStudies: seedContent.caseStudies.filter((item) =>
@@ -62,7 +51,7 @@ export async function getHomepage(): Promise<HomepageResolved> {
   return fetchWithFallback(homepageQuery, fallback);
 }
 
-export async function getWorkPage(): Promise<WorkPageResolved> {
+export async function getWorkPage(): Promise<WorkPage> {
   const fallback = {
     ...seedContent.workPage,
     featuredCaseStudies: seedContent.caseStudies.filter((item) =>

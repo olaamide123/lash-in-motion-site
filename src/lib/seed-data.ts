@@ -1,14 +1,14 @@
 import type {
   CaseStudy,
   ContextPage,
-  Homepage,
+  HomepageSeed,
   MakeSomethingPage,
   MotionPiece,
   RichTextBlock,
   SeedContent,
   ServiceTrack,
   SiteSettings,
-  WorkPage
+  WorkPageSeed
 } from "@/lib/types";
 
 let keyIndex = 0;
@@ -70,6 +70,7 @@ export const siteSettings: SiteSettings = {
   ],
   footerContactEmail: "create@lashinmotion.com",
   footerContactHelperText: "Usually the fastest way.",
+  footerLocation: "Chicago, IL",
   socialLinks: []
 };
 
@@ -100,11 +101,12 @@ export const serviceTracks: ServiceTrack[] = [
   }
 ];
 
-export const homepage: Homepage = {
+export const homepage: HomepageSeed = {
   heroLabel: "Reel 2026",
   heroHeadline: "Motion that knows\nwhat to",
   heroAccentWord: "leave out.",
   heroBody: "Motion design, editing, and storytelling built with clarity, rhythm, and enough restraint to know when less is doing more.",
+  heroMetaLine: "Chicago — Motion + Editorial — Reel 2026",
   heroPrimaryCTA: {
     label: "Make Something.",
     href: "/make-something",
@@ -121,6 +123,15 @@ export const homepage: Homepage = {
   selectedWorkTitle: "Selected Work.",
   selectedWorkSubtitle: "Selected Work.",
   selectedWorkIntro: "A selection of motion, editing, and visual storytelling projects shaped through research, rhythm, and a healthy amount of problem solving. Case studies first. Shorter pieces below.",
+  caseStudiesSectionKicker: "The Full Story.",
+  caseStudiesSectionEyebrow: "Case Studies",
+  caseStudiesSectionTitle: "Projects That Made the Cut.",
+  caseStudiesSectionIntro: "Some projects benefit from a little more context.",
+  motionSectionKicker: "Shorter Work.",
+  motionSectionEyebrow: "Standalone Pieces",
+  motionSectionTitle: "Motion, spots, and standalone pieces.",
+  motionSectionIntro:
+    "Shorter work that still carries the same attention to pace, clarity, and editorial shape.",
   selectedCaseStudies: ["move", "carrum-health-patient-guide"],
   selectedMotionPieces: ["adge-ai", "caymall", "hcg-smores", "dirt-road"],
   whyThisExistsLabel: "Why This Exists.",
@@ -139,7 +150,7 @@ export const homepage: Homepage = {
   finalCTAButtonText: "See It."
 };
 
-export const workPage: WorkPage = {
+export const workPage: WorkPageSeed = {
   pageLabel: "Work",
   pageTitle: "Selected Work.",
   introCopy: "A selection of motion, editing, and visual storytelling projects shaped through research, rhythm, and a healthy amount of problem solving. Case studies first. Shorter pieces below.",
@@ -194,6 +205,7 @@ export const caseStudies: CaseStudy[] = [
     category: "Campaign & Advocacy",
     summary: "A campaign anthem built around civic participation, urgency, and a sense of collective momentum.",
     client: "MOVE",
+    year: "2024–2026",
     role: ["Research", "Scripting", "Editorial", "Motion"],
     services: ["Research", "Scripting", "Editorial", "Motion"],
     heroVideo: {
@@ -245,12 +257,16 @@ export const caseStudies: CaseStudy[] = [
           fit: "contain"
         },
         sectionPlacement: "execution",
-        afterParagraph: 1
+        afterParagraph: 1,
+        description: pt(["A later campaign update kept the same civic message while reflecting a changed political climate."])
       }
     ],
     outcome: pt([
       "From research and scripting to visual development, AI generation, editorial structure, and motion design, the result was a flexible system of launch content capable of evolving alongside the organization itself.",
       "Just as importantly, the work helped MOVE transition from a reactive political identity toward something broader, steadier, and more accessible. Civic engagement is difficult enough. The message did not need to make it harder."
+    ]),
+    whatToNotice: pt([
+      "The anthem evolved with the political moment without losing its civic center of gravity."
     ]),
     featured: true,
     order: 1,
@@ -265,6 +281,7 @@ export const caseStudies: CaseStudy[] = [
     category: "Explainer & Education",
     summary: "Complex healthcare topics translated into approachable motion built for clarity, trust, and a more human kind of communication.",
     client: "Carrum Health",
+    year: "2023–2025",
     role: ["Scripting", "Concept Development", "Motion"],
     services: ["Scripting", "Concept Development", "Motion"],
     heroVideo: {
@@ -341,6 +358,9 @@ export const caseStudies: CaseStudy[] = [
       "From scripting and concept development through art direction, storyboarding, animation, and final delivery, the result was a cohesive library of content built to scale.",
       "Just as importantly, the work helped shift the tone from something that felt closer to corporate insurance toward something more approachable, reassuring, and human. Because healthcare information is already complicated enough."
     ]),
+    whatToNotice: pt([
+      "Each explainer uses a visual language matched to the sensitivity of the subject, not a one-size template."
+    ]),
     featured: true,
     order: 2,
     seoTitle: "Carrum Health – Patient Guide — Lash In Motion",
@@ -354,6 +374,7 @@ export const caseStudies: CaseStudy[] = [
     category: "Launch Film",
     summary: "A future-facing launch film focused on rhythm, restraint, and making a lean visual toolkit feel bigger than it is.",
     client: "Volley",
+    year: "2024",
     role: ["Scripting", "Creative Direction", "Motion"],
     services: ["Scripting", "Creative Direction", "Motion"],
     heroVideo: {
@@ -401,6 +422,9 @@ export const caseStudies: CaseStudy[] = [
       "From scripting and editorial structure to AI assisted workflows, motion tracking, UI design, and final animation, the result was a launch video that felt considerably bigger than the available materials suggested.",
       "More importantly, the work helped position Volley as more than a training device. It framed the platform as something smarter, more forward looking, and built around measurable progress. Which, in fairness, is exactly what the product was trying to do."
     ]),
+    whatToNotice: pt([
+      "Interface graphics and tracked data sell the product before the finished app exists on screen."
+    ]),
     featured: true,
     order: 3,
     seoTitle: "Volley — Lash In Motion",
@@ -425,6 +449,8 @@ export const motionPieces: MotionPiece[] = [
       fit: "contain"
     },
     client: "Jaime Harrison Campaign",
+    year: "2020",
+    duration: "60s",
     featured: true,
     showOnHomepage: true,
     order: 1,
@@ -693,6 +719,9 @@ export const contextPage: ContextPage = {
     src: "/assets/images/Greg_Green.jpeg",
     alt: "Portrait of Greg Green"
   },
+  portraitName: "Greg Green",
+  portraitLocation: "Chicago",
+  portraitRole: "Motion + Editorial",
   personHeading: "The Person Behind It",
   personBody: pt([
     "More than a decade in motion design has meant working across a wide range of creative challenges, industries, timelines, and expectations. Some carefully planned. Some held together by deadlines and determination.",

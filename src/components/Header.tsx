@@ -1,3 +1,5 @@
+import { CtaControl } from "@/components/CtaControl";
+import { resolveImageSrc } from "@/lib/media";
 import type { SiteSettings } from "@/lib/types";
 
 function renderLogoText(text: string) {
@@ -19,7 +21,7 @@ interface HeaderProps {
 }
 
 export function Header({ settings, currentPath }: HeaderProps) {
-  const logoSrc = settings.roundLogo.src || "/assets/images/lim-round-mark.png";
+  const logoSrc = resolveImageSrc(settings.roundLogo) || "/assets/images/lim-round-mark.png";
 
   return (
     <header className="nav" role="banner">
@@ -56,17 +58,7 @@ export function Header({ settings, currentPath }: HeaderProps) {
             <i className="b"></i>
             <i className="c"></i>
           </span>
-          {settings.primaryCTA.href ? (
-            <a className="nav-cta" href={settings.primaryCTA.href}>
-              <span className="dot" aria-hidden="true"></span>
-              {settings.primaryCTA.label}
-            </a>
-          ) : (
-            <button type="button" className="nav-cta js-open-reel">
-              <span className="dot" aria-hidden="true"></span>
-              {settings.primaryCTA.label}
-            </button>
-          )}
+          <CtaControl cta={settings.primaryCTA} className="nav-cta" />
         </div>
       </div>
     </header>

@@ -26,6 +26,7 @@ export default async function MakeSomethingPage() {
                   <span className="red-square"></span>
                   {page.contactEmail}
                 </a>
+                {page.emailHelperText ? <p className="page-body">{page.emailHelperText}</p> : null}
               </div>
             </div>
           </div>
