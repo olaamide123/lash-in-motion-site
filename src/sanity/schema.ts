@@ -1,18 +1,6 @@
-import { defineArrayMember, defineField, defineType, type StringRule } from "sanity";
+import { defineArrayMember, defineField, defineType } from "sanity";
 
-/** Accepts https?:// URLs or root-relative local assets under /assets/ */
-const MEDIA_PATH_PATTERN = /^(https?:\/\/|\/assets\/)/;
-
-function isValidMediaPath(value: unknown) {
-  return typeof value === "string" && MEDIA_PATH_PATTERN.test(value);
-}
-
-const mediaPathValidation = (rule: StringRule) =>
-  rule.custom((value) => {
-    if (value === undefined || value === null || value === "") return true;
-    if (isValidMediaPath(value)) return true;
-    return 'Use a full URL (http:// or https://) or a local path starting with /assets/ (e.g. /assets/images/photo.jpeg).';
-  });
+import { embedUrlValidation, mediaPathValidation } from "./validation";
 
 const portableTextBlock = defineArrayMember({
   type: "block",
@@ -211,8 +199,9 @@ const videoAssetValue = defineType({
     defineField({
       name: "embedUrl",
       title: "Embed URL",
-      type: "url",
-      description: "Use for Vimeo or other embed-only pieces."
+      type: "string",
+      description: "Vimeo or other embed player URL (https:// only). Not for local /assets/ video files.",
+      validation: embedUrlValidation
     }),
     defineField({
       name: "poster",

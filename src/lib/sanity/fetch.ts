@@ -10,6 +10,7 @@ import type {
   WorkPage
 } from "@/lib/types";
 import { sanityClient } from "@/lib/sanity/client";
+import { sanityFetchOptions } from "@/lib/sanity/fetch-options";
 import {
   caseStudiesQuery,
   caseStudyBySlugQuery,
@@ -24,7 +25,7 @@ import {
 
 async function fetchWithFallback<T>(query: string, fallback: T, params?: Record<string, unknown>) {
   try {
-    const data = await sanityClient.fetch<T | null>(query, params as never);
+    const data = await sanityClient.fetch<T | null>(query, params as never, sanityFetchOptions);
     if (data == null) return fallback;
     if (Array.isArray(data) && data.length === 0) return fallback;
     return data;
@@ -86,7 +87,11 @@ export async function getServiceTracks(): Promise<ServiceTrack[]> {
 
 export async function getCaseStudyBySlug(slug: string): Promise<CaseStudy | null> {
   try {
-    const data = await sanityClient.fetch<CaseStudy | null>(caseStudyBySlugQuery, { slug });
+    const data = await sanityClient.fetch<CaseStudy | null>(
+      caseStudyBySlugQuery,
+      { slug },
+      sanityFetchOptions
+    );
     if (data) return data;
   } catch {
     // Fall back below.
