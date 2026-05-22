@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Make Something. — Lash In Motion</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="For campaign films, brand motion, editorial pieces, and projects that need clarity from concept to final delivery." />
+  <meta name="theme-color" content="#f4efe4" />
+  <link rel="icon" href="assets/images/lim-round-mark.png" type="image/png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+  <header class="nav" role="banner">
+    <div class="nav-inner">
+      <a class="logo" href="index.html" aria-label="Lash In Motion — home">
+        <span class="logo-mark-svg" aria-hidden="true">
+          <img class="logo-mark-img" src="assets/images/lim-round-mark.png" alt="" />
+        </span>
+        <span class="logo-name">Lash <span class="em">In</span> Motion</span>
+      </a>
+      <nav class="nav-links" aria-label="Primary">
+        <a href="index.html">Home</a>
+        <a href="work.html">Work</a>
+        <a href="context.html">Context</a>
+        <a href="make-something.html" aria-current="page">Make Something.</a>
+      </nav>
+      <div class="nav-right">
+        <span class="palette" aria-hidden="true"><i class="a"></i><i class="b"></i><i class="c"></i></span>
+        
+        <a class="nav-cta" href="make-something.html"><span class="dot" aria-hidden="true"></span>Make Something.</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="page-hero">
+      <div class="container">
+        <div class="page-hero-inner">
+          <div>
+            <div class="page-kicker">
+              <span class="red-square"></span>
+              <span class="mono">Make Something.</span>
+            </div>
+            <h1 class="page-title">Have something worth moving?</h1>
+          </div>
+          <div class="page-meta-stack">
+            <p class="page-intro">For campaign films, brand motion, editorial pieces, and projects that need clarity from concept to final delivery.</p>
+            <a class="contact-email" href="mailto:create@lashinmotion.com"><span class="red-square"></span>create@lashinmotion.com</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page-section page-section--tight-top">
+      <div class="container">
+        <div class="contact-layout">
+          <div class="contact-panel">
+            <div class="section-eyebrow">
+              <span class="red-square"></span>
+              <span class="mono">Inquiry</span>
+            </div>
+            <h2 class="context-title">Tell me what needs to move.</h2>
+            <p class="contact-copy">Share the shape of the project, what stage it is in, and what kind of support would be most useful. The form is set up for Web3Forms and can also be swapped to Formspree if needed.</p>
+            <div class="timeline-list">
+              <div class="timeline-row">
+                <div class="timeline-row-label"><span class="marker"></span>Best For</div>
+                <div class="prose-stack">
+                  <p>Campaign films, motion systems, launch pieces, explainers, and editorial projects that need more than surface polish.</p>
+                </div>
+              </div>
+              <div class="timeline-row" data-tone="blue">
+                <div class="timeline-row-label"><span class="marker"></span>Contact</div>
+                <div class="prose-stack">
+                  <p>If email is easier, use <a href="mailto:create@lashinmotion.com">create@lashinmotion.com</a>. The form remains the main intake so it can connect cleanly to a simple service.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-panel">
+            <form class="form-shell" action="https://api.web3forms.com/submit" method="POST">
+              <!-- Replace the placeholder below with the live Web3Forms access key. If using Formspree instead, swap the action URL to your Formspree endpoint. -->
+              <input type="hidden" name="access_key" value="PASTE_WEB3FORMS_ACCESS_KEY_HERE" />
+              <input type="hidden" name="subject" value="New Lash In Motion project inquiry" />
+
+              <div class="form-grid">
+                <div class="field">
+                  <label for="name">Name</label>
+                  <input id="name" name="name" type="text" required />
+                </div>
+                <div class="field">
+                  <label for="email">Email</label>
+                  <input id="email" name="email" type="email" required />
+                </div>
+                <div class="field">
+                  <label for="company">Company / Organization</label>
+                  <input id="company" name="company" type="text" />
+                </div>
+                <div class="field">
+                  <label for="project-type">Project Type</label>
+                  <select id="project-type" name="project_type" required>
+                    <option value="">Select one</option>
+                    <option>Motion Design</option>
+                    <option>Editing &amp; Storytelling</option>
+                    <option>Campaign &amp; Advocacy</option>
+                    <option>Brand Film</option>
+                    <option>Explainer</option>
+                    <option>Other</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="budget">Budget Range</label>
+                  <select id="budget" name="budget_range" required>
+                    <option value="">Select one</option>
+                    <option>Under $5k</option>
+                    <option>$5k to $10k</option>
+                    <option>$10k to $25k</option>
+                    <option>$25k+</option>
+                    <option>Not sure yet</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="timeline">Timeline</label>
+                  <select id="timeline" name="timeline" required>
+                    <option value="">Select one</option>
+                    <option>ASAP</option>
+                    <option>This month</option>
+                    <option>Next 1 to 3 months</option>
+                    <option>Flexible</option>
+                  </select>
+                </div>
+                <div class="field full">
+                  <label for="message">Message</label>
+                  <textarea id="message" name="message" required></textarea>
+                </div>
+              </div>
+
+              <div class="section-actions">
+                <button class="btn-primary" type="submit">Send Inquiry <span class="arrow">→</span></button>
+                <span class="form-note">Ready for Web3Forms or Formspree endpoint swap</span>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="foot-rhythm" aria-hidden="true">
+        <span class="timeline-track timeline-track-blue in-view"></span>
+        <span class="timeline-track timeline-track-red in-view"></span>
+        <span class="timeline-track timeline-track-yellow in-view"></span>
+      </div>
+      <div class="foot-grid">
+        <div class="foot-brand">
+          <div class="foot-brand-top">
+            <span class="brand-mark-full" aria-hidden="true">
+              <img class="brand-mark-img" src="assets/images/lim-round-mark.png" alt="" />
+            </span>
+            <div>
+              <div class="lim">Lash in Motion</div>
+              <div class="mono-soft sub">Chicago, IL</div>
+            </div>
+          </div>
+        </div>
+        <div class="foot-col">
+          <h4>Navigate</h4>
+          <a href="index.html">Home</a>
+          <a href="work.html">Work</a>
+          <a href="context.html">Context</a>
+          <a href="make-something.html">Make Something.</a>
+        </div>
+        <div class="foot-col">
+          <h4>Connect</h4>
+          <a href="mailto:create@lashinmotion.com">create@lashinmotion.com</a>
+          <div class="foot-note">Usually the fastest way.</div>
+        </div>
+        <div class="foot-col">
+          <h4>WORTH MAKING</h4>
+          <div class="foot-list">
+            <span>Campaign films</span>
+            <span>Editorial work</span>
+            <span>Brand motion</span>
+            <span>Political &amp; advocacy</span>
+            <span>Explainers &amp; education</span>
+          </div>
+        </div>
+      </div>
+      <div class="foot-bottom">
+        <span>Motion that knows what to leave out. © 2026 Lash in Motion LLC. Made with care. Rights reserved.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/script.js"></script>
+</body>
+</html>
