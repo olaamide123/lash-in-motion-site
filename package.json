@@ -8,7 +8,7 @@
     "build": "npm run prepare:assets && next build",
     "start": "next start",
     "lint": "next lint",
-    "seed:sanity": "tsx scripts/seed-sanity.ts",
+    "seed:sanity": "tsx --env-file=.env.local scripts/seed-sanity.ts",
     "vercel-build": "npm run build"
   },
   "dependencies": {
