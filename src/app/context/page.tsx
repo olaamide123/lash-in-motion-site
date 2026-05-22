@@ -1,6 +1,5 @@
 import { RichTextContent } from "@/components/RichTextContent";
 import { SiteFrame } from "@/components/SiteFrame";
-import { getMarkerColorClass, getTextColorClass, joinClasses } from "@/lib/cms-helpers";
 import { getContextPage } from "@/lib/sanity/fetch";
 import { resolveImageSrc } from "@/lib/media";
 
@@ -23,10 +22,8 @@ export default async function ContextPage() {
             <div className="page-hero-inner">
               <div>
                 <div className="page-kicker">
-                  <span className={joinClasses("red-square", getMarkerColorClass(context.pageAccentColor))}></span>
-                  <span className={joinClasses("mono", getTextColorClass(context.pageAccentColor))}>
-                    {context.pageLabel}
-                  </span>
+                  <span className="red-square"></span>
+                  <span className="mono">{context.pageLabel}</span>
                 </div>
               </div>
               <div className="page-meta-stack">
@@ -48,14 +45,10 @@ export default async function ContextPage() {
             <div className="section-head">
               <div>
                 <div className="section-eyebrow">
-                  <span className={joinClasses("red-square", getMarkerColorClass(context.personAccentColor))}></span>
-                  <span className={joinClasses("mono", getTextColorClass(context.personAccentColor))}>
-                    {context.personHeading}
-                  </span>
+                  <span className="red-square"></span>
+                  <span className="mono">{context.personHeading}</span>
                 </div>
-                <h2 className={joinClasses("section-title", getTextColorClass(context.personAccentColor))}>
-                  {context.pageTitle || context.personHeading}
-                </h2>
+                <h2 className="section-title">{context.pageTitle || context.personHeading}</h2>
               </div>
             </div>
 
@@ -87,12 +80,10 @@ export default async function ContextPage() {
             <div className="section-head">
               <div>
                 <div className="section-eyebrow">
-                  <span className={joinClasses("red-square", getMarkerColorClass(context.whyAccentColor))}></span>
-                  <span className={joinClasses("mono", getTextColorClass(context.whyAccentColor))}>
-                    {context.whyHeading}
-                  </span>
+                  <span className="red-square"></span>
+                  <span className="mono">{context.whyHeading}</span>
                 </div>
-                <h2 className={joinClasses("section-title", getTextColorClass(context.whyAccentColor))}>
+                <h2 className="section-title">
                   Why This <span className="ed-italic">Exists.</span>
                 </h2>
               </div>

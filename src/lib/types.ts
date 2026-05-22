@@ -18,7 +18,7 @@ export type RichTextBlock = {
 
 export type Tone = "default" | "blue" | "yellow";
 export type VideoFit = "contain" | "cover" | "embed";
-export type ColorStyle = "default" | "muted" | "red" | "blue" | "yellow" | "black" | "white";
+export type ThemeColorToken = "offWhite" | "black" | "mutedGray" | "red" | "blue" | "yellow" | "dark" | "white";
 
 export interface SanityAssetRef {
   asset?: {
@@ -76,11 +76,28 @@ export interface FooterSocialLink {
   newTab?: boolean;
 }
 
+export interface ThemeColors {
+  backgroundColor?: ThemeColorToken;
+  surfaceColor?: ThemeColorToken;
+  headingColor?: ThemeColorToken;
+  bodyTextColor?: ThemeColorToken;
+  mutedTextColor?: ThemeColorToken;
+  primaryAccentColor?: ThemeColorToken;
+  secondaryAccentColor?: ThemeColorToken;
+  tertiaryAccentColor?: ThemeColorToken;
+  buttonBackgroundColor?: ThemeColorToken;
+  buttonTextColor?: ThemeColorToken;
+  linkColor?: ThemeColorToken;
+  borderColor?: ThemeColorToken;
+  darkSectionBackground?: ThemeColorToken;
+  darkSectionTextColor?: ThemeColorToken;
+}
+
 export interface SiteSettings {
   siteTitle: string;
   logoText: string;
   roundLogo: ImageAssetValue;
-  defaultAccentColor?: ColorStyle;
+  themeColors?: ThemeColors;
   mainNavigation: LinkItem[];
   primaryCTA: CTAItem;
   footerTagline: string;
@@ -98,21 +115,18 @@ export interface WhatMovesItem {
   label?: string;
   title: string;
   body?: string;
-  accentColor?: ColorStyle;
 }
 
 export interface HomepageSeed {
   heroLabel: string;
   heroHeadline: string;
   heroAccentWord: string;
-  heroAccentColor?: ColorStyle;
   heroBody: string;
   heroMetaLine?: string;
   heroPrimaryCTA: CTAItem;
   mainReel: VideoAssetValue;
   mainReelButtonText: string;
   selectedWorkLabel: string;
-  selectedWorkEyebrowColor?: ColorStyle;
   selectedWorkTitle: string;
   selectedWorkSubtitle: string;
   selectedWorkIntro: string;
@@ -120,27 +134,22 @@ export interface HomepageSeed {
   selectedMotionPieces: string[];
   caseStudiesSectionKicker?: string;
   caseStudiesSectionEyebrow?: string;
-  caseStudiesSectionAccentColor?: ColorStyle;
   caseStudiesSectionTitle?: string;
   caseStudiesSectionIntro?: string;
   motionSectionKicker?: string;
   motionSectionEyebrow?: string;
-  motionSectionAccentColor?: ColorStyle;
   motionSectionTitle?: string;
   motionSectionIntro?: string;
   whyThisExistsLabel: string;
-  whyThisExistsAccentColor?: ColorStyle;
   whyThisExistsTitle: string;
   whyThisExistsBody: RichTextBlock[];
   whatMovesLabel: string;
-  whatMovesAccentColor?: ColorStyle;
   whatMovesTitle: string;
   whatMovesIntro: string;
   whatMovesItems: WhatMovesItem[];
   finalCTATitle: string;
   finalCTABody: string;
   finalCTAButtonText: string;
-  finalCTAAccentColor?: ColorStyle;
 }
 
 export interface Homepage extends Omit<HomepageSeed, "selectedCaseStudies" | "selectedMotionPieces"> {
@@ -158,13 +167,10 @@ export interface MotionGroup {
 
 export interface WorkPageSeed {
   pageLabel: string;
-  pageAccentColor?: ColorStyle;
   pageTitle: string;
   introCopy: string;
-  caseStudiesSectionAccentColor?: ColorStyle;
   caseStudiesSectionTitle: string;
   caseStudiesSectionSubtitle: string;
-  motionSectionAccentColor?: ColorStyle;
   motionSectionTitle: string;
   motionSectionSubtitle: string;
   featuredCaseStudies: string[];
@@ -244,24 +250,20 @@ export interface MotionPiece {
 
 export interface ContextPage {
   pageLabel: string;
-  pageAccentColor?: ColorStyle;
   pageTitle: string;
   portraitImage: ImageAssetValue;
   portraitName?: string;
   portraitLocation?: string;
   portraitRole?: string;
   personHeading: string;
-  personAccentColor?: ColorStyle;
   personBody: RichTextBlock[];
   whyHeading: string;
-  whyAccentColor?: ColorStyle;
   whyBody: RichTextBlock[];
   whyRows: OverviewHighlight[];
 }
 
 export interface MakeSomethingPage {
   pageLabel: string;
-  pageAccentColor?: ColorStyle;
   pageTitle: string;
   introCopy: string;
   contactEmail: string;
@@ -271,7 +273,6 @@ export interface MakeSomethingPage {
   budgetRanges: string[];
   timelineOptions: string[];
   inquiryLabel: string;
-  contactAccentColor?: ColorStyle;
   inquiryTitle: string;
   bestForBody: RichTextBlock[];
   contactBody: RichTextBlock[];

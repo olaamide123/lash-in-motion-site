@@ -1,19 +1,46 @@
     /* ---------- Tokens ---------- */
     :root {
-      --bg: #f4efe4;
-      --bg-2: #ece6d8;
-      --ink: #121111;
-      --ink-soft: #3a3833;
-      --ink-mute: #8a847b;
-      --rule: #121111;
-      --rule-soft: rgba(18,17,17,0.14);
-      --rule-faint: rgba(18,17,17,0.08);
+      --token-off-white: #f4efe4;
+      --token-surface: #ece6d8;
+      --token-black: #121111;
+      --token-body: #3a3833;
+      --token-muted-gray: #8a847b;
+      --token-red: #FF2D20;
+      --token-red-deep: #d6241a;
+      --token-blue: #0057D9;
+      --token-yellow: #FFD400;
+      --token-dark: #0c0a08;
+      --token-white: #ffffff;
+
+      --color-background: var(--token-off-white);
+      --color-surface: var(--token-off-white);
+      --color-heading: var(--token-black);
+      --color-body: var(--token-body);
+      --color-muted: var(--token-muted-gray);
+      --color-accent-primary: var(--token-red);
+      --color-accent-secondary: var(--token-blue);
+      --color-accent-tertiary: var(--token-yellow);
+      --color-button-bg: var(--token-black);
+      --color-button-text: var(--token-off-white);
+      --color-link: var(--token-black);
+      --color-border: var(--token-black);
+      --color-dark-bg: var(--token-dark);
+      --color-dark-text: var(--token-off-white);
+
+      --bg: var(--color-background);
+      --bg-2: var(--color-surface);
+      --ink: var(--color-heading);
+      --ink-soft: var(--color-body);
+      --ink-mute: var(--color-muted);
+      --rule: var(--color-border);
+      --rule-soft: color-mix(in srgb, var(--color-border) 14%, transparent);
+      --rule-faint: color-mix(in srgb, var(--color-border) 8%, transparent);
 
       /* Brand */
-      --red: #FF2D20;
-      --red-deep: #d6241a;
-      --blue: #0057D9;
-      --yellow: #FFD400;
+      --red: var(--color-accent-primary);
+      --red-deep: var(--token-red-deep);
+      --blue: var(--color-accent-secondary);
+      --yellow: var(--color-accent-tertiary);
 
       --sans: 'Inter', system-ui, -apple-system, sans-serif;
       --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
@@ -28,7 +55,7 @@
     html { scroll-behavior: smooth; }
     body {
       background: var(--bg);
-      color: var(--ink);
+      color: var(--color-body);
       font-family: var(--sans);
       font-weight: 400;
       line-height: 1.5;
@@ -71,21 +98,9 @@
     .brand-rule i.b { background: var(--blue); width: 6px; }
     .brand-rule i.y { background: var(--yellow); width: 6px; }
 
-    .mono { font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink); }
+    .mono { font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--color-heading); }
     .mono-soft { font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-mute); }
-    .text-muted { color: var(--ink-mute); }
-    .text-red { color: var(--red); }
-    .text-blue { color: var(--blue); }
-    .text-yellow { color: var(--yellow); }
-    .text-black { color: var(--ink); }
-    .text-white { color: #fff; }
     .red-square { display: inline-block; width: 7px; height: 7px; background: var(--red); vertical-align: 1px; margin-right: 8px; }
-    .marker-muted { background: var(--ink-mute) !important; }
-    .marker-red { background: var(--red) !important; }
-    .marker-blue { background: var(--blue) !important; }
-    .marker-yellow { background: var(--yellow) !important; }
-    .marker-black { background: var(--ink) !important; }
-    .marker-white { background: #fff !important; }
     .sq-blue { display: inline-block; width: 6px; height: 6px; background: var(--blue); }
     .sq-yellow { display: inline-block; width: 6px; height: 6px; background: var(--yellow); }
     .sq-red { display: inline-block; width: 6px; height: 6px; background: var(--red); }
@@ -98,12 +113,20 @@
     .why-quote,
     .moves-name,
     .contact h2,
+    .page-title,
+    .work-section-title,
+    .motion-group-title,
+    .archive-title,
+    .case-card-title,
+    .case-section-title,
+    .context-title,
     .work-title,
     .foot-brand .lim {
       font-family: var(--sans);
       font-style: normal;
       font-weight: 600;
       letter-spacing: -0.025em;
+      color: var(--color-heading);
     }
     .work-title .sub { font-style: normal; }
 
@@ -122,7 +145,7 @@
     .logo-name .em { color: var(--red); }
 
     .nav-links { display: flex; align-items: center; gap: 30px; }
-    .nav-links a { font-family: var(--mono); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink); padding: 4px 0; position: relative; }
+    .nav-links a { font-family: var(--mono); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--color-link); padding: 4px 0; position: relative; }
     .nav-links a::after {
       content: ""; position: absolute; left: 0; right: 100%; bottom: -2px; height: 1px; background: var(--red);
       transition: right 280ms var(--ease);
@@ -139,14 +162,9 @@
     .palette .b { background: var(--blue); }
     .palette .c { background: var(--yellow); }
 
-    .nav-cta { display: inline-flex; align-items: center; gap: 10px; padding: 11px 16px; background: var(--ink); color: var(--bg); font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.2em; text-transform: uppercase; transition: background 220ms var(--ease); }
+    .nav-cta { display: inline-flex; align-items: center; gap: 10px; padding: 11px 16px; background: var(--color-button-bg); color: var(--color-button-text); font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.2em; text-transform: uppercase; transition: background 220ms var(--ease); }
     .nav-cta:hover { background: var(--red); color: #fff; }
     .nav-cta .dot { width: 6px; height: 6px; background: var(--red); display: inline-block; }
-    .nav-cta.marker-muted .dot { background: var(--ink-mute); }
-    .nav-cta.marker-blue .dot { background: var(--blue); }
-    .nav-cta.marker-yellow .dot { background: var(--yellow); }
-    .nav-cta.marker-black .dot { background: var(--ink); }
-    .nav-cta.marker-white .dot { background: #fff; }
     .nav-cta:hover .dot { background: #fff; }
 
     /* ---------- Brand motion-system graphics (playheads, timelines, paths) ---------- */
@@ -360,7 +378,7 @@
     .h-display .red { color: var(--red); }
     .hero-sub { max-width: 440px; font-size: 17px; line-height: 1.55; color: var(--ink-soft); margin-top: 32px; }
     .hero-cta-row { display: flex; align-items: center; gap: 22px; margin-top: 36px; flex-wrap: wrap; }
-    .btn-primary { display: inline-flex; align-items: center; gap: 12px; background: var(--ink); color: var(--bg); padding: 14px 22px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; transition: background 220ms var(--ease); }
+    .btn-primary { display: inline-flex; align-items: center; gap: 12px; background: var(--color-button-bg); color: var(--color-button-text); padding: 14px 22px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; transition: background 220ms var(--ease); }
     .btn-primary:hover { background: var(--red); }
     .btn-primary .arrow { font-family: var(--sans); font-size: 14px; font-weight: 600; }
     .btn-ghost { display: inline-flex; align-items: center; gap: 10px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; padding: 14px 0; position: relative; }

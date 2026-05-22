@@ -1,4 +1,4 @@
-import type { CTAItem, ColorStyle, RelatedVideo } from "@/lib/types";
+import type { CTAItem, RelatedVideo, ThemeColorToken, ThemeColors } from "@/lib/types";
 
 export function isReelCta(cta?: CTAItem) {
   if (!cta) return false;
@@ -41,27 +41,60 @@ export function joinClasses(...classes: Array<string | false | null | undefined>
   return classes.filter(Boolean).join(" ");
 }
 
-export function getTextColorClass(colorStyle?: ColorStyle) {
-  switch (colorStyle) {
-    case "muted":
-      return "text-muted";
-    case "red":
-      return "text-red";
-    case "blue":
-      return "text-blue";
-    case "yellow":
-      return "text-yellow";
-    case "black":
-      return "text-black";
-    case "white":
-      return "text-white";
-    default:
-      return "";
-  }
+const themeTokenValues: Record<ThemeColorToken, string> = {
+  offWhite: "#f4efe4",
+  black: "#121111",
+  mutedGray: "#8a847b",
+  red: "#FF2D20",
+  blue: "#0057D9",
+  yellow: "#FFD400",
+  dark: "#0c0a08",
+  white: "#ffffff"
+};
+
+const defaultThemeColors: Required<ThemeColors> = {
+  backgroundColor: "offWhite",
+  surfaceColor: "offWhite",
+  headingColor: "black",
+  bodyTextColor: "black",
+  mutedTextColor: "mutedGray",
+  primaryAccentColor: "red",
+  secondaryAccentColor: "blue",
+  tertiaryAccentColor: "yellow",
+  buttonBackgroundColor: "black",
+  buttonTextColor: "offWhite",
+  linkColor: "black",
+  borderColor: "black",
+  darkSectionBackground: "dark",
+  darkSectionTextColor: "offWhite"
+};
+
+function resolveThemeToken(token: ThemeColorToken | undefined, fallback: ThemeColorToken) {
+  return themeTokenValues[token || fallback];
 }
 
-export function getMarkerColorClass(colorStyle?: ColorStyle) {
-  return colorStyle && colorStyle !== "default" ? `marker-${colorStyle}` : "";
+export function getThemeColorValues(themeColors?: ThemeColors) {
+  const merged = {
+    ...defaultThemeColors,
+    ...themeColors
+  };
+
+  return {
+    "--color-background": resolveThemeToken(merged.backgroundColor, "offWhite"),
+    "--color-surface": resolveThemeToken(merged.surfaceColor, "offWhite"),
+    "--color-heading": resolveThemeToken(merged.headingColor, "black"),
+    "--color-body": resolveThemeToken(merged.bodyTextColor, "black"),
+    "--color-muted": resolveThemeToken(merged.mutedTextColor, "mutedGray"),
+    "--color-accent-primary": resolveThemeToken(merged.primaryAccentColor, "red"),
+    "--color-accent-secondary": resolveThemeToken(merged.secondaryAccentColor, "blue"),
+    "--color-accent-tertiary": resolveThemeToken(merged.tertiaryAccentColor, "yellow"),
+    "--color-button-bg": resolveThemeToken(merged.buttonBackgroundColor, "black"),
+    "--color-button-text": resolveThemeToken(merged.buttonTextColor, "offWhite"),
+    "--color-link": resolveThemeToken(merged.linkColor, "black"),
+    "--color-border": resolveThemeToken(merged.borderColor, "black"),
+    "--color-dark-bg": resolveThemeToken(merged.darkSectionBackground, "dark"),
+    "--color-dark-text": resolveThemeToken(merged.darkSectionTextColor, "offWhite")
+  };
 }
 
 export function groupRelatedVideos(videos: RelatedVideo[]) {
