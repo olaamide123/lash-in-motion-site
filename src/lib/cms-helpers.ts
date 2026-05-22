@@ -54,7 +54,6 @@ const themeTokenValues: Record<ThemeColorToken, string> = {
 
 const defaultThemeColors: Required<ThemeColors> = {
   backgroundColor: "offWhite",
-  surfaceColor: "offWhite",
   headingColor: "black",
   bodyTextColor: "black",
   mutedTextColor: "mutedGray",
@@ -64,9 +63,7 @@ const defaultThemeColors: Required<ThemeColors> = {
   buttonBackgroundColor: "black",
   buttonTextColor: "offWhite",
   linkColor: "black",
-  borderColor: "black",
-  darkSectionBackground: "dark",
-  darkSectionTextColor: "offWhite"
+  borderColor: "black"
 };
 
 function resolveThemeToken(token: ThemeColorToken | undefined, fallback: ThemeColorToken) {
@@ -81,9 +78,8 @@ export function getThemeColorValues(themeColors?: ThemeColors) {
 
   return {
     "--color-background": resolveThemeToken(merged.backgroundColor, "offWhite"),
-    "--color-surface": resolveThemeToken(merged.surfaceColor, "offWhite"),
     "--color-heading": resolveThemeToken(merged.headingColor, "black"),
-    "--color-body": resolveThemeToken(merged.bodyTextColor, "black"),
+    "--color-body": themeColors?.bodyTextColor ? resolveThemeToken(merged.bodyTextColor, "black") : "#3a3833",
     "--color-muted": resolveThemeToken(merged.mutedTextColor, "mutedGray"),
     "--color-accent-primary": resolveThemeToken(merged.primaryAccentColor, "red"),
     "--color-accent-secondary": resolveThemeToken(merged.secondaryAccentColor, "blue"),
@@ -91,9 +87,7 @@ export function getThemeColorValues(themeColors?: ThemeColors) {
     "--color-button-bg": resolveThemeToken(merged.buttonBackgroundColor, "black"),
     "--color-button-text": resolveThemeToken(merged.buttonTextColor, "offWhite"),
     "--color-link": resolveThemeToken(merged.linkColor, "black"),
-    "--color-border": resolveThemeToken(merged.borderColor, "black"),
-    "--color-dark-bg": resolveThemeToken(merged.darkSectionBackground, "dark"),
-    "--color-dark-text": resolveThemeToken(merged.darkSectionTextColor, "offWhite")
+    "--color-border": resolveThemeToken(merged.borderColor, "black")
   };
 }
 

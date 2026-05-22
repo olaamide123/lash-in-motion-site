@@ -56,9 +56,7 @@ export const siteSettings: SiteSettings = {
   logoText: "Lash in Motion",
   themeColors: {
     backgroundColor: "offWhite",
-    surfaceColor: "offWhite",
     headingColor: "black",
-    bodyTextColor: "black",
     mutedTextColor: "mutedGray",
     primaryAccentColor: "red",
     secondaryAccentColor: "blue",
@@ -66,9 +64,7 @@ export const siteSettings: SiteSettings = {
     buttonBackgroundColor: "black",
     buttonTextColor: "offWhite",
     linkColor: "black",
-    borderColor: "black",
-    darkSectionBackground: "dark",
-    darkSectionTextColor: "offWhite"
+    borderColor: "black"
   },
   roundLogo: {
     src: "/assets/images/lim-round-mark.png",

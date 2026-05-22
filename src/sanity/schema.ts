@@ -1,24 +1,24 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
 
-import { embedUrlValidation, mediaPathValidation } from "./validation";
+import { embedUrlValidation, mediaPathValidation, normalLinkValidation } from "./validation";
 
 const themeColorOptions = [
-  { title: "Off White", value: "offWhite" },
-  { title: "Black", value: "black" },
-  { title: "Muted Gray", value: "mutedGray" },
-  { title: "Red", value: "red" },
-  { title: "Blue", value: "blue" },
-  { title: "Yellow", value: "yellow" },
-  { title: "Dark", value: "dark" },
-  { title: "White", value: "white" }
+  { title: "◻ Off White", value: "offWhite" },
+  { title: "⬛ Black", value: "black" },
+  { title: "◼ Muted Gray", value: "mutedGray" },
+  { title: "🟥 Red", value: "red" },
+  { title: "🟦 Blue", value: "blue" },
+  { title: "🟨 Yellow", value: "yellow" },
+  { title: "◾ Dark", value: "dark" },
+  { title: "⬜ White", value: "white" }
 ];
 
-function themeColorField(name: string, title: string, description?: string) {
+function themeColorField(name: string, title: string, defaultColor: string, description?: string) {
   return defineField({
     name,
     title,
     type: "string",
-    description,
+    description: `${description ? `${description} ` : ""}Default: ${defaultColor}.`,
     options: {
       list: themeColorOptions,
       layout: "dropdown"
@@ -69,7 +69,7 @@ const linkItem = defineType({
       title: "Link",
       type: "string",
       description: "Use internal paths like /work or full URLs for external links.",
-      validation: (rule) => rule.required()
+      validation: (rule) => normalLinkValidation(rule.required())
     }),
     defineField({
       name: "newTab",
@@ -107,7 +107,7 @@ const socialLinkItem = defineType({
       name: "href",
       title: "Link",
       type: "string",
-      validation: (rule) => rule.required()
+      validation: (rule) => normalLinkValidation(rule.required())
     }),
     defineField({
       name: "newTab",
@@ -139,7 +139,8 @@ const ctaItem = defineType({
       name: "href",
       title: "Link",
       type: "string",
-      description: "Leave empty if this CTA should trigger the reel lightbox instead of navigation."
+      description: "Leave empty if this CTA should trigger the reel lightbox instead of navigation.",
+      validation: normalLinkValidation
     }),
     defineField({
       name: "action",
@@ -291,21 +292,19 @@ const themeColors = defineType({
   title: "Theme Colors",
   type: "object",
   fields: [
-    themeColorField("backgroundColor", "Background color"),
-    themeColorField("surfaceColor", "Surface color"),
-    themeColorField("headingColor", "Heading color"),
-    themeColorField("bodyTextColor", "Body text color"),
-    themeColorField("mutedTextColor", "Muted text color"),
-    themeColorField("primaryAccentColor", "Primary accent color"),
-    themeColorField("secondaryAccentColor", "Secondary accent color"),
-    themeColorField("tertiaryAccentColor", "Tertiary accent color"),
-    themeColorField("buttonBackgroundColor", "Button background color"),
-    themeColorField("buttonTextColor", "Button text color"),
-    themeColorField("linkColor", "Link color"),
-    themeColorField("borderColor", "Border color"),
-    themeColorField("darkSectionBackground", "Dark section background"),
-    themeColorField("darkSectionTextColor", "Dark section text color")
-  ]
+    themeColorField("backgroundColor", "Background color", "Off White"),
+    themeColorField("headingColor", "Heading color", "Black"),
+    themeColorField("bodyTextColor", "Body text color", "Soft Black (#3a3833)"),
+    themeColorField("mutedTextColor", "Muted text color", "Muted Gray"),
+    themeColorField("primaryAccentColor", "Primary accent color", "Red"),
+    themeColorField("secondaryAccentColor", "Secondary accent color", "Blue"),
+    themeColorField("tertiaryAccentColor", "Tertiary accent color", "Yellow"),
+    themeColorField("buttonBackgroundColor", "Button background color", "Black"),
+    themeColorField("buttonTextColor", "Button text color", "Off White"),
+    themeColorField("linkColor", "Link color", "Black"),
+    themeColorField("borderColor", "Border color", "Black")
+  ],
+  description: "Choose from the approved brand palette. Leave any field empty to keep the default site color shown in its field description."
 });
 
 const whatMovesItem = defineType({

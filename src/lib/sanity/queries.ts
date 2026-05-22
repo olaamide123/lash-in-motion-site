@@ -15,7 +15,6 @@ const socialLinkFields = `
 
 const themeFields = `
   backgroundColor,
-  surfaceColor,
   headingColor,
   bodyTextColor,
   mutedTextColor,
@@ -25,9 +24,7 @@ const themeFields = `
   buttonBackgroundColor,
   buttonTextColor,
   linkColor,
-  borderColor,
-  darkSectionBackground,
-  darkSectionTextColor
+  borderColor
 `;
 
 const imageFields = `
@@ -255,17 +252,9 @@ export const homepageQuery = groq`
     whatMovesLabel,
     whatMovesTitle,
     whatMovesIntro,
-    "whatMovesItems": select(
-      defined(whatMovesItems) => whatMovesItems[]{
-        ${whatMovesItemFields}
-      },
-      defined(serviceTracks) => serviceTracks[]->{
-        label,
-        title,
-        "body": description
-      },
-      []
-    ),
+    whatMovesItems[]{
+      ${whatMovesItemFields}
+    },
     finalCTATitle,
     finalCTABody,
     finalCTAButtonText

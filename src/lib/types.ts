@@ -78,7 +78,6 @@ export interface FooterSocialLink {
 
 export interface ThemeColors {
   backgroundColor?: ThemeColorToken;
-  surfaceColor?: ThemeColorToken;
   headingColor?: ThemeColorToken;
   bodyTextColor?: ThemeColorToken;
   mutedTextColor?: ThemeColorToken;
@@ -89,8 +88,6 @@ export interface ThemeColors {
   buttonTextColor?: ThemeColorToken;
   linkColor?: ThemeColorToken;
   borderColor?: ThemeColorToken;
-  darkSectionBackground?: ThemeColorToken;
-  darkSectionTextColor?: ThemeColorToken;
 }
 
 export interface SiteSettings {
