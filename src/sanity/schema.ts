@@ -182,10 +182,19 @@ const videoAssetValue = defineType({
       type: "string"
     }),
     defineField({
+      name: "uploadedVideo",
+      title: "Video file",
+      type: "file",
+      description: "Upload or replace the video here. This is the preferred option for new videos.",
+      options: {
+        accept: "video/*"
+      }
+    }),
+    defineField({
       name: "videoUrl",
-      title: "Video URL or local path",
+      title: "Fallback video URL or local path",
       type: "string",
-      description: "Use /assets/videos/... for local files or https://... for hosted videos.",
+      description: "Optional. Use only for old migrated files or externally hosted videos.",
       validation: mediaPathValidation
     }),
     defineField({
@@ -230,15 +239,27 @@ const videoAssetValue = defineType({
   preview: {
     select: {
       title: "title",
+      uploadName: "uploadedVideo.asset.originalFilename",
       subtitle: "videoUrl"
     },
-    prepare({ title, subtitle }) {
+    prepare({ title, uploadName, subtitle }) {
       return {
         title: title || "Video",
-        subtitle
+        subtitle: uploadName || subtitle
       };
     }
-  }
+  },
+  validation: (rule) =>
+    rule.custom((value) => {
+      if (!value || typeof value !== "object") return true;
+      const video = value as {
+        uploadedVideo?: unknown;
+        videoUrl?: unknown;
+        embedUrl?: unknown;
+      };
+      if (video.uploadedVideo || video.videoUrl || video.embedUrl) return true;
+      return "Add a video file, fallback video URL, or embed URL.";
+    })
 });
 
 const whatMovesItem = defineType({

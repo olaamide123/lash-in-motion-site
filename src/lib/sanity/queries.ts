@@ -23,6 +23,14 @@ const imageFields = `
 
 const videoFields = `
   title,
+  uploadedVideo{
+    asset->{
+      url,
+      originalFilename,
+      mimeType,
+      size
+    }
+  },
   "videoUrl": coalesce(videoUrl, videoUrlOrPath, videoFile.videoUrl),
   embedUrl,
   fit,

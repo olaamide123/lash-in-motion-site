@@ -38,6 +38,8 @@ export function resolvePosterSrc(poster?: SanityImageAsset) {
 /** Resolved URL from external URL or local /assets/ path */
 export function resolveVideoSrc(video?: SanityVideoAsset) {
   if (!video) return undefined;
+  const uploadedUrl = video.uploadedVideo?.asset?.url;
+  if (uploadedUrl) return uploadedUrl;
   return normalizeMediaPath(video.videoUrl || video.videoUrlOrPath);
 }
 

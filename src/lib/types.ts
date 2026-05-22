@@ -26,6 +26,16 @@ export interface SanityAssetRef {
   };
 }
 
+export interface SanityFileAssetRef {
+  asset?: {
+    _ref?: string;
+    url?: string;
+    originalFilename?: string;
+    mimeType?: string;
+    size?: number;
+  };
+}
+
 export interface ImageAssetValue {
   src?: string;
   alt?: string;
@@ -34,6 +44,7 @@ export interface ImageAssetValue {
 
 export interface VideoAssetValue {
   title?: string;
+  uploadedVideo?: SanityFileAssetRef;
   videoUrl?: string;
   videoUrlOrPath?: string;
   embedUrl?: string;
