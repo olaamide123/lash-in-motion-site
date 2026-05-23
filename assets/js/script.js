@@ -106,12 +106,17 @@
       var isAutoplay = playMode === 'autoplay';
       if (!video) return;
 
-      frame.classList.add('is-loading');
+      var loadingTimer = setTimeout(function () {
+        frame.classList.add('is-loading');
+      }, 180);
 
       function setHint(label) { if (hintEl) hintEl.textContent = label; }
       function setClick(label) { if (clickEl) clickEl.textContent = label; }
       function markPlaying(isPlaying) { frame.classList.toggle('is-playing', !!isPlaying); }
-      function clearLoading() { frame.classList.remove('is-loading'); }
+      function clearLoading() {
+        clearTimeout(loadingTimer);
+        frame.classList.remove('is-loading');
+      }
       function playMutedPreview() {
         wantsPlaying = true;
         setMutedState(true);
@@ -143,7 +148,10 @@
         syncDuration();
       });
       video.addEventListener('canplay', clearLoading);
-      video.addEventListener('error', function () { frame.classList.add('is-loading'); });
+      video.addEventListener('error', function () {
+        clearTimeout(loadingTimer);
+        frame.classList.add('is-loading');
+      });
       video.addEventListener('play', function () { markPlaying(true); });
       video.addEventListener('playing', function () { markPlaying(true); });
       video.addEventListener('pause', function () { markPlaying(false); });

@@ -10,6 +10,7 @@ interface VideoFigureProps {
   playMode?: "hover" | "autoplay";
   playLabel?: string;
   cursorFollow?: boolean;
+  preload?: "none" | "metadata" | "auto";
 }
 
 export function VideoFigure({
@@ -20,7 +21,8 @@ export function VideoFigure({
   bottomRight,
   playMode = "hover",
   playLabel,
-  cursorFollow = false
+  cursorFollow = false,
+  preload = "metadata"
 }: VideoFigureProps) {
   if (!media) return null;
 
@@ -74,7 +76,7 @@ export function VideoFigure({
               loop
               playsInline
               autoPlay={playMode === "autoplay"}
-              preload="metadata"
+              preload={preload}
               poster={posterSrc}
               disablePictureInPicture
               controlsList="nodownload nofullscreen noremoteplayback noplaybackrate"
