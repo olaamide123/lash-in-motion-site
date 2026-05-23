@@ -1,4 +1,5 @@
 import { createClient } from "@sanity/client";
+import { randomUUID } from "node:crypto";
 
 const token = process.env.SANITY_API_WRITE_TOKEN;
 
@@ -88,6 +89,22 @@ function sameJson(a: unknown, b: unknown) {
   return JSON.stringify(a) === JSON.stringify(b);
 }
 
+function ensureArrayKeys<T extends RecordValue>(items: T[] | undefined) {
+  if (!items) return items;
+
+  let changed = false;
+  const next = items.map((item) => {
+    if (typeof item._key === "string" && item._key) return item;
+    changed = true;
+    return {
+      ...item,
+      _key: randomUUID().replace(/-/g, "").slice(0, 24)
+    };
+  });
+
+  return changed ? next : items;
+}
+
 async function migrateHomepage() {
   const homepage = await client.fetch<{
     _id: string;
@@ -117,10 +134,16 @@ async function migrateHomepage() {
 
   if ((!homepage.whatMovesItems || homepage.whatMovesItems.length === 0) && homepage.serviceTracks?.length) {
     patch.whatMovesItems = homepage.serviceTracks.map((item) => ({
+      _key: randomUUID().replace(/-/g, "").slice(0, 24),
       label: item.label,
       title: item.title || "Track",
       body: item.description
     }));
+  }
+
+  const keyedWhatMovesItems = ensureArrayKeys(homepage.whatMovesItems as RecordValue[] | undefined);
+  if (!sameJson(keyedWhatMovesItems, homepage.whatMovesItems)) {
+    patch.whatMovesItems = keyedWhatMovesItems;
   }
 
   if (homepage.serviceTracks && homepage.serviceTracks.length > 0) {
