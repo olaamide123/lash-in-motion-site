@@ -7,6 +7,9 @@ interface VideoFigureProps {
   frameClassName?: string;
   topLabel?: string;
   bottomRight?: string;
+  playMode?: "hover" | "autoplay";
+  playLabel?: string;
+  cursorFollow?: boolean;
 }
 
 export function VideoFigure({
@@ -14,7 +17,10 @@ export function VideoFigure({
   className,
   frameClassName,
   topLabel,
-  bottomRight
+  bottomRight,
+  playMode = "hover",
+  playLabel,
+  cursorFollow = false
 }: VideoFigureProps) {
   if (!media) return null;
 
@@ -51,7 +57,13 @@ export function VideoFigure({
           {label ? <span className="vid-label tl">{label}</span> : null}
         </div>
       ) : source ? (
-        <div className={`${frameClasses} js-video`} data-src={source} data-title={media.title || label || "Video"}>
+        <div
+          className={`${frameClasses} js-video`}
+          data-src={source}
+          data-title={media.title || label || "Video"}
+          data-video-mode={playMode}
+          data-cursor-follow={cursorFollow ? "true" : undefined}
+        >
           <span className="crops" aria-hidden="true">
             <i></i>
             <i></i>
@@ -61,6 +73,7 @@ export function VideoFigure({
               muted
               loop
               playsInline
+              autoPlay={playMode === "autoplay"}
               preload="metadata"
               poster={posterSrc}
               disablePictureInPicture
@@ -71,7 +84,7 @@ export function VideoFigure({
           </div>
           {label ? <span className="vid-label tl">{label}</span> : null}
           <div className="v-play">
-            <div className="ring">
+            <div className="ring" data-play-label={playLabel || "Play"}>
               <div className="tri"></div>
             </div>
           </div>

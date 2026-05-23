@@ -72,6 +72,8 @@ export default async function HomePage() {
                 media={homepage.mainReel}
                 topLabel={homepage.heroLabel}
                 bottomRight={homepage.mainReel.meta || "Chicago"}
+                playLabel={homepage.mainReelButtonText || "See It."}
+                cursorFollow
               />
             </div>
           </div>

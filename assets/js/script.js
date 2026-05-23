@@ -63,6 +63,36 @@
   function initVideos() {
     var frames = Array.prototype.slice.call(document.querySelectorAll('.vid-frame.js-video:not([data-video-init="true"])'));
 
+    function initCursorFollow(frame) {
+      if (frame.getAttribute('data-cursor-follow') !== 'true') return;
+      if (frame.getAttribute('data-cursor-follow-init') === 'true') return;
+      if (window.matchMedia && window.matchMedia('(hover: none), (prefers-reduced-motion: reduce)').matches) return;
+
+      var ring = frame.querySelector('.v-play .ring');
+      if (!ring) return;
+
+      frame.setAttribute('data-cursor-follow-init', 'true');
+
+      function centerRing() {
+        ring.style.left = '50%';
+        ring.style.top = '50%';
+      }
+
+      function moveRing(event) {
+        var rect = frame.getBoundingClientRect();
+        var inset = 36;
+        var x = Math.min(Math.max(event.clientX - rect.left, inset), rect.width - inset);
+        var y = Math.min(Math.max(event.clientY - rect.top, inset), rect.height - inset);
+        ring.style.left = x + 'px';
+        ring.style.top = y + 'px';
+      }
+
+      centerRing();
+      frame.addEventListener('pointermove', moveRing);
+      frame.addEventListener('pointerleave', centerRing);
+      frame.addEventListener('blur', centerRing);
+    }
+
     frames.forEach(function (frame) {
       frame.setAttribute('data-video-init', 'true');
       var figure = frame.closest('.vid');
@@ -72,6 +102,8 @@
       var timeEl = figure ? figure.querySelector('[data-time]') : null;
       var hintEl = frame.querySelector('[data-hint]');
       var clickEl = frame.querySelector('[data-click]');
+      var playMode = frame.getAttribute('data-video-mode') || 'hover';
+      var isAutoplay = playMode === 'autoplay';
       if (!video) return;
 
       frame.classList.add('is-loading');
@@ -80,6 +112,16 @@
       function setClick(label) { if (clickEl) clickEl.textContent = label; }
       function markPlaying(isPlaying) { frame.classList.toggle('is-playing', !!isPlaying); }
       function clearLoading() { frame.classList.remove('is-loading'); }
+      function playMutedPreview() {
+        wantsPlaying = true;
+        setMutedState(true);
+        var promise = video.play();
+        if (promise && typeof promise.then === 'function') {
+          promise.then(function () {
+            if (!wantsPlaying && !frame.classList.contains('has-sound') && !isAutoplay) video.pause();
+          }).catch(function () {});
+        }
+      }
       function syncDuration() {
         if (timeEl && isFinite(video.duration) && video.duration > 0) {
           timeEl.textContent = '00:00 / ' + fmt(video.duration);
@@ -115,30 +157,30 @@
       });
 
       setMutedState(true);
-      setHint('Hover to preview');
+      setHint(isAutoplay ? 'Muted Preview' : 'Hover to preview');
       setClick('Click for sound');
+
+      var wantsPlaying = isAutoplay;
 
       if (video.readyState >= 1) {
         clearLoading();
         syncDuration();
+        if (isAutoplay) playMutedPreview();
       }
 
-      var wantsPlaying = false;
       function startHoverPlay() {
         if (frame.classList.contains('has-sound')) return;
-        wantsPlaying = true;
-        setMutedState(true);
-        var promise = video.play();
-        if (promise && typeof promise.then === 'function') {
-          promise.then(function () {
-            if (!wantsPlaying && !frame.classList.contains('has-sound')) video.pause();
-          }).catch(function () {});
-        }
+        playMutedPreview();
         setHint('Muted Preview');
       }
       function endHoverPlay() {
         if (frame.classList.contains('has-sound')) return;
-        wantsPlaying = false;
+        wantsPlaying = isAutoplay;
+        if (isAutoplay) {
+          playMutedPreview();
+          setHint('Muted Preview');
+          return;
+        }
         video.pause();
         setHint('Hover to preview');
       }
@@ -162,9 +204,10 @@
         if (frame.classList.contains('has-sound')) {
           setMutedState(true);
           frame.classList.remove('has-sound');
-          setHint('Hover to preview');
+          setHint(isAutoplay ? 'Muted Preview' : 'Hover to preview');
           setClick('Click for sound');
-          if (!frame.matches(':hover')) video.pause();
+          if (isAutoplay) playMutedPreview();
+          else if (!frame.matches(':hover')) video.pause();
           return;
         }
 
@@ -191,11 +234,26 @@
         setClick('');
       }
 
+      initCursorFollow(frame);
+
       frame.addEventListener('mouseenter', startHoverPlay);
       frame.addEventListener('mouseleave', endHoverPlay);
       frame.addEventListener('pointerleave', endHoverPlay);
       document.addEventListener('visibilitychange', function () {
-        if (document.hidden && !frame.classList.contains('has-sound')) endHoverPlay();
+        if (document.hidden) {
+          video.pause();
+          return;
+        }
+        if (frame.classList.contains('has-sound')) {
+          var promise = video.play();
+          if (promise && promise.catch) promise.catch(function () {});
+          return;
+        }
+        if (isAutoplay) {
+          playMutedPreview();
+          return;
+        }
+        if (!frame.matches(':hover')) endHoverPlay();
       });
 
       if (!isTouch) {
@@ -228,7 +286,10 @@
           var video = entry.target.querySelector('video');
           if (!video) return;
           if (entry.isIntersecting && entry.intersectionRatio > 0.25) {
-            if (entry.target.classList.contains('has-sound')) {
+            if (
+              entry.target.classList.contains('has-sound') ||
+              entry.target.getAttribute('data-video-mode') === 'autoplay'
+            ) {
               var promise = video.play();
               if (promise && promise.catch) promise.catch(function () {});
             }
