@@ -16,7 +16,8 @@ const client = createClient({
   dataset,
   apiVersion,
   token,
-  useCdn: false
+  useCdn: false,
+  perspective: "raw"
 });
 
 type RecordValue = Record<string, unknown>;
