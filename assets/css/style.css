@@ -170,9 +170,10 @@
     /* ---------- Brand motion-system graphics (playheads, timelines, paths) ---------- */
     /* Containers that hold motion graphics need positioning + clipping.
        Note: .section can't use overflow: hidden — it would break position: sticky on the work tabs.
-       Note: .hero .container is NOT relative — so the absolute hero-vid positions against .hero (full height). */
+       Note: .hero .container is relative so the hero video can match the copy block height. */
     .hero, .contact { position: relative; overflow: hidden; }
     .section { position: relative; }
+    .hero .container,
     .section .container, .contact .container { position: relative; z-index: 1; }
 
     /* Clamp section-level decorative shapes inline so they don't cause horizontal scroll */
@@ -561,6 +562,14 @@
       opacity: 1; transition: opacity 400ms var(--ease);
       pointer-events: none;
     }
+    .v-play button.ring {
+      appearance: none;
+      -webkit-appearance: none;
+      font: inherit;
+      color: inherit;
+      cursor: pointer;
+      pointer-events: auto;
+    }
     .vid-frame.is-playing .v-play { opacity: 0; }
     .v-play .ring {
       width: 76px; height: 76px;
@@ -602,7 +611,7 @@
       pointer-events: none;
     }
 
-    /* Hero video sizing — absolutely positioned on right, fills full hero height */
+    /* Hero video sizing — absolutely positioned on right, matched to the container/copy height */
     .hero-grid {
       display: block;       /* override grid; video is positioned absolutely */
       padding-right: clamp(500px, 50vw, 720px);
@@ -657,6 +666,11 @@
       border-color: rgba(244,239,228,0.36);
       transform: translate(-50%, -50%);
       transition: left 140ms linear, top 140ms linear, transform 300ms var(--ease), background 400ms var(--ease), border-color 400ms var(--ease);
+    }
+    .hero-vid .v-play button.ring {
+      box-shadow: none;
+      border-width: 1px;
+      border-style: solid;
     }
     .hero-vid .v-play .ring::before {
       content: attr(data-play-label);

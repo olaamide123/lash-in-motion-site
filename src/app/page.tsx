@@ -73,6 +73,7 @@ export default async function HomePage() {
                 topLabel={homepage.heroLabel}
                 bottomRight={homepage.mainReel.meta || "Chicago"}
                 playLabel={homepage.mainReelButtonText || "See It."}
+                playLabelAction="lightbox"
                 cursorFollow
                 preload="auto"
               />

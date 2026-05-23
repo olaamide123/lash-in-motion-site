@@ -9,6 +9,7 @@ interface VideoFigureProps {
   bottomRight?: string;
   playMode?: "hover" | "autoplay";
   playLabel?: string;
+  playLabelAction?: "none" | "lightbox";
   cursorFollow?: boolean;
   preload?: "none" | "metadata" | "auto";
 }
@@ -21,6 +22,7 @@ export function VideoFigure({
   bottomRight,
   playMode = "hover",
   playLabel,
+  playLabelAction = "none",
   cursorFollow = false,
   preload = "metadata"
 }: VideoFigureProps) {
@@ -86,9 +88,15 @@ export function VideoFigure({
           </div>
           {label ? <span className="vid-label tl">{label}</span> : null}
           <div className="v-play">
-            <div className="ring" data-play-label={playLabel || "Play"}>
-              <div className="tri"></div>
-            </div>
+            {playLabelAction === "lightbox" ? (
+              <button type="button" className="ring js-open-video-lightbox" data-play-label={playLabel || "Play"}>
+                <div className="tri"></div>
+              </button>
+            ) : (
+              <div className="ring" data-play-label={playLabel || "Play"}>
+                <div className="tri"></div>
+              </div>
+            )}
           </div>
           <span className="vid-hint">
             <span className="dot"></span>

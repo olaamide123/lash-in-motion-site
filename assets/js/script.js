@@ -434,6 +434,23 @@
       setTimeout(function () { lightbox.hidden = true; }, 280);
     }
 
+    function openFrameLightbox(frame) {
+      if (!frame) return;
+
+      var inlineFrame = frame.querySelector('iframe');
+      if (inlineFrame) {
+        openLightbox('embed', inlineFrame.getAttribute('src'), frame.getAttribute('data-title') || inlineFrame.getAttribute('title') || 'Video');
+        return;
+      }
+
+      var source = frame.getAttribute('data-src');
+      if (!source) {
+        var sourceEl = frame.querySelector('video source');
+        if (sourceEl) source = sourceEl.getAttribute('src');
+      }
+      openLightbox('video', source, frame.getAttribute('data-title') || 'Video');
+    }
+
     document.querySelectorAll('.vid-frame').forEach(function (frame) {
       if (!frame.querySelector('video') && !frame.querySelector('iframe')) return;
       if (frame.getAttribute('data-expand-init') === 'true') return;
@@ -452,19 +469,17 @@
       expandButton.addEventListener('click', function (event) {
         event.preventDefault();
         event.stopPropagation();
+        openFrameLightbox(frame);
+      });
+    });
 
-        var inlineFrame = frame.querySelector('iframe');
-        if (inlineFrame) {
-          openLightbox('embed', inlineFrame.getAttribute('src'), frame.getAttribute('data-title') || inlineFrame.getAttribute('title') || 'Video');
-          return;
-        }
-
-        var source = frame.getAttribute('data-src');
-        if (!source) {
-          var sourceEl = frame.querySelector('video source');
-          if (sourceEl) source = sourceEl.getAttribute('src');
-        }
-        openLightbox('video', source, frame.getAttribute('data-title') || 'Video');
+    document.querySelectorAll('.js-open-video-lightbox').forEach(function (button) {
+      if (button.getAttribute('data-inline-lightbox-init') === 'true') return;
+      button.setAttribute('data-inline-lightbox-init', 'true');
+      button.addEventListener('click', function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        openFrameLightbox(button.closest('.vid-frame'));
       });
     });
 
