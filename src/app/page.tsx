@@ -1,4 +1,3 @@
-import { CtaControl } from "@/components/CtaControl";
 import { SiteFrame } from "@/components/SiteFrame";
 import { VideoFigure } from "@/components/VideoFigure";
 import {
@@ -54,9 +53,6 @@ export default async function HomePage() {
                   ))}
                 </h1>
                 <p className="hero-sub">{homepage.heroBody}</p>
-                <div className="hero-cta-row">
-                  <CtaControl cta={homepage.heroPrimaryCTA} className="btn-primary" />
-                </div>
                 <div className="hero-meta-markers" aria-hidden="true">
                   <span className="swatches">
                     <i className="r"></i>
