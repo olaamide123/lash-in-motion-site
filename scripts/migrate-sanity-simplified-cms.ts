@@ -107,6 +107,7 @@ async function migrateHomepage() {
   if (!homepage?._id) return;
 
   const patch: RecordValue = {};
+  const unsetPaths: string[] = [];
   const normalizedMainReel = normalizeVideoLeaf(homepage.mainReel);
 
   if (!sameJson(normalizedMainReel, homepage.mainReel)) {
@@ -121,10 +122,28 @@ async function migrateHomepage() {
     }));
   }
 
-  if (Object.keys(patch).length === 0) return;
+  if (homepage.serviceTracks && homepage.serviceTracks.length > 0) {
+    unsetPaths.push("serviceTracks");
+  }
 
-  await client.patch(homepage._id).set(patch).commit();
-  console.log(`Migrated homepage (${Object.keys(patch).join(", ")})`);
+  if (hasAnyKey(homepage.mainReel, ["videoUrlOrPath", "videoFile"])) {
+    unsetPaths.push("mainReel.videoUrlOrPath", "mainReel.videoFile");
+  }
+
+  if (Object.keys(patch).length === 0 && unsetPaths.length === 0) return;
+
+  let mutation = client.patch(homepage._id);
+  if (Object.keys(patch).length > 0) {
+    mutation = mutation.set(patch);
+  }
+  if (unsetPaths.length > 0) {
+    mutation = mutation.unset(unsetPaths);
+  }
+
+  await mutation.commit();
+  console.log(
+    `Migrated homepage (${[...Object.keys(patch), ...(unsetPaths.length ? [`unset ${unsetPaths.join(", ")}`] : [])].join(", ")})`
+  );
 }
 
 async function migrateCaseStudies() {
@@ -142,6 +161,7 @@ async function migrateCaseStudies() {
 
   for (const study of studies) {
     const patch: RecordValue = {};
+    const unsetPaths: string[] = [];
     const normalizedHeroVideo = normalizeVideoLeaf(study.heroVideo);
     const normalizedRelatedVideos = normalizeRelatedVideos(study.relatedVideos);
 
@@ -153,10 +173,31 @@ async function migrateCaseStudies() {
       patch.relatedVideos = normalizedRelatedVideos;
     }
 
-    if (Object.keys(patch).length === 0) continue;
+    if (hasAnyKey(study.heroVideo, ["videoUrlOrPath", "videoFile"])) {
+      unsetPaths.push("heroVideo.videoUrlOrPath", "heroVideo.videoFile");
+    }
 
-    await client.patch(study._id).set(patch).commit();
-    console.log(`Migrated caseStudy ${study._id} (${Object.keys(patch).join(", ")})`);
+    study.relatedVideos?.forEach((item, index) => {
+      const media = isRecord(item.media) ? item.media : undefined;
+      if (hasAnyKey(media, ["videoUrlOrPath", "videoFile"])) {
+        unsetPaths.push(`relatedVideos[${index}].media.videoUrlOrPath`, `relatedVideos[${index}].media.videoFile`);
+      }
+    });
+
+    if (Object.keys(patch).length === 0 && unsetPaths.length === 0) continue;
+
+    let mutation = client.patch(study._id);
+    if (Object.keys(patch).length > 0) {
+      mutation = mutation.set(patch);
+    }
+    if (unsetPaths.length > 0) {
+      mutation = mutation.unset(unsetPaths);
+    }
+
+    await mutation.commit();
+    console.log(
+      `Migrated caseStudy ${study._id} (${[...Object.keys(patch), ...(unsetPaths.length ? [`unset ${unsetPaths.join(", ")}`] : [])].join(", ")})`
+    );
   }
 }
 
@@ -200,7 +241,7 @@ async function migrateMotionPieces() {
       mutation = mutation.set(patch);
     }
     if (shouldUnsetLegacy) {
-      mutation = mutation.unset(["videoFile", "videoUrl", "resolvedVideoUrl"]);
+      mutation = mutation.unset(["videoFile", "videoUrl", "resolvedVideoUrl", "video.videoUrlOrPath", "video.videoFile"]);
     }
 
     await mutation.commit();
