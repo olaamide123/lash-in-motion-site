@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 const REVIEW_COOKIE = "lim_review";
 const REVIEW_COOKIE_VALUE = "granted";
 const REVIEW_PASSWORD = "MotionReview2026";
-const COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
+const COOKIE_MAX_AGE = 60 * 60;
 
 async function submit(formData: FormData) {
   "use server";
