@@ -1,4 +1,3 @@
-import { resolveImageSrc } from "@/lib/media";
 import type { SiteSettings } from "@/lib/types";
 
 interface FooterProps {
@@ -7,9 +6,6 @@ interface FooterProps {
 }
 
 export function Footer({ settings, currentPath }: FooterProps) {
-  const logoSrc = resolveImageSrc(settings.roundLogo) || "/assets/images/lim-round-mark.png";
-  const location = settings.footerLocation || "Chicago, IL";
-
   return (
     <footer>
       <div className="container">
@@ -20,15 +16,57 @@ export function Footer({ settings, currentPath }: FooterProps) {
         </div>
         <div className="foot-grid">
           <div className="foot-brand">
-            <div className="foot-brand-top">
-              <span className="brand-mark-full" aria-hidden="true">
-                <img className="brand-mark-img" src={logoSrc} alt="" />
-              </span>
-              <div>
-                <div className="lim">{settings.logoText}</div>
-                <div className="mono-soft sub">{location}</div>
-              </div>
-            </div>
+            <a className="foot-wordmark" href="/" aria-label={settings.logoText || "Lash In Motion"}>
+              <svg
+                className="foot-wordmark-svg"
+                viewBox="0 0 320 80"
+                xmlns="http://www.w3.org/2000/svg"
+                role="img"
+                aria-hidden="true"
+              >
+                <text
+                  x="0"
+                  y="38"
+                  fontFamily="Inter, system-ui, sans-serif"
+                  fontWeight="700"
+                  fontSize="34"
+                  letterSpacing="6"
+                  fill="#121111"
+                >
+                  LASH
+                </text>
+                <line x1="0" y1="50" x2="108" y2="50" stroke="#121111" strokeWidth="2" />
+                <line x1="124" y1="6" x2="124" y2="74" stroke="#FF2D20" strokeWidth="2" />
+                <rect x="118" y="44" width="12" height="12" fill="#FF2D20" />
+                <text
+                  x="138"
+                  y="32"
+                  fontFamily="Inter, system-ui, sans-serif"
+                  fontWeight="600"
+                  fontSize="18"
+                  letterSpacing="3"
+                  fill="#FF2D20"
+                >
+                  IN
+                </text>
+                <text
+                  x="148"
+                  y="66"
+                  fontFamily="Inter, system-ui, sans-serif"
+                  fontWeight="500"
+                  fontSize="28"
+                  letterSpacing="5"
+                  fill="#121111"
+                  textDecoration="line-through"
+                >
+                  MOTION
+                </text>
+                <line x1="148" y1="58" x2="306" y2="58" stroke="#121111" strokeWidth="1.5" />
+                <rect x="282" y="72" width="6" height="6" fill="#FF2D20" />
+                <rect x="292" y="72" width="6" height="6" fill="#0057D9" />
+                <rect x="302" y="72" width="6" height="6" fill="#FFD400" />
+              </svg>
+            </a>
           </div>
           <div className="foot-col">
             <h4>Navigate</h4>

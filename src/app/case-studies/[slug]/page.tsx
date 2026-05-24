@@ -121,12 +121,6 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
                     <span className="case-stat-value">{study.category}</span>
                   </div>
                 )}
-                <div className="case-stat">
-                  <span className="case-stat-label">Videos</span>
-                  <span className="case-stat-value">
-                    {(study.heroVideo || study.heroImage ? 1 : 0) + (study.relatedVideos?.length || 0)}
-                  </span>
-                </div>
               </div>
             </div>
           </div>

@@ -5,10 +5,6 @@ import { resolveMotionVideo } from "@/lib/media";
 import { getWorkPage } from "@/lib/sanity/fetch";
 import type { MotionPiece } from "@/lib/types";
 
-function linkedVideoCount(study: { relatedVideos?: unknown[]; heroVideo?: unknown }) {
-  return (study.heroVideo ? 1 : 0) + (study.relatedVideos?.length || 0);
-}
-
 export default async function WorkPage() {
   const workPage = await getWorkPage();
   const [titleLineOne, titleLineTwo] = splitPageTitleLines(workPage.pageTitle || "Selected Work.");
@@ -104,7 +100,6 @@ export default async function WorkPage() {
                       <h3 className="case-card-title">{study.title}</h3>
                       <div className="case-meta">
                         <span>{study.category}</span>
-                        <span>{linkedVideoCount(study)} linked videos</span>
                       </div>
                       <p className="page-body">{study.summary}</p>
                       <a className="link-arrow" href={`/case-studies/${study.slug}`}>

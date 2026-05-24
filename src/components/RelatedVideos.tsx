@@ -22,11 +22,6 @@ export function RelatedVideos({ items }: RelatedVideosProps) {
               topLabel={item.title}
               bottomRight={item.media.meta || item.subtitle}
             />
-            {item.subtitle ? (
-              <div className="archive-meta">
-                <span>{item.subtitle}</span>
-              </div>
-            ) : null}
             {item.description?.length ? (
               <RichTextContent value={item.description} className="page-body" />
             ) : null}

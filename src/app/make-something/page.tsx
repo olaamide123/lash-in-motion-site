@@ -7,8 +7,6 @@ const web3FormsKey = "5facc282-85fb-4c8f-bad3-24d875230b73";
 export default async function MakeSomethingPage() {
   const page = await getMakeSomethingPage();
   const projectTypes = page.projectTypes ?? [];
-  const budgetRanges = page.budgetRanges ?? [];
-  const timelineOptions = page.timelineOptions ?? [];
   const bestForBody = page.bestForBody ?? [];
   const contactBody = page.contactBody ?? [];
 
@@ -86,24 +84,6 @@ export default async function MakeSomethingPage() {
                       <select id="project-type" name="project_type" required>
                         <option value="">Select one</option>
                         {projectTypes.map((item) => (
-                          <option key={item}>{item}</option>
-                        ))}
-                      </select>
-                    </div>
-                    <div className="field">
-                      <label htmlFor="budget">Budget Range</label>
-                      <select id="budget" name="budget_range" required>
-                        <option value="">Select one</option>
-                        {budgetRanges.map((item) => (
-                          <option key={item}>{item}</option>
-                        ))}
-                      </select>
-                    </div>
-                    <div className="field">
-                      <label htmlFor="timeline">Timeline</label>
-                      <select id="timeline" name="timeline" required>
-                        <option value="">Select one</option>
-                        {timelineOptions.map((item) => (
                           <option key={item}>{item}</option>
                         ))}
                       </select>

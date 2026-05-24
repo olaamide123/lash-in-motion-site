@@ -87,9 +87,6 @@ export default async function HomePage() {
                   <span className="mono">{homepage.selectedWorkLabel}</span>
                 </div>
                 <h2 className="section-title">{homepage.selectedWorkTitle}</h2>
-                {homepage.selectedWorkSubtitle ? (
-                  <p className="section-subtitle">{homepage.selectedWorkSubtitle}</p>
-                ) : null}
               </div>
               <div>
                 <p className="section-intro">{homepage.selectedWorkIntro}</p>
