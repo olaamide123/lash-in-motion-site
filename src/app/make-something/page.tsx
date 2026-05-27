@@ -26,7 +26,6 @@ export default async function MakeSomethingPage() {
               <div className="page-meta-stack">
                 <p className="page-intro">{page.introCopy}</p>
                 <a className="contact-email" href={`mailto:${page.contactEmail}`}>
-                  <span className="red-square"></span>
                   {page.contactEmail}
                 </a>
                 {page.emailHelperText ? <p className="page-body">{page.emailHelperText}</p> : null}
@@ -40,7 +39,6 @@ export default async function MakeSomethingPage() {
             <div className="contact-layout">
               <div className="contact-panel">
                 <div className="section-eyebrow">
-                  <span className="red-square"></span>
                   <span className="mono">{page.inquiryLabel}</span>
                 </div>
                 <h2 className="context-title">{page.inquiryTitle}</h2>
@@ -98,7 +96,6 @@ export default async function MakeSomethingPage() {
                     <button className="btn-primary" type="submit">
                       {page.formButtonText} <span className="arrow">→</span>
                     </button>
-                    <span className="form-note">Ready for Web3Forms or Formspree endpoint swap</span>
                   </div>
                 </form>
               </div>

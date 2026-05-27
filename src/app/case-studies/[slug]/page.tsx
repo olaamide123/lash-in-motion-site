@@ -9,7 +9,7 @@ import { SiteFrame } from "@/components/SiteFrame";
 import { VideoFigure } from "@/components/VideoFigure";
 import { groupRelatedVideos } from "@/lib/cms-helpers";
 import { resolveImageSrc } from "@/lib/media";
-import { getCaseStudies, getCaseStudyBySlug } from "@/lib/sanity/fetch";
+import { getCaseStudies, getCaseStudyBySlug, getSiteSettings } from "@/lib/sanity/fetch";
 
 interface CaseStudyPageProps {
   params: Promise<{
@@ -42,8 +42,12 @@ export async function generateMetadata({ params }: CaseStudyPageProps): Promise<
 
 export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
   const { slug } = await params;
-  const study = await getCaseStudyBySlug(slug);
-  const allStudies = await getCaseStudies();
+  const [study, allStudies, settings] = await Promise.all([
+    getCaseStudyBySlug(slug),
+    getCaseStudies(),
+    getSiteSettings()
+  ]);
+  const labels = settings.uiLabels ?? {};
 
   if (!study) notFound();
 
@@ -79,17 +83,17 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
               <div>
                 <div className="page-kicker">
                   <span className="red-square"></span>
-                  <span className="mono">Case Study</span>
+                  <span className="mono">{labels.caseStudyKickerLabel || "Case Study"}</span>
                 </div>
                 <h1 className="page-title">{study.title}</h1>
                 <p className="case-summary">{study.subtitle}</p>
                 {study.summary ? <p className="page-body">{study.summary}</p> : null}
                 <div className="case-actions" style={{ marginTop: 20 }}>
                   <a className="btn-primary" href="#main-video">
-                    View Motion <span className="arrow">→</span>
+                    {labels.viewMotionLabel || "View Motion"} <span className="arrow">→</span>
                   </a>
                   <a className="btn-ghost" href="/work#case-studies">
-                    <span className="red-square"></span>Back to Work
+                    <span className="red-square"></span>{labels.backToWorkLabel || "Back to Work"}
                   </a>
                 </div>
               </div>
@@ -153,7 +157,7 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
               <div className="info-panel">
                 <div className="section-eyebrow">
                   <span className="red-square"></span>
-                  <span className="mono">Overview</span>
+                  <span className="mono">{labels.overviewSectionLabel || "Overview"}</span>
                 </div>
                 {overview.map((block, index) => (
                   <Fragment key={block._key}>
@@ -180,28 +184,28 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
           </div>
         </section>
 
-        <CaseStudySection label="The Challenge" body={challenge} relatedVideos={sectionVideos("challenge")} />
-        <CaseStudySection label="The Approach" body={approach} relatedVideos={sectionVideos("approach")} />
-        <CaseStudySection label="The Execution" body={execution} relatedVideos={sectionVideos("execution")} />
-        <CaseStudySection label="The Outcome" body={outcome} relatedVideos={sectionVideos("outcome")} />
+        <CaseStudySection label={labels.challengeSectionLabel || "The Challenge"} body={challenge} relatedVideos={sectionVideos("challenge")} />
+        <CaseStudySection label={labels.approachSectionLabel || "The Approach"} body={approach} relatedVideos={sectionVideos("approach")} />
+        <CaseStudySection label={labels.executionSectionLabel || "The Execution"} body={execution} relatedVideos={sectionVideos("execution")} />
+        <CaseStudySection label={labels.outcomeSectionLabel || "The Outcome"} body={outcome} relatedVideos={sectionVideos("outcome")} />
 
         {study.whatToNotice?.length ? (
-          <CaseStudySection label="What to Notice" body={study.whatToNotice} />
+          <CaseStudySection label={labels.whatToNoticeSectionLabel || "What to Notice"} body={study.whatToNotice} />
         ) : null}
 
         <section className="page-section">
           <div className="container">
             <div className="back-row">
               <a className="link-arrow" href="/work#case-studies">
-                <span className="red-square"></span>Back to Work
+                <span className="red-square"></span>{labels.backToWorkLabel || "Back to Work"}
               </a>
               {nextStudy ? (
                 <a className="link-arrow" href={`/case-studies/${nextStudy.slug}`}>
-                  <span className="red-square"></span>Next Case: {nextStudy.title}
+                  <span className="red-square"></span>{labels.nextCaseLabel || "Next Case:"} {nextStudy.title}
                 </a>
               ) : (
                 <a className="link-arrow" href="/make-something">
-                  <span className="red-square"></span>Make Something.
+                  <span className="red-square"></span>{labels.makeSomethingLabel || "Make Something."}
                 </a>
               )}
             </div>

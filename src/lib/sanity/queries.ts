@@ -187,6 +187,9 @@ export const siteSettingsQuery = groq`
     roundLogo{
       ${imageFields}
     },
+    footerLogo{
+      ${imageFields}
+    },
     mainNavigation[]{
       ${linkFields}
     },
@@ -194,6 +197,26 @@ export const siteSettingsQuery = groq`
       label,
       href,
       action
+    },
+    uiLabels{
+      viewCaseLabel,
+      viewMotionLabel,
+      backToWorkLabel,
+      nextCaseLabel,
+      makeSomethingLabel,
+      viewAllCaseStudiesLabel,
+      viewAllMotionLabel,
+      watchExternalLabel,
+      hoverPreviewLabel,
+      clickSoundLabel,
+      motionEditorialLabel,
+      caseStudyKickerLabel,
+      overviewSectionLabel,
+      challengeSectionLabel,
+      approachSectionLabel,
+      executionSectionLabel,
+      outcomeSectionLabel,
+      whatToNoticeSectionLabel
     },
     footerTagline,
     footerCopyright,
@@ -266,8 +289,12 @@ export const workPageQuery = groq`
     pageLabel,
     pageTitle,
     introCopy,
+    caseStudiesSectionKicker,
+    caseStudiesSectionEyebrow,
     caseStudiesSectionTitle,
     caseStudiesSectionSubtitle,
+    motionSectionKicker,
+    motionSectionEyebrow,
     motionSectionTitle,
     motionSectionSubtitle,
     motionGroups[]{
@@ -300,12 +327,17 @@ export const contextPageQuery = groq`
       ${portableTextFields}
     },
     whyHeading,
+    whyExistsTitle,
     whyBody[]{
       ${portableTextFields}
     },
     whyRows[]{
       ${overviewHighlightFields}
-    }
+    },
+    ctaEyebrow,
+    ctaTitle,
+    ctaBody,
+    ctaButtonText
   }
 `;
 

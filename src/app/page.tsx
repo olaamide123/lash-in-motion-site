@@ -7,10 +7,11 @@ import {
   splitPageTitleLines
 } from "@/lib/cms-helpers";
 import { resolveMotionVideo } from "@/lib/media";
-import { getHomepage } from "@/lib/sanity/fetch";
+import { getHomepage, getSiteSettings } from "@/lib/sanity/fetch";
 
 export default async function HomePage() {
-  const homepage = await getHomepage();
+  const [homepage, settings] = await Promise.all([getHomepage(), getSiteSettings()]);
+  const labels = settings.uiLabels ?? {};
   const selectedCaseStudies = homepage.selectedCaseStudies ?? [];
   const selectedMotionPieces = homepage.selectedMotionPieces ?? [];
   const whyThisExistsBody = homepage.whyThisExistsBody ?? [];
@@ -144,7 +145,7 @@ export default async function HomePage() {
                           </span>
                           <p className="work-desc">{study.summary}</p>
                           <a className="work-link" href={`/case-studies/${study.slug}`}>
-                            <span className="red-square"></span>View Case ↗
+                            <span className="red-square"></span>{labels.viewCaseLabel || "View Case"} ↗
                           </a>
                         </div>
                       </>
@@ -157,7 +158,7 @@ export default async function HomePage() {
                           </span>
                           <p className="work-desc">{study.summary}</p>
                           <a className="work-link" href={`/case-studies/${study.slug}`}>
-                            <span className="red-square"></span>View Case ↗
+                            <span className="red-square"></span>{labels.viewCaseLabel || "View Case"} ↗
                           </a>
                         </div>
                         <VideoFigure
@@ -174,7 +175,7 @@ export default async function HomePage() {
 
               <div className="view-all-row view-all-row--prominent">
                 <a className="btn-primary" href="/work#case-studies">
-                  View All Case Studies <span className="arrow">→</span>
+                  {labels.viewAllCaseStudiesLabel || "View All Case Studies"} <span className="arrow">→</span>
                 </a>
               </div>
             </div>
@@ -230,7 +231,7 @@ export default async function HomePage() {
 
               <div className="view-all-row view-all-row--prominent">
                 <a className="btn-primary" href="/work#motion">
-                  View All Short Work <span className="arrow">→</span>
+                  {labels.viewAllMotionLabel || "View All Short Work"} <span className="arrow">→</span>
                 </a>
               </div>
             </div>

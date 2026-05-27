@@ -445,6 +445,33 @@ const motionGroup = defineType({
   ]
 });
 
+const uiLabels = defineType({
+  name: "uiLabels",
+  title: "Global UI Labels",
+  type: "object",
+  description: "Reusable button text and small labels that appear across the site.",
+  fields: [
+    defineField({ name: "viewCaseLabel", title: "“View Case” link text", type: "string" }),
+    defineField({ name: "viewMotionLabel", title: "“View Motion” button text", type: "string" }),
+    defineField({ name: "backToWorkLabel", title: "“Back to Work” link text", type: "string" }),
+    defineField({ name: "nextCaseLabel", title: "“Next Case:” prefix", type: "string" }),
+    defineField({ name: "makeSomethingLabel", title: "“Make Something.” button text", type: "string" }),
+    defineField({ name: "viewAllCaseStudiesLabel", title: "“View All Case Studies” button text", type: "string" }),
+    defineField({ name: "viewAllMotionLabel", title: "“View All Short Work” button text", type: "string" }),
+    defineField({ name: "watchExternalLabel", title: "“Watch on Vimeo” link text", type: "string" }),
+    defineField({ name: "hoverPreviewLabel", title: "“Hover to preview” label", type: "string" }),
+    defineField({ name: "clickSoundLabel", title: "“Click for sound” label", type: "string" }),
+    defineField({ name: "motionEditorialLabel", title: "“Motion + Editorial” label", type: "string" }),
+    defineField({ name: "caseStudyKickerLabel", title: "Case study page kicker (default “Case Study”)", type: "string" }),
+    defineField({ name: "overviewSectionLabel", title: "Case study “Overview” label", type: "string" }),
+    defineField({ name: "challengeSectionLabel", title: "Case study “The Challenge” label", type: "string" }),
+    defineField({ name: "approachSectionLabel", title: "Case study “The Approach” label", type: "string" }),
+    defineField({ name: "executionSectionLabel", title: "Case study “The Execution” label", type: "string" }),
+    defineField({ name: "outcomeSectionLabel", title: "Case study “The Outcome” label", type: "string" }),
+    defineField({ name: "whatToNoticeSectionLabel", title: "Case study “What to Notice” label", type: "string" })
+  ]
+});
+
 const siteSettings = defineType({
   name: "siteSettings",
   title: "Site Settings",
@@ -452,6 +479,7 @@ const siteSettings = defineType({
   groups: [
     { name: "brand", title: "Brand" },
     { name: "navigation", title: "Navigation" },
+    { name: "labels", title: "UI Labels" },
     { name: "theme", title: "Theme Colors" },
     { name: "footer", title: "Footer" }
   ],
@@ -479,6 +507,13 @@ const siteSettings = defineType({
       group: "brand"
     }),
     defineField({
+      name: "footerLogo",
+      title: "Footer logo",
+      type: "imageAssetValue",
+      group: "brand",
+      description: "Full logo / wordmark shown in the footer. Upload here to replace the default."
+    }),
+    defineField({
       name: "themeColors",
       title: "Theme Colors",
       type: "themeColors",
@@ -498,6 +533,12 @@ const siteSettings = defineType({
       title: "Primary CTA",
       type: "ctaItem",
       group: "navigation"
+    }),
+    defineField({
+      name: "uiLabels",
+      title: "UI Labels",
+      type: "uiLabels",
+      group: "labels"
     }),
     defineField({
       name: "footerTagline",
@@ -630,8 +671,12 @@ const workPage = defineType({
     defineField({ name: "pageLabel", title: "Page label", type: "string" }),
     defineField({ name: "pageTitle", title: "Page title", type: "string" }),
     defineField({ name: "introCopy", title: "Intro copy", type: "text", rows: 4 }),
+    defineField({ name: "caseStudiesSectionKicker", title: "Case studies kicker (above eyebrow)", type: "string" }),
+    defineField({ name: "caseStudiesSectionEyebrow", title: "Case studies eyebrow label", type: "string" }),
     defineField({ name: "caseStudiesSectionTitle", title: "Case studies section title", type: "string" }),
     defineField({ name: "caseStudiesSectionSubtitle", title: "Case studies section subtitle", type: "text", rows: 3 }),
+    defineField({ name: "motionSectionKicker", title: "Motion kicker (above eyebrow)", type: "string" }),
+    defineField({ name: "motionSectionEyebrow", title: "Motion eyebrow label", type: "string" }),
     defineField({ name: "motionSectionTitle", title: "Motion section title", type: "string" }),
     defineField({ name: "motionSectionSubtitle", title: "Motion section subtitle", type: "text", rows: 3 }),
     defineField({
@@ -773,14 +818,29 @@ const contextPage = defineType({
     defineField({ name: "portraitRole", title: "Portrait role", type: "string" }),
     defineField({ name: "personHeading", title: "Person heading", type: "string" }),
     defineField({ name: "personBody", title: "Person body", type: "array", of: [portableTextBlock] }),
-    defineField({ name: "whyHeading", title: "Why heading", type: "string" }),
+    defineField({ name: "whyHeading", title: "Why heading (eyebrow)", type: "string" }),
+    defineField({
+      name: "whyExistsTitle",
+      title: "“Why This Exists.” title",
+      type: "string",
+      description: "Use a period at the end. The last word is italicized automatically."
+    }),
     defineField({ name: "whyBody", title: "Why body", type: "array", of: [portableTextBlock] }),
     defineField({
       name: "whyRows",
       title: "Why rows",
       type: "array",
       of: [defineArrayMember({ type: "overviewHighlight" })]
-    })
+    }),
+    defineField({ name: "ctaEyebrow", title: "Bottom CTA eyebrow (e.g. “Next”)", type: "string" }),
+    defineField({
+      name: "ctaTitle",
+      title: "Bottom CTA title",
+      type: "string",
+      description: "The last word is italicized automatically."
+    }),
+    defineField({ name: "ctaBody", title: "Bottom CTA body", type: "text", rows: 3 }),
+    defineField({ name: "ctaButtonText", title: "Bottom CTA button text", type: "string" })
   ]
 });
 
@@ -832,6 +892,7 @@ export const schemaTypes = [
   overviewHighlight,
   relatedVideo,
   motionGroup,
+  uiLabels,
   siteSettings,
   homepage,
   workPage,

@@ -2,11 +2,12 @@ import { SiteFrame } from "@/components/SiteFrame";
 import { VideoFigure } from "@/components/VideoFigure";
 import { splitPageTitleLines } from "@/lib/cms-helpers";
 import { resolveMotionVideo } from "@/lib/media";
-import { getWorkPage } from "@/lib/sanity/fetch";
-import type { MotionPiece } from "@/lib/types";
+import { getSiteSettings, getWorkPage } from "@/lib/sanity/fetch";
+import type { MotionPiece, UILabels } from "@/lib/types";
 
 export default async function WorkPage() {
-  const workPage = await getWorkPage();
+  const [workPage, settings] = await Promise.all([getWorkPage(), getSiteSettings()]);
+  const labels: UILabels = settings.uiLabels ?? {};
   const [titleLineOne, titleLineTwo] = splitPageTitleLines(workPage.pageTitle || "Selected Work.");
   const motionGroups = workPage.motionGroups ?? [];
   const featuredCaseStudies = workPage.featuredCaseStudies ?? [];
@@ -39,13 +40,13 @@ export default async function WorkPage() {
                 <p className="page-intro">{workPage.introCopy}</p>
                 <div className="archive-meta">
                   <span>
-                    <span className="sq-red"></span>Motion + Editorial
+                    <span className="sq-red"></span>{labels.motionEditorialLabel || "Motion + Editorial"}
                   </span>
                   <span>
-                    <span className="sq-blue"></span>Hover to preview
+                    <span className="sq-blue"></span>{labels.hoverPreviewLabel || "Hover to preview"}
                   </span>
                   <span>
-                    <span className="sq-yellow"></span>Click for sound
+                    <span className="sq-yellow"></span>{labels.clickSoundLabel || "Click for sound"}
                   </span>
                 </div>
               </div>
@@ -68,10 +69,10 @@ export default async function WorkPage() {
             <div className="work-section" data-section="studies">
               <div className="section-head">
                 <div className="section-stack">
-                  <div className="section-kicker">The Full Story.</div>
+                  <div className="section-kicker">{workPage.caseStudiesSectionKicker || "The Full Story."}</div>
                   <div className="section-eyebrow">
                     <span className="red-square"></span>
-                    <span className="mono">Case Studies</span>
+                    <span className="mono">{workPage.caseStudiesSectionEyebrow || "Case Studies"}</span>
                   </div>
                   <h2 className="section-title">{workPage.caseStudiesSectionTitle}</h2>
                 </div>
@@ -103,7 +104,7 @@ export default async function WorkPage() {
                       </div>
                       <p className="page-body">{study.summary}</p>
                       <a className="link-arrow" href={`/case-studies/${study.slug}`}>
-                        <span className="red-square"></span>View Case
+                        <span className="red-square"></span>{labels.viewCaseLabel || "View Case"}
                       </a>
                     </div>
                   </article>
@@ -114,14 +115,14 @@ export default async function WorkPage() {
             <div className="work-section" data-section="motion">
               <div className="section-head">
                 <div className="section-stack">
-                  <div className="section-kicker">Shorter Work.</div>
+                  <div className="section-kicker">{workPage.motionSectionKicker || "Shorter Work."}</div>
                   <div className="section-eyebrow">
                     <span className="brand-swatches sm" aria-hidden="true">
                       <i className="r"></i>
                       <i className="b"></i>
                       <i className="y"></i>
                     </span>
-                    <span className="mono">Standalone Pieces</span>
+                    <span className="mono">{workPage.motionSectionEyebrow || "Standalone Pieces"}</span>
                   </div>
                   <h2 className="section-title">{workPage.motionSectionTitle}</h2>
                 </div>
@@ -143,7 +144,12 @@ export default async function WorkPage() {
 
                     <div className="archive-grid motion-gallery">
                       {group.items.map((piece, index) => (
-                        <MotionArchiveItem key={piece.slug} piece={piece} index={index} />
+                        <MotionArchiveItem
+                          key={piece.slug}
+                          piece={piece}
+                          index={index}
+                          watchLabel={labels.watchExternalLabel || "Watch on Vimeo"}
+                        />
                       ))}
                     </div>
                   </section>
@@ -157,7 +163,7 @@ export default async function WorkPage() {
   );
 }
 
-function MotionArchiveItem({ piece, index }: { piece: MotionPiece; index: number }) {
+function MotionArchiveItem({ piece, index, watchLabel }: { piece: MotionPiece; index: number; watchLabel: string }) {
   const media = resolveMotionVideo(piece);
   const layoutClass =
     index === 0
@@ -207,7 +213,7 @@ function MotionArchiveItem({ piece, index }: { piece: MotionPiece; index: number
         ))}
         {media?.embedUrl && externalUrl ? (
           <a className="link-arrow" href={externalUrl} target="_blank" rel="noreferrer">
-            <span className="red-square"></span>Watch on Vimeo
+            <span className="red-square"></span>{watchLabel}
           </a>
         ) : null}
       </div>

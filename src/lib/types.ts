@@ -90,13 +90,36 @@ export interface ThemeColors {
   borderColor?: ThemeColorToken;
 }
 
+export interface UILabels {
+  viewCaseLabel?: string;
+  viewMotionLabel?: string;
+  backToWorkLabel?: string;
+  nextCaseLabel?: string;
+  makeSomethingLabel?: string;
+  viewAllCaseStudiesLabel?: string;
+  viewAllMotionLabel?: string;
+  watchExternalLabel?: string;
+  hoverPreviewLabel?: string;
+  clickSoundLabel?: string;
+  motionEditorialLabel?: string;
+  caseStudyKickerLabel?: string;
+  overviewSectionLabel?: string;
+  challengeSectionLabel?: string;
+  approachSectionLabel?: string;
+  executionSectionLabel?: string;
+  outcomeSectionLabel?: string;
+  whatToNoticeSectionLabel?: string;
+}
+
 export interface SiteSettings {
   siteTitle: string;
   logoText: string;
   roundLogo: ImageAssetValue;
+  footerLogo?: ImageAssetValue;
   themeColors?: ThemeColors;
   mainNavigation: LinkItem[];
   primaryCTA: CTAItem;
+  uiLabels?: UILabels;
   footerTagline: string;
   footerCopyright: string;
   footerWorthMakingList: string[];
@@ -166,8 +189,12 @@ export interface WorkPageSeed {
   pageLabel: string;
   pageTitle: string;
   introCopy: string;
+  caseStudiesSectionKicker?: string;
+  caseStudiesSectionEyebrow?: string;
   caseStudiesSectionTitle: string;
   caseStudiesSectionSubtitle: string;
+  motionSectionKicker?: string;
+  motionSectionEyebrow?: string;
   motionSectionTitle: string;
   motionSectionSubtitle: string;
   featuredCaseStudies: string[];
@@ -255,8 +282,13 @@ export interface ContextPage {
   personHeading: string;
   personBody: RichTextBlock[];
   whyHeading: string;
+  whyExistsTitle?: string;
   whyBody: RichTextBlock[];
   whyRows: OverviewHighlight[];
+  ctaEyebrow?: string;
+  ctaTitle?: string;
+  ctaBody?: string;
+  ctaButtonText?: string;
 }
 
 export interface MakeSomethingPage {

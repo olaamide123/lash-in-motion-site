@@ -1,18 +1,22 @@
 import { RichTextContent } from "@/components/RichTextContent";
 import { SiteFrame } from "@/components/SiteFrame";
-import { getContextPage } from "@/lib/sanity/fetch";
+import { splitPageTitleLines } from "@/lib/cms-helpers";
+import { getContextPage, getSiteSettings } from "@/lib/sanity/fetch";
 import { resolveImageSrc } from "@/lib/media";
 
 export default async function ContextPage() {
-  const context = await getContextPage();
+  const [context, settings] = await Promise.all([getContextPage(), getSiteSettings()]);
+  const labels = settings.uiLabels ?? {};
   const personBody = context.personBody ?? [];
   const whyBody = context.whyBody ?? [];
   const whyRows = context.whyRows ?? [];
   const portraitSrc = resolveImageSrc(context.portraitImage);
-  const portraitName = context.portraitName || "Greg Green";
-  const portraitLocation = context.portraitLocation || "Chicago";
-  const portraitRole = context.portraitRole || "Motion + Editorial";
+  const portraitName = "Greg Lash";
   const showWhyBody = whyBody.length > 0 && whyRows.length === 0;
+  const [whyTitleLead, whyTitleAccent] = splitPageTitleLines(context.whyExistsTitle || "Why This Exists.");
+  const [ctaTitleLead, ctaTitleAccent] = splitPageTitleLines(
+    context.ctaTitle || "If the project matters, the process should too."
+  );
 
   return (
     <SiteFrame currentPath="/context">
@@ -29,7 +33,7 @@ export default async function ContextPage() {
               <div className="page-meta-stack">
                 <div className="archive-meta">
                   <span>
-                    <span className="sq-red"></span>Motion + Editorial
+                    <span className="sq-red"></span>{labels.motionEditorialLabel || "Motion + Editorial"}
                   </span>
                   <span>
                     <span className="sq-blue"></span>{context.whyHeading}
@@ -65,8 +69,6 @@ export default async function ContextPage() {
                 <div className="archive-caption">
                   <div className="archive-meta">
                     <span>{portraitName}</span>
-                    <span>{portraitLocation}</span>
-                    <span>{portraitRole}</span>
                   </div>
                 </div>
               </div>
@@ -84,7 +86,13 @@ export default async function ContextPage() {
                   <span className="mono">{context.whyHeading}</span>
                 </div>
                 <h2 className="section-title">
-                  Why This <span className="ed-italic">Exists.</span>
+                  {whyTitleLead}
+                  {whyTitleAccent ? (
+                    <>
+                      {" "}
+                      <span className="ed-italic">{whyTitleAccent}</span>
+                    </>
+                  ) : null}
                 </h2>
               </div>
             </div>
@@ -111,16 +119,25 @@ export default async function ContextPage() {
               <div>
                 <div className="section-eyebrow">
                   <span className="red-square"></span>
-                  <span className="mono">Next</span>
+                  <span className="mono">{context.ctaEyebrow || "Next"}</span>
                 </div>
                 <h2 className="section-title">
-                  If the project matters, the process should <span className="ed-italic">too.</span>
+                  {ctaTitleLead}
+                  {ctaTitleAccent ? (
+                    <>
+                      {" "}
+                      <span className="ed-italic">{ctaTitleAccent}</span>
+                    </>
+                  ) : null}
                 </h2>
               </div>
               <div className="section-actions">
-                <p className="page-body">For campaign films, brand motion, editorial pieces, and projects that need clarity from concept to final delivery.</p>
+                <p className="page-body">
+                  {context.ctaBody ||
+                    "For campaign films, brand motion, editorial pieces, and projects that need clarity from concept to final delivery."}
+                </p>
                 <a className="btn-primary" href="/make-something">
-                  Make Something. <span className="arrow">→</span>
+                  {context.ctaButtonText || labels.makeSomethingLabel || "Make Something."} <span className="arrow">→</span>
                 </a>
               </div>
             </div>
