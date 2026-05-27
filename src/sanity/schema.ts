@@ -510,7 +510,7 @@ const siteSettings = defineType({
       name: "footerLogo",
       title: "Footer logo",
       type: "imageAssetValue",
-      group: "brand",
+      group: "footer",
       description: "Full logo / wordmark shown in the footer. Upload here to replace the default."
     }),
     defineField({
