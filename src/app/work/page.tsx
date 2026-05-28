@@ -201,10 +201,9 @@ function MotionArchiveItem({ piece, index, watchLabel }: { piece: MotionPiece; i
           {piece.title}
         </h3>
         <div className="archive-meta">
-          <span>{piece.subtitle}</span>
-          <span>{piece.category}</span>
+          {piece.subtitle ? <span>{piece.subtitle}</span> : null}
+          {piece.category ? <span>{piece.category}</span> : null}
           {piece.year ? <span>{piece.year}</span> : null}
-          {piece.duration ? <span>{piece.duration}</span> : null}
         </div>
         {piece.description.map((block) => (
           <p className="page-body" key={block._key}>

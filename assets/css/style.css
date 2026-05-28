@@ -1513,14 +1513,13 @@
     }
     .archive-item--feature .archive-caption,
     .archive-item--feature-alt .archive-caption {
-      grid-template-columns: 1fr auto;
-      align-items: end;
-      gap: 18px 24px;
+      grid-template-columns: 1fr;
+      gap: 10px;
     }
     .archive-item--feature .archive-meta,
     .archive-item--feature-alt .archive-meta {
-      justify-content: flex-end;
-      text-align: right;
+      justify-content: flex-start;
+      text-align: left;
     }
     .archive-item--tall .vid-frame {
       aspect-ratio: 4 / 5.2;
@@ -1541,8 +1540,14 @@
     }
     .archive-caption {
       display: grid;
-      gap: 8px;
+      gap: 6px;
       padding-top: 4px;
+    }
+    .archive-caption .archive-meta {
+      margin-top: 0;
+    }
+    .archive-caption .page-body {
+      margin-top: 8px;
     }
     .archive-title,
     .case-card-title,
